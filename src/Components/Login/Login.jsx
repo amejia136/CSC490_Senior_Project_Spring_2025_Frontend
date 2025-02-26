@@ -3,15 +3,21 @@ import axios from "axios"; // Import axios to make API requests to Flask (backen
 import "./Login.css"; //Import the CSS file for styling
 import {FaEnvelope, FaUser,} from "react-icons/fa"; // Import icons for input fields
 import {RiLockPasswordFill} from "react-icons/ri"; // Import password icon
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
+
+    // For live hosting uncomment this
+    // const API_BASE_URL = "https://amejia201.pythonanywhere.com";
 
     // Initialize navigate function * Navigation Purposes *
     const navigate = useNavigate();
 
     //State to track the active form (Login or Register)
     const [action, setAction] = useState('');
+
+    //State to track if user checked remember me box or not
+    const [rememberMe, setRememberMe] = useState(false);
 
 
     // State for handling registration form data
@@ -49,6 +55,9 @@ const Login = () => {
 
         try {
             // Uses backend API to register a user
+            // const response = await axios.post(`${API_BASE_URL}/signup` *** for live hosting has backend uncomment this
+
+            // Local hosting, must run PyCharm backend at the same time on the same computer
             const response = await axios.post("http://127.0.0.1:5000/signup", registerData, {
                 headers: {
                     "Content-Type": "application/json",
@@ -80,6 +89,9 @@ const Login = () => {
 
         try {
             // Uses backend API to authenticate user login
+            // const response = await axios.post(`${API_BASE_URL}/login` ** for live hosting, has backend *** for live hosting uncomment this
+
+            // Local hosting, must run PyCharm backend at the same time on the same computer
             const response = await axios.post("http://127.0.0.1:5000/login", loginData, {
                 headers: {
                     "Content-Type": "application/json",
@@ -89,12 +101,17 @@ const Login = () => {
             setSuccessMessage("Login successful!"); // Shows success message
             console.log("User logged in:", response.data);
 
-            // Saves user info from backend into local storage
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            if (rememberMe) {
+                // If box checked, stores user session in localStorage (Stays logged in)
+                localStorage.setItem("user", JSON.stringify(response.data.user));
+            } else {
+                // if box not checked, store user session in sessionStorage (Clears logged in user when browser closes)
+                sessionStorage.setItem("user", JSON.stringify(response.data.user));
+            }
 
             // Redirect or update UI upon successful login
             setTimeout(() => {
-               navigate("/home") // Redirect to dashboard or homepage
+                navigate("/home") // Redirect to dashboard or homepage
             }, 2000);
 
             // Handle errors from the API response
@@ -146,10 +163,15 @@ const Login = () => {
                         <RiLockPasswordFill className='icon'/>
                     </div>
 
+
                     <div className="remember-forgot">
-                        <label><input type="checkbox"/>Remember me </label>
+                        <label><input type="checkbox"
+                                      checked={rememberMe}
+                                      onChange={() => setRememberMe(!rememberMe)}
+                        />Remember me </label>
                         <a href="#">Forgot password?</a>
                     </div>
+
 
                     <button type="submit">Login</button>
                     {/*Login request is sent to backend*/}
