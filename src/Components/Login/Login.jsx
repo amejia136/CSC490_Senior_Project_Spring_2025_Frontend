@@ -3,9 +3,12 @@ import axios from "axios"; // Import axios to make API requests to Flask (backen
 import "./Login.css"; //Import the CSS file for styling
 import {FaEnvelope, FaUser,} from "react-icons/fa"; // Import icons for input fields
 import {RiLockPasswordFill} from "react-icons/ri"; // Import password icon
-
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+    // Initialize navigate function * Navigation Purposes *
+    const navigate = useNavigate();
 
     //State to track the active form (Login or Register)
     const [action, setAction] = useState('');
@@ -91,7 +94,7 @@ const Login = () => {
 
             // Redirect or update UI upon successful login
             setTimeout(() => {
-                window.location.href = "/dashboard"; // Redirect to dashboard or homepage
+               navigate("/home") // Redirect to dashboard or homepage
             }, 2000);
 
             // Handle errors from the API response
