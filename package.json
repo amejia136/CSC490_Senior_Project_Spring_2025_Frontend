@@ -38,5 +38,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "sass": "^1.85.1",
+    "sass-loader": "^16.0.5",
+    "vite": "^6.2.0",
+    "webpack": "^5.98.0"
+  },
+
+
+  "script": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   }
+
 }
