@@ -58,7 +58,7 @@ const Login = () => {
             // const response = await axios.post(`${API_BASE_URL}/signup` *** for live hosting has backend uncomment this
 
             // Local hosting, must run PyCharm backend at the same time on the same computer
-            const response = await axios.post("http://127.0.0.1:5000/auth/signup", registerData, {
+            const response = await axios.post("http://127.0.0.1:5000/signup", registerData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -92,7 +92,7 @@ const Login = () => {
             // const response = await axios.post(`${API_BASE_URL}/login` ** for live hosting, has backend *** for live hosting uncomment this
 
             // Local hosting, must run PyCharm backend at the same time on the same computer
-            const response = await axios.post("http://127.0.0.1:5000/auth/login", loginData, {
+            const response = await axios.post("http://127.0.0.1:5000/login", loginData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
