@@ -61,10 +61,13 @@ const Navbar = () => {
                             <a href="#">BOOK NOW</a>
                         </button>
                     </ul>
+
                     <div onClick={removeNavbar} className = "closeNavbar">
                         <AiFillCloseCircle className="icon"/>
                     </div>
+
                 </div>
+
 
                 <div onClick ={showNav} className = "toggleNavbar">
                     <TbGridDots className = "icon"/>
