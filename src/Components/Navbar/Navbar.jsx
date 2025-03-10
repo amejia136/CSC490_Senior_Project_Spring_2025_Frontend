@@ -34,15 +34,15 @@ const Navbar = () => {
                         </li>
 
                         <li className="navItem">
-                            <a href="#" className="navLink">Packages</a>
-                        </li>
-
-                        <li className="navItem">
-                            <a href="#" className="navLink">Shop</a>
-                        </li>
-
-                        <li className="navItem">
                             <a href="#" className="navLink">About</a>
+                        </li>
+
+                        <li className="navItem">
+                            <a href="#" className="navLink">Profile</a>
+                        </li>
+
+                        <li className="navItem">
+                            <a href="#" className="navLink">Reviews</a>
                         </li>
 
                         <li className="navItem">
@@ -58,7 +58,7 @@ const Navbar = () => {
                         </li>
 
                         <button className = 'btn'>
-                            <a href="#">BOOK NOW</a>
+                            <a href="#">LOGIN</a>
                         </button>
                     </ul>
 

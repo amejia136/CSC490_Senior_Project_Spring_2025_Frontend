@@ -6,25 +6,34 @@ import Home from "./Components/Home/Home";
 import Main from "./Components/Main/Main";
 import Footer from "./Components/Footer/Footer";
 import Login from "./Components/Login/Login";
-
+import Profile from "./Components/Profile/Profile";
 
 const App = () => {
     return (
         <Router>
             <Routes>
+
                 {/* Login Page */}
-                <Route path="/" element={
+                <Route path="/login" element={
                     <>
                         <Login />
                     </>
                 } />
+
                 {/* Home Page */}
-                <Route path="/home" element={
+                <Route path="/" element={
                     <>
                         <Navbar />
                         <Home />
                         <Main />
                         <Footer />
+                    </>
+                } />
+
+                {/* Profile Page */}
+                <Route path="/profile" element={
+                    <>
+                        <Profile />
                     </>
                 } />
             </Routes>

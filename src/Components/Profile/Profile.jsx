@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from "./Profile.module.css";
-import defaultProfile from "C:/Users/Luisa V/WebstormProjects/CSC490_Senior_Project_Spring_2025_Frontend1/src/profile-default.jpg";
+import defaultProfile from "../../Assets/profile-default.jpg";
 
 
 function Profile() {
