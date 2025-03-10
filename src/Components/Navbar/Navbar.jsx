@@ -4,10 +4,14 @@ import { MdOutlineTravelExplore } from 'react-icons/md';
 import { IoMdCloseCircle } from "react-icons/io";
 import { TbGridDots } from "react-icons/tb";
 import {AiFillCloseCircle} from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 
 const Navbar = () => {
     const[active,setActive] = useState('navBar');
+
+    const navigate = useNavigate();
+
     //function to toggle navBar
     const showNav = () => {
         setActive('navBar activeNavbar');
@@ -17,6 +21,11 @@ const Navbar = () => {
     const removeNavbar = () => {
         setActive('navBar');
     }
+
+    const handleLogin = () => {
+        navigate('/login'); // ***** Navigate to login page *****
+    };
+
     return (
         <section className= 'navBarSection'>
             <header className="header flex">
@@ -57,7 +66,7 @@ const Navbar = () => {
                             <a href="#" className="navLink">Contact</a>
                         </li>
 
-                        <button className = 'btn'>
+                        <button className = 'btn' onClick={handleLogin}>
                             <a href="#">LOGIN</a>
                         </button>
                     </ul>
