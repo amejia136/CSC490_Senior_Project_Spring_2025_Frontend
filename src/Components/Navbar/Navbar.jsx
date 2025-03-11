@@ -26,6 +26,18 @@ const Navbar = () => {
         navigate('/login'); // ***** Navigate to login page *****
     };
 
+    const handleProfile = () => {
+        navigate('/profile'); // ***** Navigate to login page *****
+    };
+
+    const handleHome = () => {
+        navigate('/'); // ***** Navigate to login page *****
+    };
+
+    const handleAchievements = () => {
+        navigate('/achievements'); // ***** Navigate to login page *****
+    };
+
     return (
         <section className= 'navBarSection'>
             <header className="header flex">
@@ -38,7 +50,7 @@ const Navbar = () => {
 
                 <div className={active}>
                     <ul className="navLists flex">
-                        <li className="navItem">
+                        <li className="navItem" onClick={handleHome}>
                             <a href="#" className="navLink">Home</a>
                         </li>
 
@@ -46,7 +58,7 @@ const Navbar = () => {
                             <a href="#" className="navLink">About</a>
                         </li>
 
-                        <li className="navItem">
+                        <li className="navItem" onClick={handleProfile}>
                             <a href="#" className="navLink">Profile</a>
                         </li>
 
@@ -54,8 +66,8 @@ const Navbar = () => {
                             <a href="#" className="navLink">Reviews</a>
                         </li>
 
-                        <li className="navItem">
-                            <a href="#" className="navLink">Pages</a>
+                        <li className="navItem" onClick={handleAchievements}>
+                            <a href="#" className="navLink">Achievements</a>
                         </li>
 
                         <li className="navItem">

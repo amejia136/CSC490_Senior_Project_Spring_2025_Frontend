@@ -7,6 +7,7 @@ import Main from "./Components/Main/Main";
 import Footer from "./Components/Footer/Footer";
 import Login from "./Components/Login/Login";
 import Profile from "./Components/Profile/Profile";
+import Achivements from "./Components/Achivements/Achivements";
 
 const App = () => {
     return (
@@ -33,7 +34,15 @@ const App = () => {
                 {/* Profile Page */}
                 <Route path="/profile" element={
                     <>
+                        <Navbar />
                         <Profile />
+                    </>
+                } />
+                {/* Achievements Page */}
+                <Route path="/achievements" element={
+                    <>
+                        <Navbar />
+                        <Achivements />
                     </>
                 } />
             </Routes>

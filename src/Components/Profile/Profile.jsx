@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Profile.css'; // Create a Profile.css file
 import { BsListTask } from "react-icons/bs";
 import { TbApps } from "react-icons/tb";
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../../Assets/backgroundForProfile.jpg';
 import styles from './Profile.css';
 
@@ -15,6 +15,8 @@ const Profile = () => {
     const [language, setLanguage] = useState('english'); // Default to english
     const [bio, setBio] = useState('');
 
+    const navigate = useNavigate();
+
 
     const [isEditing, setIsEditing] = useState(false);
 
@@ -24,9 +26,13 @@ const Profile = () => {
 
     const handleSave = () => {
         setIsEditing(false);
-
         console.log('Profile saved:', { name, email, phoneNumber, username, gender, language, bio });
     };
+
+    const handleBackToHome = () => {
+        navigate('/');
+    };
+
     return (
         <div
             className={styles.profileContainer} // Use styles.profileContainer
@@ -41,9 +47,7 @@ const Profile = () => {
             {/* Place your JSX content inside this div */}
             <nav className="profile-navbar">
                 <div className="leftIcons">
-                    <Link to="/">
-                        <BsListTask className="icon" />
-                    </Link>
+                    <BsListTask className="icon" onClick={handleBackToHome} />
                     <TbApps className="icon" />
                 </div>
             </nav>
