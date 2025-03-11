@@ -1,0 +1,110 @@
+/* Profile.css */
+
+:root {
+    --PrimaryColor: hsl(199, 100%, 33%);
+    --SecondaryColor: hsl(187, 85%, 43%);
+    --gradientColor: linear-gradient(to right, hsl(187, 85%, 43%), hsl(199, 100%, 33%));
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(201, 33%, 16%);
+    --textColor: hsl(240, 4%, 36%);
+    --whiteColorDeam: hsl(0, 0%, 93%);
+    --greyText: rgb(190, 190, 190);
+    --inputColor: rgb(239, 239, 239);
+    --bodyColor: rgb(240, 240, 246);
+    --cardBG: rgb(225, 225, 235);
+}
+
+.profileContainer {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Remove background image from here */
+    background-color: var(--bodyColor); /* Fallback color */
+}
+
+.profile-navbar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 1rem;
+    background-color: var(--whiteColor);
+}
+
+.profile-navbar .leftIcons {
+    display: flex;
+    align-items: center;
+}
+
+.profile-navbar .icon {
+    font-size: 20px;
+    margin: 0 5px;
+    color: var(--blackColor);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile-navbar .icon:hover {
+    color: var(--PrimaryColor);
+}
+
+.profile-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.profile-content h1 {
+    margin-bottom: 2rem;
+    color: var(--blackColor);
+}
+
+.profile-form {
+    width: 80%;
+    max-width: 400px;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--textColor);
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--greyText);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: var(--inputColor);
+    box-sizing: border-box; /* Important for consistent width */
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--PrimaryColor);
+}
+
+.input-group textarea {
+    height: 150px; /* Adjust height as needed */
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.input-group select {
+    appearance: none; /* Remove default arrow in some browsers */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>'); /* Add custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 0.65rem auto;
+}

@@ -1,0 +1,107 @@
+
+@import '../../Components/Home/home.css';
+
+.achievements {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    min-height: 100vh;
+    background-color: deepskyblue;
+}
+
+.achievements .overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: none;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    mix-blend-mode: hard-light;
+}
+
+.achievements video {
+    display:none;
+
+}
+
+.achievements .achievementsContent {
+    width: 100%;
+    max-width: 1240px;
+    padding: 8rem 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    margin: auto;
+    color: var(--whiteColor);
+    z-index: 100;
+}
+
+.achievements .achievementsTitle {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.achievements .visitedPlaces,
+.achievements .plannedPlaces {
+    margin-bottom: 3rem;
+}
+
+.achievements .visitedPlaces h2,
+.achievements .plannedPlaces h2 {
+    color: var(--whiteColor);
+    margin-bottom: 1rem;
+}
+
+.achievements .placesList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.achievements .placeCard {
+    background: var(--whiteColor);
+    border-radius: 10px;
+    padding: 1rem;
+    color: var(--textColor);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.achievements .placeCard:hover {
+    transform: translateY(-5px);
+}
+
+.achievements .placeCard img {
+    width: 200px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 1rem;
+}
+
+.achievements .placeDetails {
+    flex: 1;
+    text-align: left;
+}
+
+.achievements .placeDetails h3 {
+    margin-bottom: 0.5rem;
+}
+
+.achievements .placeDetails .location {
+    font-style: italic;
+    color: var(--greyText);
+    margin-bottom: 0.5rem;
+}
+
+.achievements .placeDetails .description {
+    font-size: 14px;
+}
