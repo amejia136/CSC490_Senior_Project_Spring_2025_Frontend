@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, Marker, LoadScript, Autocomplete } from "@react-google-maps/api";
+import stateLocations from "./StateLocations";
 
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -13,17 +14,19 @@ const defaultCenter = {
     lng: -98.5795,
 };
 
-const GoogleMapComponent = ({ onLocationSelect }) => {
+const GoogleMapComponent = ({ onLocationSelect, selectedState }) => {
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [map, setMap] = useState(null);
     const autocompleteRef = useRef(null);
     const inputRef = useRef(null);
 
     useEffect(() => {
-        if (map && selectedLocation) {
-            map.panTo({ lat: selectedLocation.latitude, lng: selectedLocation.longitude });
+        if (map && selectedState) {
+            const newCenter = stateLocations[selectedState] || defaultCenter;
+            map.panTo(newCenter);
+            map.setZoom(6);
         }
-    }, [selectedLocation, map]);
+    }, [selectedState, map]);
 
     const handleMapClick = (event) => {
         const lat = event.latLng.lat();
@@ -71,25 +74,10 @@ const GoogleMapComponent = ({ onLocationSelect }) => {
 
     return (
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
-            <div className="search-container">
-                <Autocomplete
-                    onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
-                    onPlaceChanged={handlePlaceSelect}
-                >
-                    <input
-                        type="text"
-                        placeholder="Search location..."
-                        ref={inputRef}
-                        className="search-input"
-                    />
-                </Autocomplete>
-            </div>
-
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={selectedLocation ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude } : defaultCenter}
-                zoom={selectedLocation ? 12 : 4}
-                onClick={handleMapClick}
+                center={selectedState ? stateLocations[selectedState] : defaultCenter}
+                zoom={selectedState ? 6 : 4} // Adjust zoom based on state selection
                 onLoad={(map) => setMap(map)}
             >
                 {selectedLocation && (

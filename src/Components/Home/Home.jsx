@@ -11,6 +11,7 @@ import { TbApps } from "react-icons/tb";
 import GoogleMapComponent from "../GoogleMap/GoogleMap";
 import Aos from 'aos'
 import 'aos/dist/aos.css'
+import StateLocations from "../GoogleMap/StateLocations";
 
 const states = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
@@ -86,7 +87,7 @@ const Home = () => {
                 {/* Show Google Map only when the button is clicked */}
                 {showMap && (
                     <div className="map-container">
-                        <GoogleMapComponent />
+                        <GoogleMapComponent selectedState={selectedState} />
                     </div>
                 )}
 
