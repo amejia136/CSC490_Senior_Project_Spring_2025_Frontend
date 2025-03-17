@@ -12,9 +12,17 @@ import GoogleMapComponent from "../GoogleMap/GoogleMap";
 import Aos from 'aos'
 import 'aos/dist/aos.css'
 
+const states = [
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+    "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
+    "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+    "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+    "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+];
+
 const Home = () => {
     const [showMap, setShowMap] = useState(false);
-    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [selectedState, setSelectedState] = useState("");
 
     useEffect(() => {
         Aos.init({ duration: 2000 });
@@ -22,6 +30,10 @@ const Home = () => {
 
     const handleLocationButtonClick = () => {
         setShowMap(true);
+    };
+
+    const handleStateChange = (event) => {
+        setSelectedState(event.target.value);
     };
 
     return (
@@ -43,17 +55,15 @@ const Home = () => {
                 <div data-aos="fade-up" className="cardDiv grid">
                     {/* Destination Input with Location Button */}
                     <div className="destinationInput">
-                        <label htmlFor="city">Search your destination:</label>
+                        <label htmlFor="state">Select State:</label>
                         <div className="input flex">
-                            <input type="text" placeholder="Enter name here..." readOnly value={selectedLocation?.name || ""} />
+                            <select id="state" value={selectedState} onChange={handleStateChange} className="dropdown">
+                                <option value="" disabled>Select State</option>
+                                {states.map((state, index) => (
+                                    <option key={index} value={state}>{state}</option>
+                                ))}
+                            </select>
                             <GrLocation className="icon" onClick={handleLocationButtonClick} style={{ cursor: "pointer" }} />
-                        </div>
-                    </div>
-
-                    <div className="dateInput">
-                        <label htmlFor="date">Select your date:</label>
-                        <div className="input flex">
-                            <input type="date" />
                         </div>
                     </div>
 
@@ -76,7 +86,7 @@ const Home = () => {
                 {/* Show Google Map only when the button is clicked */}
                 {showMap && (
                     <div className="map-container">
-                        <GoogleMapComponent onLocationSelect={setSelectedLocation} />
+                        <GoogleMapComponent />
                     </div>
                 )}
 
