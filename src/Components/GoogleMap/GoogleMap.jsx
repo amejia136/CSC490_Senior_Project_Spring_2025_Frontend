@@ -21,12 +21,19 @@ const GoogleMapComponent = ({ onLocationSelect, selectedState }) => {
     const inputRef = useRef(null);
 
     useEffect(() => {
-        if (map && selectedState) {
-            const newCenter = stateLocations[selectedState] || defaultCenter;
-            map.panTo(newCenter);
-            map.setZoom(6);
+        if (map) {
+            if (selectedLocation) {
+                // Zoom into the selected location
+                map.panTo({ lat: selectedLocation.latitude, lng: selectedLocation.longitude });
+                map.setZoom(12);
+            } else if (selectedState) {
+                // Zoom into the selected state
+                const newCenter = stateLocations[selectedState] || defaultCenter;
+                map.panTo(newCenter);
+                map.setZoom(6);
+            }
         }
-    }, [selectedState, map]);
+    }, [selectedState, selectedLocation, map]);
 
     const handleMapClick = (event) => {
         const lat = event.latLng.lat();
@@ -50,6 +57,7 @@ const GoogleMapComponent = ({ onLocationSelect, selectedState }) => {
 
                 setSelectedLocation(locationData);
                 onLocationSelect(locationData);
+                //onLocationSelect(locationData);
             } else {
                 console.error("Geocoder failed due to:", status);
             }
@@ -62,22 +70,45 @@ const GoogleMapComponent = ({ onLocationSelect, selectedState }) => {
             if (place.geometry) {
                 const lat = place.geometry.location.lat();
                 const lng = place.geometry.location.lng();
-                setSelectedLocation({
+                const locationData = {
                     name: place.formatted_address,
                     latitude: lat,
                     longitude: lng,
                     place_id: place.place_id,
-                });
+                };
+
+                setSelectedLocation(locationData);
+                onLocationSelect(locationData);
+                //onLocationSelect(locationData);
             }
         }
     };
 
     return (
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
+            <div className="search-container">
+                <select id="state" value={selectedState} className="dropdown" disabled>
+                    <option value="">{selectedState || "Select State"}</option>
+                </select>
+
+                {/* Display the selected address here */}
+                <input
+                    type="text"
+                    placeholder="Selected location..."
+                    ref={inputRef}
+                    className="selected-location"
+                />
+
+                <Autocomplete onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)} onPlaceChanged={handlePlaceSelect}>
+                    <input type="text" placeholder="Search location..." ref={inputRef} className="search-input" />
+                </Autocomplete>
+            </div>
+
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={selectedState ? stateLocations[selectedState] : defaultCenter}
-                zoom={selectedState ? 6 : 4} // Adjust zoom based on state selection
+                center={selectedLocation ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude } : (selectedState ? stateLocations[selectedState] : defaultCenter)}
+                zoom={selectedLocation ? 12 : selectedState ? 6 : 4} // Adjust zoom dynamically
+                onClick={handleMapClick}
                 onLoad={(map) => setMap(map)}
             >
                 {selectedLocation && (

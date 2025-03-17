@@ -11,7 +11,6 @@ import { TbApps } from "react-icons/tb";
 import GoogleMapComponent from "../GoogleMap/GoogleMap";
 import Aos from 'aos'
 import 'aos/dist/aos.css'
-import StateLocations from "../GoogleMap/StateLocations";
 
 const states = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
@@ -24,6 +23,7 @@ const states = [
 const Home = () => {
     const [showMap, setShowMap] = useState(false);
     const [selectedState, setSelectedState] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState(null); //added this
 
     useEffect(() => {
         Aos.init({ duration: 2000 });
@@ -32,10 +32,16 @@ const Home = () => {
     const handleLocationButtonClick = () => {
         setShowMap(true);
     };
-
+    // making changes
     const handleStateChange = (event) => {
-        setSelectedState(event.target.value);
+        const newState = event.target.value;
+        setSelectedState(newState);
+        setSelectedLocation(null);
     };
+
+    const handleLocationSelect = (location) => {
+        setSelectedLocation(location);
+    }
 
     return (
         <section className="home">
@@ -68,6 +74,13 @@ const Home = () => {
                         </div>
                     </div>
 
+                    <div className="dateInput">
+                        <label htmlFor="date">Select your date:</label>
+                        <div className="input flex">
+                            <input type="date"/>
+                        </div>
+                    </div>
+
                     <div className="priceInput">
                         <div className="label_total flex">
                             <label htmlFor="price">Max price:</label>
@@ -78,6 +91,18 @@ const Home = () => {
                         </div>
                     </div>
 
+                    {selectedLocation && (
+                        <div className="locationDetails" style={{color: "#333"}}>
+                            <h3>Selected Location</h3>
+                            <p><strong>Address:</strong> {selectedLocation.name}</p>
+                            <p><strong>Latitude:</strong> {selectedLocation.latitude}</p>
+                            <p><strong>Longitude:</strong> {selectedLocation.longitude}</p>
+
+                        </div>
+                    )}
+
+
+
                     <div className="searchOptions flex">
                         <HiFilter className="icon" />
                         <span> MORE FILTERS</span>
@@ -87,7 +112,7 @@ const Home = () => {
                 {/* Show Google Map only when the button is clicked */}
                 {showMap && (
                     <div className="map-container">
-                        <GoogleMapComponent selectedState={selectedState} />
+                        <GoogleMapComponent selectedState={selectedState} selectedLocation = {selectedLocation} onLocationSelect={handleLocationSelect} />
                     </div>
                 )}
 

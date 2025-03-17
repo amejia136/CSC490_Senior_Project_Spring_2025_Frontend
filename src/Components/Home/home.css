@@ -13,6 +13,15 @@
   --cardBG: rgb(225,225,235);
 }
 
+.locationDetails {
+  background: #f8f8f8;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  color: #333;
+}
+
 .home {
   width: 100%;
   position: relative;
