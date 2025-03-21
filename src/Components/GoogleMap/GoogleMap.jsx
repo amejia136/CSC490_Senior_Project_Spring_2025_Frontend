@@ -14,105 +14,130 @@ const defaultCenter = {
     lng: -98.5795,
 };
 
-const GoogleMapComponent = ({ onLocationSelect, selectedState }) => {
+const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [map, setMap] = useState(null);
+    const [zoomLevel, setZoomLevel] = useState(6);
+
     const autocompleteRef = useRef(null);
-    const inputRef = useRef(null);
 
     useEffect(() => {
         if (map) {
-            if (selectedLocation) {
-                // Zoom into the selected location
-                map.panTo({ lat: selectedLocation.latitude, lng: selectedLocation.longitude });
-                map.setZoom(12);
-            } else if (selectedState) {
-                // Zoom into the selected state
+            if (selectedState) {
                 const newCenter = stateLocations[selectedState] || defaultCenter;
                 map.panTo(newCenter);
-                map.setZoom(6);
+                setZoomLevel(6);
             }
         }
-    }, [selectedState, selectedLocation, map]);
+    }, [selectedState, map]);
 
     const handleMapClick = (event) => {
+        if (!event.latLng) return;
+
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
 
-        if (!window.google || !window.google.maps) {
-            console.error("Google Maps API not loaded.");
-            return;
-        }
+        if (!window.google || !window.google.maps) return;
 
         const geocoder = new window.google.maps.Geocoder();
         geocoder.geocode({ location: { lat, lng } }, (results, status) => {
             if (status === "OK" && results[0]) {
                 const place = results[0];
-                const locationData = {
+
+                let locationData = {
                     name: place.formatted_address,
                     latitude: lat,
                     longitude: lng,
-                    place_id: place.place_id,
+                    place_id: place.place_id || null,
+                    price_level: "N/A",
+                    types: "Unknown",
                 };
 
-                setSelectedLocation(locationData);
-                onLocationSelect(locationData);
-                //onLocationSelect(locationData);
-            } else {
-                console.error("Geocoder failed due to:", status);
+                if (locationData.place_id) {
+                    fetchPlaceDetails(locationData);
+                } else {
+                    updateSelectedLocation(locationData);
+                }
             }
         });
     };
 
-    const handlePlaceSelect = () => {
-        if (autocompleteRef.current) {
-            const place = autocompleteRef.current.getPlace();
-            if (place.geometry) {
-                const lat = place.geometry.location.lat();
-                const lng = place.geometry.location.lng();
-                const locationData = {
-                    name: place.formatted_address,
-                    latitude: lat,
-                    longitude: lng,
-                    place_id: place.place_id,
-                };
-
-                setSelectedLocation(locationData);
-                onLocationSelect(locationData);
-                //onLocationSelect(locationData);
-            }
+    const fetchPlaceDetails = (locationData) => {
+        if (!locationData.place_id || !window.google || !window.google.maps || !map) {
+            updateSelectedLocation(locationData);
+            return;
         }
+
+        const service = new window.google.maps.places.PlacesService(map);
+
+        service.getDetails(
+            { placeId: locationData.place_id, fields: ["name", "price_level", "types"] },
+            (place, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
+                    locationData.name = place.name || locationData.name;
+                    locationData.price_level = place.price_level !== undefined ? place.price_level : "N/A";
+                    locationData.types = place.types ? place.types.join(", ") : "Unknown";
+                }
+                updateSelectedLocation(locationData);
+            }
+        );
+    };
+
+    const updateSelectedLocation = (locationData) => {
+        setSelectedLocation(locationData);
+        onLocationSelect(locationData);
     };
 
     return (
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
             <div className="search-container">
-                <select id="state" value={selectedState} className="dropdown" disabled>
-                    <option value="">{selectedState || "Select State"}</option>
-                </select>
+                <Autocomplete
+                    onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+                    onPlaceChanged={() => {
+                        if (autocompleteRef.current) {
+                            const place = autocompleteRef.current.getPlace();
+                            if (place.geometry) {
+                                const lat = place.geometry.location.lat();
+                                const lng = place.geometry.location.lng();
 
-                {/* Display the selected address here */}
-                <input
-                    type="text"
-                    placeholder="Selected location..."
-                    ref={inputRef}
-                    className="selected-location"
-                />
+                                let locationData = {
+                                    name: place.formatted_address, // Default to address
+                                    latitude: lat,
+                                    longitude: lng,
+                                    place_id: place.place_id || null,
+                                    price_level: "N/A",
+                                    types: "Unknown",
+                                };
 
-                <Autocomplete onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)} onPlaceChanged={handlePlaceSelect}>
-                    <input type="text" placeholder="Search location..." ref={inputRef} className="search-input" />
+                                if (locationData.place_id) {
+                                    fetchPlaceDetails(locationData);
+                                } else {
+                                    updateSelectedLocation(locationData);
+                                }
+                            }
+                        }
+                    }}
+                >
+                    <input type="text" placeholder="Search location..." className="search-input" />
                 </Autocomplete>
             </div>
 
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={selectedLocation ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude } : (selectedState ? stateLocations[selectedState] : defaultCenter)}
-                zoom={selectedLocation ? 12 : selectedState ? 6 : 4} // Adjust zoom dynamically
+                center={selectedLocation ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude } : defaultCenter}
+                zoom={zoomLevel}
                 onClick={handleMapClick}
                 onLoad={(map) => setMap(map)}
             >
                 {selectedLocation && (
-                    <Marker position={{ lat: selectedLocation.latitude, lng: selectedLocation.longitude }} />
+                    <Marker
+                        position={{ lat: selectedLocation.latitude, lng: selectedLocation.longitude }}
+                        label={{
+                            text: selectedLocation.name.length > 15 ? selectedLocation.name.substring(0, 15) + "..." : selectedLocation.name, // ✅ Show business name on the map
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                        }}
+                    />
                 )}
             </GoogleMap>
         </LoadScript>

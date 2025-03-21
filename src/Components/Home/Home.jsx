@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./home.css";
-import video from '../../Assets/video.mp4'
+import video from "../../Assets/video.mp4";
 import { GrLocation } from "react-icons/gr";
 import { HiFilter } from "react-icons/hi";
 import { FiFacebook } from "react-icons/fi";
@@ -9,8 +9,8 @@ import { FaInstagram } from "react-icons/fa";
 import { BsListTask } from "react-icons/bs";
 import { TbApps } from "react-icons/tb";
 import GoogleMapComponent from "../GoogleMap/GoogleMap";
-import Aos from 'aos'
-import 'aos/dist/aos.css'
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const states = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
@@ -23,7 +23,7 @@ const states = [
 const Home = () => {
     const [showMap, setShowMap] = useState(false);
     const [selectedState, setSelectedState] = useState("");
-    const [selectedLocation, setSelectedLocation] = useState(null); //added this
+    const [selectedLocation, setSelectedLocation] = useState(null);
 
     useEffect(() => {
         Aos.init({ duration: 2000 });
@@ -32,16 +32,19 @@ const Home = () => {
     const handleLocationButtonClick = () => {
         setShowMap(true);
     };
-    // making changes
+
     const handleStateChange = (event) => {
-        const newState = event.target.value;
-        setSelectedState(newState);
+        setSelectedState(event.target.value);
         setSelectedLocation(null);
     };
 
     const handleLocationSelect = (location) => {
         setSelectedLocation(location);
-    }
+    };
+
+    const toggleMap = () => {
+        setShowMap((prevShowMap) => !prevShowMap);
+    };
 
     return (
         <section className="home">
@@ -50,13 +53,8 @@ const Home = () => {
 
             <div className="homeContent container">
                 <div className="textDiv">
-                    <span data-aos="fade-up" className="smallText">
-                        Our Packages
-                    </span>
-
-                    <h1 data-aos="fade-up" className="homeTitle">
-                        Search your Holiday
-                    </h1>
+                    <span data-aos="fade-up" className="smallText">Our Packages</span>
+                    <h1 data-aos="fade-up" className="homeTitle">Search your Holiday</h1>
                 </div>
 
                 <div data-aos="fade-up" className="cardDiv grid">
@@ -74,13 +72,15 @@ const Home = () => {
                         </div>
                     </div>
 
+                    {/* Date Input */}
                     <div className="dateInput">
                         <label htmlFor="date">Select your date:</label>
                         <div className="input flex">
-                            <input type="date"/>
+                            <input type="date" />
                         </div>
                     </div>
 
+                    {/* Price Input */}
                     <div className="priceInput">
                         <div className="label_total flex">
                             <label htmlFor="price">Max price:</label>
@@ -92,17 +92,17 @@ const Home = () => {
                     </div>
 
                     {selectedLocation && (
-                        <div className="locationDetails" style={{color: "#333"}}>
+                        <div className="locationDetails" style={{ color: "#333" }}>
                             <h3>Selected Location</h3>
                             <p><strong>Address:</strong> {selectedLocation.name}</p>
                             <p><strong>Latitude:</strong> {selectedLocation.latitude}</p>
                             <p><strong>Longitude:</strong> {selectedLocation.longitude}</p>
-
+                            <p><strong>Price Level:</strong> {selectedLocation.price_level}</p>
+                            <p><strong>Types:</strong> {selectedLocation.types}</p>
                         </div>
                     )}
 
-
-
+                    {/* Search Filters */}
                     <div className="searchOptions flex">
                         <HiFilter className="icon" />
                         <span> MORE FILTERS</span>
@@ -110,12 +110,21 @@ const Home = () => {
                 </div>
 
                 {/* Show Google Map only when the button is clicked */}
-                {showMap && (
-                    <div className="map-container">
-                        <GoogleMapComponent selectedState={selectedState} selectedLocation = {selectedLocation} onLocationSelect={handleLocationSelect} />
-                    </div>
-                )}
+                <div>
+                    {/* Button to toggle the map */}
+                    <button onClick={toggleMap}>
+                        {showMap ? 'Hide Map' : 'Show Map'}
+                    </button>
 
+                    {/* Show Google Map only when the button is clicked */}
+                    {showMap && (
+                        <div className="map-container">
+                            <GoogleMapComponent selectedState={selectedState} onLocationSelect={handleLocationSelect} />
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer Icons */}
                 <div data-aos="fade-up" className="homeFooterIcons flex">
                     <div className="rightIcons">
                         <FiFacebook className="icon" />
