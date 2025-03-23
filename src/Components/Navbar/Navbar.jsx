@@ -38,6 +38,10 @@ const Navbar = () => {
         navigate('/achievements'); // ***** Navigate to login page *****
     };
 
+    const handleItinerary = () => {
+        navigate('/itinerary'); // ***** Navigate to login page *****
+    };
+
     return (
         <section className= 'navBarSection'>
             <header className="header flex">
@@ -70,8 +74,8 @@ const Navbar = () => {
                             <a href="#" className="navLink">Achievements</a>
                         </li>
 
-                        <li className="navItem">
-                            <a href="#" className="navLink">News</a>
+                        <li className="navItem" onClick={handleItinerary}>
+                            <a href="#" className="navLink">Itinerary</a>
                         </li>
 
                         <li className="navItem">

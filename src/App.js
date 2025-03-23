@@ -8,6 +8,7 @@ import Footer from "./Components/Footer/Footer";
 import Login from "./Components/Login/Login";
 import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
+import Itinerary from "./Components/Itinerary/Itinerary";
 
 const App = () => {
     return (
@@ -43,6 +44,14 @@ const App = () => {
                     <>
                         <Navbar />
                         <Achievements />
+                    </>
+                } />
+
+                {/* Itinerary Page */}
+                <Route path="/itinerary" element={
+                    <>
+                        <Navbar />
+                        <Itinerary /> {/* Display Itinerary component */}
                     </>
                 } />
             </Routes>

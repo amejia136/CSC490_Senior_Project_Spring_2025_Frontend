@@ -1,3 +1,6 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
     apiKey: "AIzaSyAhHipRfqvK1vgpBBL6iAGUXzfKLA79rFY",
     authDomain: "journeyhub-7bad8.firebaseapp.com",
@@ -8,4 +11,7 @@ const firebaseConfig = {
     measurementId: "G-Q07ZJGGJ9C"
 };
 
-export default firebaseConfig;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+export { db };
