@@ -46,6 +46,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
 
                 let locationData = {
                     name: place.formatted_address,
+                    address: place.formatted_address,
                     latitude: lat,
                     longitude: lng,
                     place_id: place.place_id || null,
@@ -72,14 +73,22 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
         const service = new window.google.maps.places.PlacesService(map);
 
         service.getDetails(
-            { placeId: locationData.place_id, fields: ["name", "price_level", "types"] },
+            { placeId: locationData.place_id, fields: ["name", "price_level", "types", "rating", "formatted_address"] },
             (place, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
                     locationData.name = place.name || locationData.name;
+                    locationData.address = place.formatted_address || locationData.address;
                     locationData.price_level = place.price_level !== undefined ? place.price_level : "N/A";
-                    locationData.rating = place.rating !== undefined ? place.rating : "N/A";
-                    locationData.types = place.types ? place.types.join(", ") : "Unknown";
+                    locationData.rating = place.rating
+                        ? place.rating.toFixed(1)
+                        : "N/A";
+                    locationData.types = place.types
+                        ? place.types
+                            .map(type => type.replace(/_/g, ' '))
+                            .join(", ")
+                        : "Unknown";
                 }
+
                 updateSelectedLocation(locationData);
             }
         );
@@ -136,7 +145,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                     <Marker
                         position={{ lat: selectedLocation.latitude, lng: selectedLocation.longitude }}
                         label={{
-                            text: selectedLocation.name.length > 15 ? selectedLocation.name.substring(0, 15) + "..." : selectedLocation.name, // ✅ Show business name on the map
+                            text: selectedLocation.name.length > 15 ? selectedLocation.name.substring(0, 15) + "..." : selectedLocation.name,
                             fontSize: "14px",
                             fontWeight: "bold",
                         }}

@@ -94,7 +94,8 @@ const Home = () => {
                     {selectedLocation && (
                         <div className="locationDetails" style={{ color: "#333" }}>
                             <h3>Selected Location</h3>
-                            <p><strong>Address:</strong> {selectedLocation.name}</p>
+                            <p><strong>Name:</strong> {selectedLocation.name}</p>
+                            <p><strong>Address:</strong> {selectedLocation.address}</p>
                             <p><strong>Latitude:</strong> {selectedLocation.latitude}</p>
                             <p><strong>Longitude:</strong> {selectedLocation.longitude}</p>
                             <p><strong>Price Level:</strong> {selectedLocation.price_level}</p>
