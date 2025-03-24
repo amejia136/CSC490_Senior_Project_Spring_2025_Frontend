@@ -9,6 +9,7 @@ import app from "../../firebaseConfig"; // Correct the relative path based on fi
 import { auth } from "../../firebaseConfig";
 
 
+
 const Login = () => {
 
     // For live hosting uncomment this
