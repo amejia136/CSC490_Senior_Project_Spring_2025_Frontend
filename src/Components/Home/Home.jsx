@@ -98,6 +98,7 @@ const Home = () => {
                             <p><strong>Latitude:</strong> {selectedLocation.latitude}</p>
                             <p><strong>Longitude:</strong> {selectedLocation.longitude}</p>
                             <p><strong>Price Level:</strong> {selectedLocation.price_level}</p>
+                            <p><strong>Rating:</strong> {selectedLocation.rating}</p>
                             <p><strong>Types:</strong> {selectedLocation.types}</p>
                         </div>
                     )}

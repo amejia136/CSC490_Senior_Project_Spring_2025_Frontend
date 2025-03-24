@@ -50,6 +50,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                     longitude: lng,
                     place_id: place.place_id || null,
                     price_level: "N/A",
+                    rating: "N/A",
                     types: "Unknown",
                 };
 
@@ -76,6 +77,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
                     locationData.name = place.name || locationData.name;
                     locationData.price_level = place.price_level !== undefined ? place.price_level : "N/A";
+                    locationData.rating = place.rating !== undefined ? place.rating : "N/A";
                     locationData.types = place.types ? place.types.join(", ") : "Unknown";
                 }
                 updateSelectedLocation(locationData);
@@ -106,6 +108,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                                     longitude: lng,
                                     place_id: place.place_id || null,
                                     price_level: "N/A",
+                                    rating: "N/A",
                                     types: "Unknown",
                                 };
 
