@@ -8,6 +8,7 @@ import Footer from "./Components/Footer/Footer";
 import Login from "./Components/Login/Login";
 import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
+import ResetPassword from "./Components/Login/ResetPassword";
 
 const App = () => {
     return (
@@ -45,6 +46,12 @@ const App = () => {
                         <Achievements />
                     </>
                 } />
+
+                <Route path="/reset-password" element={
+                    <ResetPassword />
+                } />
+
+
             </Routes>
         </Router>
     );
