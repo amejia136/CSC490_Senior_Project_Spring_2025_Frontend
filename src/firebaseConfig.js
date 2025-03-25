@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAhHipRfqvK1vgpBBL6iAGUXzfKLA79rFY",
@@ -7,11 +8,24 @@ const firebaseConfig = {
     projectId: "journeyhub-7bad8",
     storageBucket: "journeyhub-7bad8.firebasestorage.app",
     messagingSenderId: "834192142060",
-    appId: "1:834192142060:web:3fd37ca7bafdb5f96b7fc9",
-    measurementId: "G-Q07ZJGGJ9C"
+    appId: "1:834192142060:web:3fd37ca7bafdb5f96b7fc9"
+    // measurementId: "G-Q07ZJGGJ9C" // Only include if using Analytics
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let app;
+let db;
+let auth;
 
-export { db };
+try {
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    auth = getAuth(app);
+
+    // Optional: Initialize other services if needed
+    // const analytics = getAnalytics(app);
+} catch (error) {
+    console.error("Firebase initialization error:", error);
+    throw new Error("Failed to initialize Firebase services");
+}
+
+export { db, auth };

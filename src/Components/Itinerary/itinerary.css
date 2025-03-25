@@ -1,49 +1,50 @@
-.app-container {
+/* itinerary.css */
+.itinerary-page {
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 0.8rem;
 }
 
-table {
+.itinerary-page table {
     border-collapse: collapse;
     width: 100%;
 }
 
-th,
-td {
+.itinerary-page th,
+.itinerary-page td {
     border: 1px solid #ffffff;
     text-align: left;
     padding: 6px;
     font-size: 20px;
 }
 
-th {
+.itinerary-page th {
     background-color: rgb(117, 201, 250);
 }
 
-td {
+.itinerary-page td {
     background-color: rgb(205, 235, 253);
 }
 
-form {
+.itinerary-page form {
     display: flex;
     gap: 6px;
     flex-direction: column;
 }
 
-form * {
+.itinerary-page form * {
     font-size: 18px;
 }
 
-form input {
+.itinerary-page form input {
     padding: 8px;
     font-size: 18px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-form button {
+.itinerary-page form button {
     padding: 8px;
     font-size: 18px;
     background-color: #74c9fa;
@@ -53,11 +54,11 @@ form button {
     cursor: pointer;
 }
 
-form button:hover {
+.itinerary-page form button:hover {
     background-color: #56a8d9;
 }
 
-button {
+.itinerary-page button {
     font-size: 18px;
     background-color: #74c9fa;
     color: white;
@@ -67,30 +68,30 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.itinerary-page button:hover {
     background-color: #56a8d9;
 }
 
-.itinerary-list {
+.itinerary-page .itinerary-list {
     margin-top: 16px;
 }
 
-.itinerary-item {
+.itinerary-page .itinerary-item {
     margin-bottom: 8px;
     padding: 8px;
     background-color: rgb(205, 235, 253);
     border-radius: 5px;
 }
 
-.itinerary-item button {
+.itinerary-page .itinerary-item button {
     background-color: rgb(117, 201, 250);
 }
 
-.itinerary-item button:hover {
+.itinerary-page .itinerary-item button:hover {
     background-color: rgb(56, 133, 201);
 }
 
-h2 {
+.itinerary-page h2 {
     font-size: 24px;
     color: #333;
     margin-bottom: 16px;
