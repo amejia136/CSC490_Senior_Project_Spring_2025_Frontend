@@ -123,7 +123,8 @@ const Login = () => {
             // Redirect or update UI upon successful login
             setTimeout(() => {
                 navigate("/") // Redirect to dashboard or homepage
-            }, 2000);
+                window.location.reload();
+            }, 1000);
 
             // Handle errors from the API response
         } catch (error) {

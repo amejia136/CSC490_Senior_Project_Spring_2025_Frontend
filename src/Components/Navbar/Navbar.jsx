@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
+import { UserContext } from '../../UserContext';
 import './navbar.css'
 import { MdOutlineTravelExplore } from 'react-icons/md';
 import { IoMdCloseCircle } from "react-icons/io";
@@ -11,6 +12,8 @@ const Navbar = () => {
     const[active,setActive] = useState('navBar');
 
     const navigate = useNavigate();
+
+    const { user, setUser } = useContext(UserContext);
 
     //function to toggle navBar
     const showNav = () => {
@@ -36,6 +39,16 @@ const Navbar = () => {
 
     const handleAchievements = () => {
         navigate('/achievements'); // ***** Navigate to login page *****
+    };
+
+    const handleLogout = () => {
+
+        setUser(null);
+
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
+
+        navigate('/');
     };
 
     return (
@@ -78,9 +91,15 @@ const Navbar = () => {
                             <a href="#" className="navLink">Contact</a>
                         </li>
 
-                        <button className = 'btn' onClick={handleLogin}>
-                            <a href="#">LOGIN</a>
-                        </button>
+                        {user ? (
+                            <button className='btn' onClick={handleLogout}>
+                                <a href="#">SIGNOUT</a>
+                            </button>
+                        ) : (
+                            <button className='btn' onClick={handleLogin}>
+                                <a href="#">LOGIN</a>
+                            </button>
+                        )}
                     </ul>
 
                     <div onClick={removeNavbar} className = "closeNavbar">
