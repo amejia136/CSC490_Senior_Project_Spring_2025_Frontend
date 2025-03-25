@@ -8,12 +8,12 @@ import { FaTripadvisor } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { BsListTask } from "react-icons/bs";
 import { TbApps } from "react-icons/tb";
+import { useContext } from 'react';
+import { UserContext } from '../../UserContext';
+
 
 import Aos from 'aos'
 import 'aos/dist/aos.css'
-
-
-
 
 
 
@@ -21,6 +21,8 @@ const Home = () => {
     useEffect(() => {
         Aos.init({duration: 2000})
     },[])
+
+    const { user } = useContext(UserContext);
 
 
     return (

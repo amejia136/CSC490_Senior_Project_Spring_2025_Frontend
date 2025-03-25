@@ -9,6 +9,7 @@ import Login from "./Components/Login/Login";
 import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
 import Itinerary from "./Components/Itinerary/Itinerary";
+import ResetPassword from "./Components/Login/ResetPassword";
 import {UserProvider} from './UserContext';
 
 
@@ -57,6 +58,12 @@ const App = () => {
                             <Itinerary/> {/* Display Itinerary component */}
                         </>
                     }/>
+
+                    <Route path="/reset-password" element={
+                        <ResetPassword/>
+                    }/>
+
+
                 </Routes>
             </Router>
         </UserProvider>

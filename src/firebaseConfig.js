@@ -8,8 +8,8 @@ const firebaseConfig = {
     projectId: "journeyhub-7bad8",
     storageBucket: "journeyhub-7bad8.firebasestorage.app",
     messagingSenderId: "834192142060",
-    appId: "1:834192142060:web:3fd37ca7bafdb5f96b7fc9"
-    // measurementId: "G-Q07ZJGGJ9C" // Only include if using Analytics
+    appId: "1:834192142060:web:3fd37ca7bafdb5f96b7fc9",
+    measurementId: "G-Q07ZJGGJ9C"
 };
 
 let app;
@@ -28,4 +28,4 @@ try {
     throw new Error("Failed to initialize Firebase services");
 }
 
-export { db, auth };
+export { app,db, auth };
