@@ -3,6 +3,9 @@ import './Profile.css';
 import { BsListTask } from "react-icons/bs";
 import { TbApps } from "react-icons/tb";
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../UserContext';
+import { db } from '../../firebaseConfig'; //
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import backgroundVideo from '../../Assets/ProfileVideo.mp4'
 
 const Profile = () => {

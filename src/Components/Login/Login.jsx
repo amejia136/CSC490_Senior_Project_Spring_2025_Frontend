@@ -4,6 +4,10 @@
     import {FaEnvelope, FaUser,} from "react-icons/fa"; // Import icons for input fields
     import {RiLockPasswordFill} from "react-icons/ri"; // Import password icon
     import {useNavigate} from "react-router-dom";
+    import { useContext } from 'react';
+    import { UserContext } from '../../UserContext';
+
+
 
     const Login = () => {
 
@@ -12,6 +16,7 @@
 
 
         // Initialize navigate function * Navigation Purposes *
+        const { setUser } = useContext(UserContext);
         const navigate = useNavigate();
 
         //State to track the active form (Login or Register)
@@ -103,6 +108,8 @@
                 const user = response.data.user; // Assuming the user object is in response.data.user
                 const userId = user.id; // Adjust this if the ID field has a different name
 
+                setUser(user);
+
                 if (rememberMe) {
                     // If box checked, store user session in localStorage (Stays logged in)
                     localStorage.setItem("user", JSON.stringify(user));
@@ -116,7 +123,8 @@
                 // Redirect or update UI upon successful login
                 setTimeout(() => {
                     navigate("/") // Redirect to dashboard or homepage
-                }, 2000);
+                    window.location.reload();
+                }, 1000);
 
             } catch (error) {
                 if (error.response) {
