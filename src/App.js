@@ -1,5 +1,5 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from "react";
 import './App.css'
 import Navbar from "./Components/Navbar/Navbar";
 import Home from "./Components/Home/Home";
@@ -8,6 +8,7 @@ import Footer from "./Components/Footer/Footer";
 import Login from "./Components/Login/Login";
 import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
+import GoogleMapComponent from "./Components/GoogleMap/GoogleMap";
 
 const App = () => {
     return (
@@ -43,6 +44,13 @@ const App = () => {
                     <>
                         <Navbar />
                         <Achievements />
+                    </>
+                } />
+                <Route path="/map" element={
+                    <>
+                        <Navbar />
+                        <GoogleMapComponent />
+                        <Footer />
                     </>
                 } />
             </Routes>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, Marker, LoadScript, Autocomplete } from "@react-google-maps/api";
 import stateLocations from "./StateLocations";
+import LocationPopup from '../LocationPopup/LocationPopup';
 
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -18,6 +19,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [map, setMap] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(6);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     const autocompleteRef = useRef(null);
 
@@ -53,6 +55,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                     price_level: "N/A",
                     rating: "N/A",
                     types: "Unknown",
+                    address_components: place.address_components,
                 };
 
                 if (locationData.place_id) {
@@ -73,7 +76,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
         const service = new window.google.maps.places.PlacesService(map);
 
         service.getDetails(
-            { placeId: locationData.place_id, fields: ["name", "price_level", "types", "rating", "formatted_address"] },
+            { placeId: locationData.place_id, fields: ["name", "price_level", "types", "rating", "formatted_address","address_components"] },
             (place, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
                     locationData.name = place.name || locationData.name;
@@ -95,8 +98,29 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
     };
 
     const updateSelectedLocation = (locationData) => {
-        setSelectedLocation(locationData);
-        onLocationSelect(locationData);
+        let cityName = '';
+        let stateName = '';
+
+        if (locationData.address_components) {
+            for (const component of locationData.address_components) {
+                if (component.types.includes('locality')) {
+                    cityName = component.long_name;
+                } else if (component.types.includes('administrative_area_level_1')) {
+                    stateName = component.short_name;
+                }
+            }
+        }
+
+        const cityState = cityName && stateName ? `${cityName}, ${stateName}` : locationData.name;
+
+        setSelectedLocation({ ...locationData, name: cityState });
+        onLocationSelect({ ...locationData, name: cityState });
+        setIsPopupOpen(true);
+    };
+    const handleAddToItinerary = (location, itineraryId) => {
+        console.log('Adding location:', location, 'to itinerary:', itineraryId);
+        //  location and itinerary database
+        setIsPopupOpen(false);
     };
 
     return (
@@ -152,6 +176,13 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                     />
                 )}
             </GoogleMap>
+            {isPopupOpen && (
+                <LocationPopup
+                    location={selectedLocation}
+                    onClose={() => setIsPopupOpen(false)}
+                    onAddToItinerary={handleAddToItinerary}
+                />
+            )}
         </LoadScript>
     );
 };
