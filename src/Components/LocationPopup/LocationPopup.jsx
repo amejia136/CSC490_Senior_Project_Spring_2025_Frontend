@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './LocationPopup.css';
 import ConfirmationPopup from './ConfirmationPopup';
 
+
 const mockItineraries = [
     { id: 'spring-vacation', name: 'Spring Vacations' },
     { id: 'summer-weekend', name: 'Summer Weekend' },

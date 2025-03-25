@@ -111,10 +111,12 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
             }
         }
 
-        const cityState = cityName && stateName ? `${cityName}, ${stateName}` : locationData.name;
 
-        setSelectedLocation({ ...locationData, name: cityState });
-        onLocationSelect({ ...locationData, name: cityState });
+
+        //const cityState = cityName && stateName ? `${cityName}, ${stateName}` : locationData.name;
+
+        setSelectedLocation({ ...locationData });
+        onLocationSelect({ ...locationData });
         setIsPopupOpen(true);
     };
     const handleAddToItinerary = (location, itineraryId) => {
