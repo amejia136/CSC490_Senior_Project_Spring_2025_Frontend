@@ -9,6 +9,7 @@ import app from "../../firebaseConfig"; // Correct the relative path based on fi
 import {auth} from "../../firebaseConfig";
 import {useContext} from 'react';
 import {UserContext} from '../../UserContext';
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 
 const Login = () => {
@@ -115,6 +116,8 @@ const Login = () => {
 
             setSuccessMessage("Login successful!"); // Shows success message
             console.log("User logged in:", response.data);
+
+            await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
 
             const user = response.data.user; // Assuming the user object is in response.data.user
             const userId = user.id; // Adjust this if the ID field has a different name
