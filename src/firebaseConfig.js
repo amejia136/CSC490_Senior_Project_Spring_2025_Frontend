@@ -12,20 +12,18 @@ const firebaseConfig = {
     measurementId: "G-Q07ZJGGJ9C"
 };
 
-let app;
-let db;
-let auth;
+const app = initializeApp(firebaseConfig);
 
-try {
-    app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    auth = getAuth(app);
+// Initialize Firebase services
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    // Optional: Initialize other services if needed
-    // const analytics = getAnalytics(app);
-} catch (error) {
-    console.error("Firebase initialization error:", error);
-    throw new Error("Failed to initialize Firebase services");
+if (window.location.hostname === "localhost") {
+    auth.settings.appVerificationDisabledForTesting = false;
 }
 
-export { app,db, auth };
+auth.languageCode = 'en';
+
+
+// Export instances
+export { app, auth, db };

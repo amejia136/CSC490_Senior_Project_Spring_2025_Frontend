@@ -12,6 +12,7 @@ import Itinerary from "./Components/Itinerary/Itinerary";
 import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
 import {UserProvider} from './UserContext';
+import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
 
 
 const App = () => {
@@ -65,9 +66,19 @@ const App = () => {
                         <ResetPassword/>
                     }/>
 
-                    {/* Reset Password Page */}
+                    {/* Account Security Page */}
                     <Route path="/account-security" element={
-                        <AccountSecurity/>
+                        <>
+                            <Navbar/>
+                            <AccountSecurity/>
+                        </>
+                    }/>
+
+                    {/* Verify Email Page */}
+                    <Route path="/verify-link" element={
+                        <>
+                            <VerifyEmailLink/>
+                        </>
                     }/>
 
                 </Routes>

@@ -9,7 +9,7 @@ import app from "../../firebaseConfig"; // Correct the relative path based on fi
 import {auth} from "../../firebaseConfig";
 import {useContext} from 'react';
 import {UserContext} from '../../UserContext';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {signInWithEmailAndPassword} from "firebase/auth";
 
 
 const Login = () => {
@@ -27,6 +27,10 @@ const Login = () => {
 
     //State to track if user checked remember me box or not
     const [rememberMe, setRememberMe] = useState(false);
+
+    const [loginStage, setLoginStage] = useState("login"); // 'login' or '2fa'
+    const [tempUID, setTempUID] = useState(""); // Hold UID during 2FA flow
+    const [code, setCode] = useState(""); // 4-digit code from user
 
 
     // State for handling registration form data
@@ -114,6 +118,13 @@ const Login = () => {
                 },
             });
 
+            // If backend says 2FA is required
+            if (response.data?.["2fa_required"]) {
+                setTempUID(response.data.uid); // Store UID temporarily
+                setLoginStage("2fa"); // Show 2FA form
+                return;
+            }
+
             setSuccessMessage("Login successful!"); // Shows success message
             console.log("User logged in:", response.data);
 
@@ -149,6 +160,44 @@ const Login = () => {
             }
         }
     };
+
+    const handleVerifyCode = async (e) => {
+        e.preventDefault();
+        setErrorMessage("");
+        setSuccessMessage("");
+
+        try {
+            const response = await axios.post("http://127.0.0.1:5000/2fa/verify-login-code", {
+                uid: tempUID,
+                code: code,
+            });
+
+            const user = response.data.user;
+            setUser(user);
+
+            if (rememberMe) {
+                localStorage.setItem("user", JSON.stringify(user));
+                localStorage.setItem("userId", user.uid);
+            } else {
+                sessionStorage.setItem("user", JSON.stringify(user));
+                sessionStorage.setItem("userId", user.uid);
+            }
+
+            setSuccessMessage("2FA verified. Logging in...");
+            setTimeout(() => {
+                navigate("/");
+                window.location.reload();
+            }, 1000);
+
+        } catch (error) {
+            if (error.response) {
+                setErrorMessage(error.response.data.error);
+            } else {
+                setErrorMessage("Verification failed. Try again.");
+            }
+        }
+    };
+
 
     const handleForgotPassword = async (e) => {
         e.preventDefault();
@@ -192,6 +241,30 @@ const Login = () => {
     return (
         <div className={"login-container"}>
             <div className={`wrapper${action}`}>
+                {/* ----------------------------- 2FA Verification Form ----------------------------- */}
+                {loginStage === "2fa" ? (
+                    <div className="form-box login">
+                        <form onSubmit={handleVerifyCode}>
+                            <h1>2FA Verification</h1>
+                            <p>We sent a 4-digit code to your email.</p>
+                            <div className="input-box">
+                                <input
+                                    type="text"
+                                    placeholder="Enter 4-digit code"
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button type="submit">Verify</button>
+                        </form>
+                        <div className="message-box">
+                            {errorMessage && <p className="error">{errorMessage}</p>}
+                            {successMessage && <p className="success">{successMessage}</p>}
+                        </div>
+                    </div>
+                ) : (
+                    <>
                 {/* ----------------------------- Login Form ----------------------------- */}
                 {!isForgotPassword ? (
                     <div className="form-box login">
@@ -327,12 +400,12 @@ const Login = () => {
                         {successMessage &&
                             <p className="success">{successMessage}</p>} {/* Displays success message from backend if registration is successful */}
                     </div>
-
                 </div>
+                    </>
+                )}
             </div>
         </div>
-    )
-        ;
+    );
 };
 
 export default Login;
