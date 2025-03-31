@@ -11,6 +11,9 @@ import { TbApps } from "react-icons/tb";
 import GoogleMapComponent from "../GoogleMap/GoogleMap";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import { LoadScript } from "@react-google-maps/api";
+
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const states = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
@@ -111,32 +114,33 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Show Google Map only when the button is clicked */}
                 <div>
-                    {/* Button to toggle the map */}
-                    <button onClick={toggleMap}>
-                        {showMap ? 'Hide Map' : 'Show Map'}
-                    </button>
+                    {/* Google Map Load and Toggle */}
+                    <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
+                        <button onClick={toggleMap}>
+                            {showMap ? 'Hide Map' : 'Show Map'}
+                        </button>
 
-                    {/* Show Google Map only when the button is clicked */}
-                    {showMap && (
-                        <div className="map-container">
-                            <GoogleMapComponent selectedState={selectedState} onLocationSelect={handleLocationSelect} />
+                        <div className="map-container" style={{ display: showMap ? 'block' : 'none' }}>
+                            <GoogleMapComponent
+                                selectedState={selectedState}
+                                onLocationSelect={handleLocationSelect}
+                            />
                         </div>
-                    )}
-                </div>
+                    </LoadScript>
 
-                {/* Footer Icons */}
-                <div data-aos="fade-up" className="homeFooterIcons flex">
-                    <div className="rightIcons">
-                        <FiFacebook className="icon" />
-                        <FaInstagram className="icon" />
-                        <FaTripadvisor className="icon" />
-                    </div>
+                    {/* Footer Icons */}
+                    <div data-aos="fade-up" className="homeFooterIcons flex">
+                        <div className="rightIcons">
+                            <FiFacebook className="icon" />
+                            <FaInstagram className="icon" />
+                            <FaTripadvisor className="icon" />
+                        </div>
 
-                    <div className="leftIcons">
-                        <BsListTask className="icon" />
-                        <TbApps className="icon" />
+                        <div className="leftIcons">
+                            <BsListTask className="icon" />
+                            <TbApps className="icon" />
+                        </div>
                     </div>
                 </div>
             </div>

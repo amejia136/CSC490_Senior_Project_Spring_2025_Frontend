@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { GoogleMap, Marker, LoadScript, Autocomplete } from "@react-google-maps/api";
+import { GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 import stateLocations from "./StateLocations";
 import LocationPopup from '../LocationPopup/LocationPopup';
 
-const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+
 
 const mapContainerStyle = {
     width: "100%",
-    height: "500px",
+    height: "80vh",
+    margin: "0 auto",
+    borderRadius: "12px",
 };
 
 const defaultCenter = {
@@ -126,7 +128,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
     };
 
     return (
-        <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
+        <>
             <div className="search-container">
                 <Autocomplete
                     onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
@@ -185,7 +187,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                     onAddToItinerary={handleAddToItinerary}
                 />
             )}
-        </LoadScript>
+        </>
     );
 };
 
