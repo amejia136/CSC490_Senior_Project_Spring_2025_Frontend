@@ -4,7 +4,6 @@ import stateLocations from "./StateLocations";
 import LocationPopup from '../LocationPopup/LocationPopup';
 
 
-
 const mapContainerStyle = {
     width: "100%",
     height: "80vh",
@@ -100,23 +99,6 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
     };
 
     const updateSelectedLocation = (locationData) => {
-        let cityName = '';
-        let stateName = '';
-
-        if (locationData.address_components) {
-            for (const component of locationData.address_components) {
-                if (component.types.includes('locality')) {
-                    cityName = component.long_name;
-                } else if (component.types.includes('administrative_area_level_1')) {
-                    stateName = component.short_name;
-                }
-            }
-        }
-
-
-
-        //const cityState = cityName && stateName ? `${cityName}, ${stateName}` : locationData.name;
-
         setSelectedLocation({ ...locationData });
         onLocationSelect({ ...locationData });
         setIsPopupOpen(true);
@@ -139,6 +121,12 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                                 const lat = place.geometry.location.lat();
                                 const lng = place.geometry.location.lng();
 
+                                if(map) {
+                                    map.panTo({ lat, lng });
+                                    map.setZoom(15);
+                                }
+
+
                                 let locationData = {
                                     name: place.formatted_address, // Default to address
                                     latitude: lat,
@@ -158,7 +146,9 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                         }
                     }}
                 >
-                    <input type="text" placeholder="Search location..." className="search-input" />
+                    <input type="text" placeholder="Search location..." className="search-input" style={{
+                        width: '100%', maxWidth: '90%', padding: '10px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ccc'
+                    }} />
                 </Autocomplete>
             </div>
 
