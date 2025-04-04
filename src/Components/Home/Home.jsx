@@ -8,10 +8,16 @@ import { FaTripadvisor } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { BsListTask } from "react-icons/bs";
 import { TbApps } from "react-icons/tb";
+ Google-Maps-Implementation
 import GoogleMapComponent from "../GoogleMap/GoogleMap";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { LoadScript } from "@react-google-maps/api";
+
+import { useContext } from 'react';
+import { UserContext } from '../../UserContext';
+
+ main
 
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -28,6 +34,7 @@ const Home = () => {
     const [selectedState, setSelectedState] = useState("");
     const [selectedLocation, setSelectedLocation] = useState(null);
 
+ Google-Maps-Implementation
     useEffect(() => {
         Aos.init({ duration: 2000 });
     }, []);
@@ -48,6 +55,15 @@ const Home = () => {
     const toggleMap = () => {
         setShowMap((prevShowMap) => !prevShowMap);
     };
+
+const Home = () => {
+    useEffect(() => {
+        Aos.init({duration: 2000})
+    },[])
+
+    const { user } = useContext(UserContext);
+
+ main
 
     return (
         <section className="home">

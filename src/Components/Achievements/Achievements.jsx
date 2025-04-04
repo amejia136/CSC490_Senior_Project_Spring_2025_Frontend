@@ -43,7 +43,6 @@ const AchievementsPage = () => {
         },
         // Add more  places
     ];
-
     return (
         <section className="achievements">
             <div className="overlay"></div>
