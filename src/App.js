@@ -13,6 +13,8 @@ import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
 import {UserProvider} from './UserContext';
 import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
+import About from "./Components/About/About";
+import Contact from "./Components/Contact/Contact";
 
 
 const App = () => {
@@ -58,6 +60,24 @@ const App = () => {
                         <>
                             <Navbar/>
                             <Itinerary/> {/* Display Itinerary component */}
+                        </>
+                    }/>
+
+                    {/* About Page */}
+                    <Route path="/about" element={
+                        <>
+                            <Navbar/>
+                            <About/>
+                            <Footer/>
+                        </>
+                    }/>
+
+                    {/* About Page */}
+                    <Route path="/contact" element={
+                        <>
+                            <Navbar/>
+                            <Contact/>
+                            <Footer/>
                         </>
                     }/>
 

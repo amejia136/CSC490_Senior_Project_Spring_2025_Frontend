@@ -1,0 +1,225 @@
+.about {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f6faff;
+    color: #333;
+    padding: 40px 20px;
+}
+
+.hero {
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 60px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #0066cc;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.mission {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+}
+
+.mission-image {
+    background: url('../../Assets/woman-tablet.jpg') center/cover no-repeat;
+    width: 400px;
+    height: 280px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.mission-text {
+    max-width: 500px;
+}
+
+.mission-text h2 {
+    color: #004b99;
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.mission-text p {
+    color: #555;
+    line-height: 1.6;
+}
+
+.comparison {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.comparison h2 {
+    margin-bottom: 40px;
+    color: #004b99;
+    font-size: 2.2rem;
+}
+
+.comparison-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    width: 280px;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    color: #0066cc;
+    margin-bottom: 15px;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.card li {
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+}
+
+.features-text {
+    max-width: 500px;
+}
+
+.features-text h2 {
+    color: #004b99;
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.features-text ul {
+    list-style: none;
+    padding: 0;
+}
+
+.features-text li {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.features-image {
+    background: url('../../Assets/phone-planner.jpg') center/cover no-repeat;
+    width: 400px;
+    height: 280px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.feature-highlights {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+}
+
+.feature-card {
+    background: linear-gradient(to right, #cdefff, #e0f7ff);
+    padding: 25px;
+    border-radius: 20px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.feature-card h3 {
+    color: #0055aa;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: #555;
+}
+
+.values {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.values h2 {
+    margin-bottom: 30px;
+    color: #004b99;
+    font-size: 2.2rem;
+}
+
+.values-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.value-card {
+    background: #ffffff;
+    padding: 20px 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    color: #0066cc;
+    font-weight: 600;
+}
+
+.join {
+    background: linear-gradient(to right, #cce7ff, #e6f3ff);
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 20px;
+}
+
+.join h2 {
+    color: #004b99;
+    margin-bottom: 15px;
+}
+
+.join p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.join-btn {
+    background: linear-gradient(to right, #00aaff, #0066cc);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.join-btn:hover {
+    background: linear-gradient(to right, #0099dd, #0055aa);
+}
