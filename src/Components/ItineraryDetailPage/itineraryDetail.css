@@ -1,0 +1,262 @@
+/* itineraryDetail.css */
+
+/* Base Styles */
+.itinerary-details-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2d3748;
+}
+
+/* Header Styles */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #2c7be5;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    color: #1a68d1;
+}
+
+.itinerary-header {
+    margin-bottom: 2rem;
+}
+
+.itinerary-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.trip-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    color: #4a5568;
+    font-size: 0.95rem;
+}
+
+.trip-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trip-meta strong {
+    font-weight: 600;
+}
+
+/* Main Content Layout */
+.details-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 992px) {
+    .details-content {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+/* Card Styles */
+.locations-section,
+.packing-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Drag and Drop Styles */
+.locations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.location-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+}
+
+.location-card.dragging {
+    background-color: #f8fafc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Drag Handle */
+.location-card > *:not(.delete-btn) {
+    cursor: grab;
+}
+
+/* Location Order Indicator */
+.location-order {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background-color: #2c7be5;
+    color: white;
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* Location Info */
+.location-info {
+    flex-grow: 1;
+    max-width: calc(100% - 100px);
+}
+
+.location-info h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.location-info p {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+/* Price Level */
+.price-level {
+    font-size: 0.85rem;
+    color: #38b000;
+    font-weight: 600;
+}
+
+/* Delete Button */
+.delete-btn {
+    background-color: #f72585;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s;
+}
+
+.delete-btn:hover {
+    background-color: #e5177b;
+    transform: translateY(-1px);
+}
+
+/* Add Location Button */
+.add-location-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #2c7be5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-location-button:hover {
+    background-color: #1a68d1;
+}
+
+/* Packing List Styles */
+.packing-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.packing-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.packing-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.packing-item:hover {
+    background-color: rgba(72, 149, 239, 0.05);
+}
+
+.packing-item input {
+    width: 18px;
+    height: 18px;
+    accent-color: #2c7be5;
+}
+
+.packing-item label {
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Drag and Drop Placeholder */
+[data-rbd-placeholder-context-id] {
+    background-color: rgba(72, 149, 239, 0.1);
+    border-radius: 8px;
+    border: 1px dashed #2c7be5;
+}
+
+/* Previous styles remain the same, add these drag-and-drop specific styles: */
+
+.location-card {
+    /* ... existing styles ... */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.location-card.dragging {
+    opacity: 0.5;
+    background-color: #f8fafc;
+}
+
+.location-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Make sure delete button doesn't interfere with dragging */
+.delete-btn {
+    pointer-events: auto;
+}
+
+.location-card > *:not(.delete-btn) {
+    pointer-events: none;
+}
