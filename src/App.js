@@ -13,11 +13,13 @@ import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
 import {UserProvider} from './UserContext';
 import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
+import { DarkModeProvider } from './Components/DarkMode/DarkMode';
 
 
 const App = () => {
     return (
         <UserProvider>
+            <DarkModeProvider>
             <Router>
                 <Routes>
 
@@ -83,6 +85,7 @@ const App = () => {
 
                 </Routes>
             </Router>
+            </DarkModeProvider>
         </UserProvider>
     );
 };
