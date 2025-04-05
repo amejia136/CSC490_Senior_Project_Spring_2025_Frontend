@@ -11,11 +11,7 @@ import { TbApps } from "react-icons/tb";
 import GoogleMapComponent from "../GoogleMap/GoogleMap";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { LoadScript } from "@react-google-maps/api";
 import { UserContext } from '../../UserContext';
-
-// Set your Google Maps API key
-const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const states = [
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
@@ -120,18 +116,16 @@ const Home = () => {
 
                 <div>
                     {/* Google Map Load and Toggle */}
-                    <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
-                        <button onClick={toggleMap}>
-                            {showMap ? 'Hide Map' : 'Show Map'}
-                        </button>
+                    <button onClick={toggleMap}>
+                        {showMap ? 'Hide Map' : 'Show Map'}
+                    </button>
 
-                        <div className="map-container" style={{ display: showMap ? 'block' : 'none' }}>
-                            <GoogleMapComponent
-                                selectedState={selectedState}
-                                onLocationSelect={handleLocationSelect}
-                            />
-                        </div>
-                    </LoadScript>
+                    <div className="map-container" style={{ display: showMap ? 'block' : 'none' }}>
+                        <GoogleMapComponent
+                            selectedState={selectedState}
+                            onLocationSelect={handleLocationSelect}
+                        />
+                    </div>
 
                     {/* Footer Icons */}
                     <div data-aos="fade-up" className="homeFooterIcons flex">

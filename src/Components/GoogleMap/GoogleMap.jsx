@@ -115,40 +115,54 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                 <Autocomplete
                     onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
                     onPlaceChanged={() => {
-                        if (autocompleteRef.current) {
-                            const place = autocompleteRef.current.getPlace();
-                            if (place.geometry) {
-                                const lat = place.geometry.location.lat();
-                                const lng = place.geometry.location.lng();
+                        setTimeout(() => {
+                            const place = autocompleteRef.current?.getPlace();
 
-                                if(map) {
-                                    map.panTo({ lat, lng });
-                                    map.setZoom(15);
-                                }
-
-
-                                let locationData = {
-                                    name: place.formatted_address, // Default to address
-                                    latitude: lat,
-                                    longitude: lng,
-                                    place_id: place.place_id || null,
-                                    price_level: "N/A",
-                                    rating: "N/A",
-                                    types: "Unknown",
-                                };
-
-                                if (locationData.place_id) {
-                                    fetchPlaceDetails(locationData);
-                                } else {
-                                    updateSelectedLocation(locationData);
-                                }
+                            if (!place || !place.geometry || !place.geometry.location) {
+                                console.warn("No geometry returned for place:", place);
+                                alert("Please select a valid location from the dropdown.");
+                                return;
                             }
-                        }
+
+                            const lat = place.geometry.location.lat();
+                            const lng = place.geometry.location.lng();
+
+                            if (map) {
+                                map.panTo({ lat, lng });
+                                map.setZoom(15);
+                            }
+
+                            let locationData = {
+                                name: place.formatted_address || place.name,
+                                latitude: lat,
+                                longitude: lng,
+                                place_id: place.place_id || null,
+                                price_level: "N/A",
+                                rating: "N/A",
+                                types: "Unknown",
+                            };
+
+                            if (locationData.place_id) {
+                                fetchPlaceDetails(locationData);
+                            } else {
+                                updateSelectedLocation(locationData);
+                            }
+                        }, 100);
                     }}
                 >
-                    <input type="text" placeholder="Search location..." className="search-input" style={{
-                        width: '100%', maxWidth: '90%', padding: '10px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ccc'
-                    }} />
+                    <input
+                        type="text"
+                        placeholder="Search location..."
+                        className="search-input"
+                        style={{
+                            width: '100%',
+                            maxWidth: '90%',
+                            padding: '10px',
+                            fontSize: '16px',
+                            borderRadius: '5px',
+                            border: '1px solid #ccc'
+                        }}
+                    />
                 </Autocomplete>
             </div>
 
