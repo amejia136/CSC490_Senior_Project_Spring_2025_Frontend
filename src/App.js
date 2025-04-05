@@ -1,11 +1,8 @@
- Google-Maps-Implementation
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import React from "react";
+import { UserProvider } from './UserContext'; // Import the UserProvider
 
-import React from "react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
- main
-import './App.css'
+import './App.css';
 import Navbar from "./Components/Navbar/Navbar";
 import Home from "./Components/Home/Home";
 import Main from "./Components/Main/Main";
@@ -13,61 +10,11 @@ import Footer from "./Components/Footer/Footer";
 import Login from "./Components/Login/Login";
 import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
- Google-Maps-Implementation
 import GoogleMapComponent from "./Components/GoogleMap/GoogleMap";
-
-const App = () => {
-    return (
-        <Router>
-            <Routes>
-
-                {/* Login Page */}
-                <Route path="/login" element={
-                    <>
-                        <Login />
-                    </>
-                } />
-
-                {/* Home Page */}
-                <Route path="/" element={
-                    <>
-                        <Navbar />
-                        <Home />
-                        <Main />
-                        <Footer />
-                    </>
-                } />
-
-                {/* Profile Page */}
-                <Route path="/profile" element={
-                    <>
-                        <Navbar />
-                        <Profile />
-                    </>
-                } />
-                {/* Achievements Page */}
-                <Route path="/achievements" element={
-                    <>
-                        <Navbar />
-                        <Achievements />
-                    </>
-                } />
-                <Route path="/map" element={
-                    <>
-                        <Navbar />
-                        <GoogleMapComponent />
-                        <Footer />
-                    </>
-                } />
-            </Routes>
-        </Router>
-
 import Itinerary from "./Components/Itinerary/Itinerary";
 import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
-import {UserProvider} from './UserContext';
 import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
-
 
 const App = () => {
     return (
@@ -76,69 +23,68 @@ const App = () => {
                 <Routes>
 
                     {/* Login Page */}
-                    <Route path="/login" element={
-                        <>
-                            <Login/>
-                        </>
-                    }/>
+                    <Route path="/login" element={<Login />} />
 
                     {/* Home Page */}
                     <Route path="/" element={
                         <>
-                            <Navbar/>
-                            <Home/>
-                            <Main/>
-                            <Footer/>
+                            <Navbar />
+                            <Home />
+                            <Main />
+                            <Footer />
                         </>
-                    }/>
+                    } />
 
                     {/* Profile Page */}
                     <Route path="/profile" element={
                         <>
-                            <Navbar/>
-                            <Profile/>
+                            <Navbar />
+                            <Profile />
                         </>
-                    }/>
+                    } />
+
                     {/* Achievements Page */}
                     <Route path="/achievements" element={
                         <>
-                            <Navbar/>
-                            <Achievements/>
+                            <Navbar />
+                            <Achievements />
                         </>
-                    }/>
+                    } />
 
                     {/* Itinerary Page */}
                     <Route path="/itinerary" element={
                         <>
-                            <Navbar/>
-                            <Itinerary/> {/* Display Itinerary component */}
+                            <Navbar />
+                            <Itinerary />
                         </>
-                    }/>
+                    } />
 
                     {/* Reset Password Page */}
-                    <Route path="/reset-password" element={
-                        <ResetPassword/>
-                    }/>
+                    <Route path="/reset-password" element={<ResetPassword />} />
 
                     {/* Account Security Page */}
                     <Route path="/account-security" element={
                         <>
-                            <Navbar/>
-                            <AccountSecurity/>
+                            <Navbar />
+                            <AccountSecurity />
                         </>
-                    }/>
+                    } />
 
                     {/* Verify Email Page */}
-                    <Route path="/verify-link" element={
+                    <Route path="/verify-link" element={<VerifyEmailLink />} />
+
+                    {/* Google Map Page */}
+                    <Route path="/map" element={
                         <>
-                            <VerifyEmailLink/>
+                            <Navbar />
+                            <GoogleMapComponent />
+                            <Footer />
                         </>
-                    }/>
+                    } />
 
                 </Routes>
             </Router>
         </UserProvider>
- main
     );
 };
 
