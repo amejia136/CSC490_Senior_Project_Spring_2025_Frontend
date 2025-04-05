@@ -1,5 +1,10 @@
+ Google-Maps-Implementation
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from "react";
+
 import React from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+ main
 import './App.css'
 import Navbar from "./Components/Navbar/Navbar";
 import Home from "./Components/Home/Home";
@@ -8,6 +13,55 @@ import Footer from "./Components/Footer/Footer";
 import Login from "./Components/Login/Login";
 import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
+ Google-Maps-Implementation
+import GoogleMapComponent from "./Components/GoogleMap/GoogleMap";
+
+const App = () => {
+    return (
+        <Router>
+            <Routes>
+
+                {/* Login Page */}
+                <Route path="/login" element={
+                    <>
+                        <Login />
+                    </>
+                } />
+
+                {/* Home Page */}
+                <Route path="/" element={
+                    <>
+                        <Navbar />
+                        <Home />
+                        <Main />
+                        <Footer />
+                    </>
+                } />
+
+                {/* Profile Page */}
+                <Route path="/profile" element={
+                    <>
+                        <Navbar />
+                        <Profile />
+                    </>
+                } />
+                {/* Achievements Page */}
+                <Route path="/achievements" element={
+                    <>
+                        <Navbar />
+                        <Achievements />
+                    </>
+                } />
+                <Route path="/map" element={
+                    <>
+                        <Navbar />
+                        <GoogleMapComponent />
+                        <Footer />
+                    </>
+                } />
+            </Routes>
+        </Router>
+
 import Itinerary from "./Components/Itinerary/Itinerary";
 import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
@@ -84,6 +138,7 @@ const App = () => {
                 </Routes>
             </Router>
         </UserProvider>
+ main
     );
 };
 
