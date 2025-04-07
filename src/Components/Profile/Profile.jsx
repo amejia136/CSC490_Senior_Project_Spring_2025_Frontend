@@ -114,7 +114,7 @@ const Profile = () => {
 
         try {
             const response = await axios.post('http://127.0.0.1:5000/profile/save-profile', {
-                userID: user.uid, // must match your backend field
+                userID: user.uid,
                 ...profileData
             });
 
@@ -240,6 +240,20 @@ const Profile = () => {
                                 <option value="Other">Other</option>
                             </select>
                         </div>
+                        {/*Language*/}
+                        <div className="input-group">
+                            <label htmlFor="gender">Gender:</label>
+                            <select
+                                id="gender"
+                                name="gender"
+                                value={profileData.gender}
+                                onChange={handleInputChange}
+                            >
+                                <option value="English">Male</option>
+                                <option value="Spanish">Female</option>
+                            </select>
+                        </div>
+
 
                         {/* Bio */}
                         <div className="input-group">
