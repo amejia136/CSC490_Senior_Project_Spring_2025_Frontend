@@ -17,6 +17,8 @@ import ItineraryDetailPage from "./Components/ItineraryDetailPage/ItineraryDetai
 import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
 import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
+import About from "./Components/About/About";
+import Contact from "./Components/Contact/Contact";
 
 const App = () => {
     return (
@@ -70,6 +72,24 @@ const App = () => {
                         <>
                             <Navbar/>
                             <ItineraryDetailPage/>
+                        </>
+                    }/>
+
+                    {/* About Page */}
+                    <Route path="/about" element={
+                        <>
+                            <Navbar/>
+                            <About/>
+                            <Footer/>
+                        </>
+                    }/>
+
+                    {/* About Page */}
+                    <Route path="/contact" element={
+                        <>
+                            <Navbar/>
+                            <Contact/>
+                            <Footer/>
                         </>
                     }/>
 
