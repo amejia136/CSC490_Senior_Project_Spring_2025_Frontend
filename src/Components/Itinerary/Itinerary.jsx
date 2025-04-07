@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './itinerary.css';
-import { UserContext } from '../../UserContext'; // ***** Added this import *****
+import { UserContext } from '../../UserContext';
 
 const ItineraryPage = () => {
-    // State for itineraries and form fields
+    const navigate = useNavigate();
     const [itineraries, setItineraries] = useState([]);
     const [formData, setFormData] = useState({
         tripName: '',
@@ -16,26 +17,37 @@ const ItineraryPage = () => {
     const [currentItineraryId, setCurrentItineraryId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showToast, setShowToast] = useState(false);
 
-    // ✅ Get userId from UserContext (REMOVED auth.onAuthStateChanged)
     const { user } = useContext(UserContext);
-    const userId = user?.uid; // ***** Replaced direct auth reference with userContext *****
+    const userId = user?.uid;
 
-    // ✅ Fetch itineraries when userId changes
+    // Fetch itineraries when userId changes
     useEffect(() => {
         if (userId) {
-            fetchItineraries(); // ***** Trigger when userId is available *****
+            fetchItineraries();
         }
     }, [userId]);
 
-    // ✅ Fetch itineraries from backend
+    // Show toast message for errors
+    useEffect(() => {
+        if (error) {
+            setShowToast(true);
+            const timer = setTimeout(() => {
+                setShowToast(false);
+                setError(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
+
     const fetchItineraries = async () => {
-        if (!userId) return; // ***** Stop if no userId available *****
+        if (!userId) return;
         setIsLoading(true);
         setError(null);
         try {
             const response = await axios.get(
-                `http://127.0.0.1:5000/itinerary/get/itineraries/${userId}` // ***** Updated endpoint *****
+                `http://127.0.0.1:5000/itinerary/get/itineraries/${userId}`
             );
             setItineraries(response.data.data || []);
         } catch (error) {
@@ -46,13 +58,11 @@ const ItineraryPage = () => {
         }
     };
 
-    // ✅ Handle form input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // ✅ Handle form submission (Add/Edit)
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!userId) {
@@ -72,9 +82,8 @@ const ItineraryPage = () => {
 
         try {
             if (editMode) {
-                // ✅ Update existing itinerary
                 await axios.put(
-                    `http://127.0.0.1:5000/itinerary/update/itinerary/${userId}/${currentItineraryId}`, // ***** Updated endpoint *****
+                    `http://127.0.0.1:5000/itinerary/update/itinerary/${userId}/${currentItineraryId}`,
                     submissionData
                 );
                 setItineraries(prevItineraries =>
@@ -86,12 +95,11 @@ const ItineraryPage = () => {
                 );
                 setEditMode(false);
             } else {
-                // ✅ Add new itinerary
                 await axios.post(
-                    `http://127.0.0.1:5000/itinerary/add/itinerary/${userId}`, // ***** Updated endpoint *****
+                    `http://127.0.0.1:5000/itinerary/add/itinerary/${userId}`,
                     submissionData
                 );
-                fetchItineraries(); // ***** Refresh after adding *****
+                fetchItineraries();
             }
             resetForm();
         } catch (error) {
@@ -105,8 +113,8 @@ const ItineraryPage = () => {
         }
     };
 
-    // ✅ Edit an itinerary
-    const handleEditClick = (itinerary) => {
+    const handleEditClick = (e, itinerary) => {
+        e.stopPropagation();
         setEditMode(true);
         setCurrentItineraryId(itinerary.id);
         setFormData({
@@ -117,15 +125,15 @@ const ItineraryPage = () => {
         });
     };
 
-    // ✅ Delete an itinerary
-    const handleDeleteItinerary = async (itineraryId) => {
+    const handleDeleteItinerary = async (e, itineraryId) => {
+        e.stopPropagation();
         if (!window.confirm("Are you sure you want to delete this itinerary?")) return;
-        if (!userId) return; // ***** Stop if no userId available *****
+        if (!userId) return;
 
         setIsLoading(true);
         try {
             await axios.delete(
-                `http://127.0.0.1:5000/itinerary/delete/itinerary/${userId}/${itineraryId}` // ***** Updated endpoint *****
+                `http://127.0.0.1:5000/itinerary/delete/itinerary/${userId}/${itineraryId}`
             );
             setItineraries(prev => prev.filter(itinerary => itinerary.id !== itineraryId));
         } catch (error) {
@@ -136,7 +144,6 @@ const ItineraryPage = () => {
         }
     };
 
-    // ✅ Reset form fields
     const resetForm = () => {
         setFormData({
             tripCost: '',
@@ -148,7 +155,6 @@ const ItineraryPage = () => {
         setEditMode(false);
     };
 
-    // ✅ Cancel edit mode
     const handleCancel = () => {
         resetForm();
     };
@@ -158,13 +164,24 @@ const ItineraryPage = () => {
             <div className="app-container">
                 <h2>Itinerary List</h2>
 
-                {/* ✅ Error Message */}
-                {error && <div className="error-message">{error}</div>}
+                {/* Toast Notification */}
+                {showToast && (
+                    <div className="toast-notification">
+                        {error}
+                        <button onClick={() => setShowToast(false)} className="toast-close">
+                            ×
+                        </button>
+                    </div>
+                )}
 
-                {/* ✅ Loading Spinner */}
-                {isLoading && <div className="loading-spinner">Loading...</div>}
+                {/* Loading Overlay */}
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <div className="loading-spinner"></div>
+                    </div>
+                )}
 
-                {/* ✅ Itinerary Table */}
+                {/* Itinerary Table */}
                 <table className="itinerary-table">
                     <thead>
                     <tr>
@@ -178,16 +195,28 @@ const ItineraryPage = () => {
                     <tbody>
                     {itineraries.length > 0 ? (
                         itineraries.map((itinerary) => (
-                            <tr key={itinerary.id}>
+                            <tr
+                                key={itinerary.id}
+                                onClick={() => !isLoading && navigate(`/itinerary/${itinerary.id}`)}
+                                className={isLoading ? 'disabled-row' : ''}
+                            >
                                 <td>{itinerary.TripName}</td>
                                 <td>${itinerary.TripCost}</td>
                                 <td>{itinerary.TripType}</td>
                                 <td>{itinerary.TripDuration}</td>
-                                <td className="actions">
-                                    <button onClick={() => handleEditClick(itinerary)} disabled={isLoading}>
+                                <td className="actions" onClick={(e) => e.stopPropagation()}>
+                                    <button
+                                        onClick={(e) => handleEditClick(e, itinerary)}
+                                        disabled={isLoading}
+                                        className="edit-btn"
+                                    >
                                         Edit
                                     </button>
-                                    <button onClick={() => handleDeleteItinerary(itinerary.id)} disabled={isLoading} className="delete-btn">
+                                    <button
+                                        onClick={(e) => handleDeleteItinerary(e, itinerary.id)}
+                                        disabled={isLoading}
+                                        className="delete-btn"
+                                    >
                                         Delete
                                     </button>
                                 </td>
@@ -203,7 +232,7 @@ const ItineraryPage = () => {
                     </tbody>
                 </table>
 
-                {/* ✅ Add/Edit Form */}
+                {/* Add/Edit Form */}
                 <h2>{editMode ? "Edit Itinerary" : "Add New Itinerary"}</h2>
                 <form onSubmit={handleSubmit} className="itinerary-form">
                     <input
@@ -213,6 +242,7 @@ const ItineraryPage = () => {
                         value={formData.tripName}
                         onChange={handleInputChange}
                         required
+                        disabled={isLoading}
                     />
                     <input
                         type="number"
@@ -221,6 +251,9 @@ const ItineraryPage = () => {
                         value={formData.tripCost}
                         onChange={handleInputChange}
                         required
+                        disabled={isLoading}
+                        min="0"
+                        step="0.01"
                     />
                     <input
                         type="text"
@@ -229,6 +262,7 @@ const ItineraryPage = () => {
                         value={formData.tripType}
                         onChange={handleInputChange}
                         required
+                        disabled={isLoading}
                     />
                     <input
                         type="number"
@@ -237,8 +271,19 @@ const ItineraryPage = () => {
                         value={formData.tripDuration}
                         onChange={handleInputChange}
                         required
+                        disabled={isLoading}
+                        min="1"
                     />
-                    <button type="submit">{editMode ? "Update Itinerary" : "Add Itinerary"}</button>
+                    <div className="form-actions">
+                        <button type="submit" disabled={isLoading}>
+                            {editMode ? "Update Itinerary" : "Add Itinerary"}
+                        </button>
+                        {editMode && (
+                            <button type="button" onClick={handleCancel} disabled={isLoading} className="cancel-btn">
+                                Cancel
+                            </button>
+                        )}
+                    </div>
                 </form>
             </div>
         </div>

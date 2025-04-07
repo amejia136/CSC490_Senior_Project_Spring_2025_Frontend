@@ -13,13 +13,14 @@ import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
 import GoogleMapComponent from "./Components/GoogleMap/GoogleMap";
 import Itinerary from "./Components/Itinerary/Itinerary";
+import ItineraryDetailPage from "./Components/ItineraryDetailPage/ItineraryDetailPage"; // Your import path
 import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
 import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
 
 const App = () => {
     return (
-        <UserProvider>
+        <UserProvider>      
             <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             libraries={["places"]}
             >
@@ -47,6 +48,7 @@ const App = () => {
                             </>
                         } />
 
+
                         {/* Achievements Page */}
                         <Route path="/achievements" element={
                             <>
@@ -54,28 +56,38 @@ const App = () => {
                                 <Achievements />
                             </>
                         } />
+                          
+                    {/* Itinerary List Page */}
+                    <Route path="/itinerary" element={
+                        <>
+                            <Navbar/>
+                            <Itinerary/>
+                        </>
+                    }/>
 
-                        {/* Itinerary Page */}
-                        <Route path="/itinerary" element={
-                            <>
-                                <Navbar />
-                                <Itinerary />
-                            </>
-                        } />
+                    {/* Itinerary Detail Page */}
+                    <Route path="/itinerary/:itineraryId" element={
+                        <>
+                            <Navbar/>
+                            <ItineraryDetailPage/>
+                        </>
+                    }/>
 
-                        {/* Reset Password Page */}
-                        <Route path="/reset-password" element={<ResetPassword />} />
+                    {/* Reset Password Page */}
+                    <Route path="/reset-password" element={<ResetPassword/>}/>
 
-                        {/* Account Security Page */}
-                        <Route path="/account-security" element={
-                            <>
-                                <Navbar />
-                                <AccountSecurity />
-                            </>
-                        } />
+                    {/* Account Security Page */}
+                    <Route path="/account-security" element={
+                        <>
+                            <Navbar/>
+                            <AccountSecurity/>
+                        </>
+                    }/>
 
-                        {/* Verify Email Page */}
-                        <Route path="/verify-link" element={<VerifyEmailLink />} />
+                    {/* Verify Email Page */}
+                    <Route path="/verify-link" element={<VerifyEmailLink/>}/>
+
+                      
 
                         {/* Google Map Page */}
                         <Route path="/map" element={
@@ -85,7 +97,6 @@ const App = () => {
                                 <Footer />
                             </>
                         } />
-
                     </Routes>
                 </Router>
             </LoadScript>
