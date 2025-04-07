@@ -107,6 +107,14 @@ const Profile = () => {
         }));
     };
 
+    const handleLanguageChange = (e) => {
+        const {name, value} = e.target;
+        setProfileData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
     const handleSave = async () => {
         if (!user?.uid) return;
         setLoading(true);
@@ -240,17 +248,18 @@ const Profile = () => {
                                 <option value="Other">Other</option>
                             </select>
                         </div>
+
                         {/*Language*/}
                         <div className="input-group">
-                            <label htmlFor="gender">Gender:</label>
+                            <label htmlFor="language">Language:</label>
                             <select
-                                id="gender"
-                                name="gender"
-                                value={profileData.gender}
+                                id="language"
+                                name="language"
+                                value={profileData.language}
                                 onChange={handleInputChange}
                             >
-                                <option value="English">Male</option>
-                                <option value="Spanish">Female</option>
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
                             </select>
                         </div>
 
@@ -281,7 +290,7 @@ const Profile = () => {
                                 </p>
                             ))}
 
-                        {/* ✅ Show nested Preferences */}
+                        {/* Show nested Preferences */}
                         <p><strong>Preferences:</strong></p>
                         <ul style={{margin: '0.25rem 0 1rem 1rem', padding: 0, listStyle: 'none'}}>
                             {Object.entries(extras.preferences).map(([subKey, subValue]) => (
@@ -293,7 +302,7 @@ const Profile = () => {
                             ))}
                         </ul>
 
-                        {/* ✅ Show nested Achievement Progress */}
+                        {/* Show nested Achievement Progress */}
                         <p><strong>AchievementProgress:</strong></p>
                         <ul style={{margin: '0.25rem 0 1rem 1rem', padding: 0, listStyle: 'none'}}>
                             {Object.entries(extras.achievementProgress).map(([subKey, subValue]) => (
