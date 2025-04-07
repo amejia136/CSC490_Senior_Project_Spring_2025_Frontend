@@ -3,7 +3,7 @@ import axios from "axios"; // Import axios to make API requests to Flask (backen
 import "./Login.css"; //Import the CSS file for styling
 import {FaEnvelope, FaUser,} from "react-icons/fa"; // Import icons for input fields
 import {RiLockPasswordFill} from "react-icons/ri"; // Import password icon
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {getAuth, sendPasswordResetEmail} from "firebase/auth";
 import app from "../../firebaseConfig"; // Correct the relative path based on file structure
 import {auth} from "../../firebaseConfig";
@@ -24,6 +24,14 @@ const Login = () => {
 
     //State to track the active form (Login or Register)
     const [action, setAction] = useState('');
+
+    const location = useLocation();
+
+    React.useEffect(() => {
+        if (location.state && location.state.showRegister) {
+            setAction(' active');
+        }
+    }, [location]);
 
     //State to track if user checked remember me box or not
     const [rememberMe, setRememberMe] = useState(false);

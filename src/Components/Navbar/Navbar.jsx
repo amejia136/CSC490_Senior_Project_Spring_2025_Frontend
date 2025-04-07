@@ -45,6 +45,14 @@ const Navbar = () => {
         navigate('/itinerary'); // ***** Navigate to login page *****
     };
 
+    const handleAbout = () => {
+        navigate('/about'); // ***** Navigate to login page *****
+    };
+
+    const handleContact = () => {
+        navigate('/contact'); // ***** Navigate to login page *****
+    };
+
     const handleLogout = () => {
 
         setUser(null);
@@ -71,9 +79,10 @@ const Navbar = () => {
                             <a href="#" className="navLink">Home</a>
                         </li>
 
-                        <li className="navItem">
-                            <a href="#" className="navLink">About</a>
+                        <li className="navItem" onClick={handleAbout}>
+                            <a href="#" className="navLink">About Us</a>
                         </li>
+
 
                         <li className="navItem" onClick={handleProfile}>
                             <a href="#" className="navLink">Profile</a>
@@ -91,7 +100,7 @@ const Navbar = () => {
                             <a href="#" className="navLink">Itinerary</a>
                         </li>
 
-                        <li className="navItem">
+                        <li className="navItem" onClick={handleContact}>
                             <a href="#" className="navLink">Contact</a>
                         </li>
 

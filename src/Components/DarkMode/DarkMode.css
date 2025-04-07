@@ -1,0 +1,113 @@
+:root {
+    --PrimaryColor: hsl(199, 100%, 33%);
+    --SecondaryColor: hsl(187, 85%, 43%);
+    --gradientColor: linear-gradient(to right, hsl(187, 85%, 43%), hsl(199, 100%, 33%));
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(201, 33%, 16%);
+    --textColor: hsl(240, 4%, 36%);
+    --whiteColorDeam: hsl(0, 0%, 93%);
+    --greyText: rgb(190, 190, 190);
+    --inputColor: rgb(239, 239, 239);
+    --bodyColor: rgb(240, 240, 246);
+    --cardBG: rgb(225, 225, 235);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+html[data-theme='dark'] {
+    --PrimaryColor: #64B5F6;
+    --SecondaryColor: #26A69A;
+    --gradientColor: linear-gradient(to bottom, #283593, #64B5F6);
+    --whiteColor: #1E1E1E;
+    --blackColor: #E0E0E0;
+    --textColor: #E0E0E0;
+    --whiteColorDeam: #282828;
+    --greyText: #B0BEC5;
+    --inputColor: lightgrey;
+    --bodyColor: #121212;
+    --cardBG: #212121;
+
+}
+
+
+body {
+    background-color: var(--bodyColor);
+    color: var(--textColor);
+}
+
+
+html[data-theme='dark'] body {
+    background-color: var(--bodyColor);
+    color: var(--textColor);
+}
+
+
+html[data-theme='dark'] .home {
+    background-color: var(--bodyColor);
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .home .overlay {
+    background: rgba(30, 80, 100, 0.7);
+}
+
+html[data-theme='dark'] .home .homeContent {
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .home .homeContent .cardDiv {
+    background: var(--cardBG);
+}
+
+html[data-theme='dark'] .home .homeContent .cardDiv label,
+html[data-theme='dark'] .home .homeContent .cardDiv .total {
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .home .homeContent .cardDiv .input {
+    background: var(--inputColor);
+}
+
+html[data-theme='dark'] .home .homeContent .homeFooterIcons icon {
+    color: var(--textColor);
+}
+
+
+html[data-theme='dark'] .footer {
+    background-color: var(--whiteColor);
+    color: var(--textColor);
+}
+
+
+html[data-theme='dark'] .profile-view {
+    background-color: rgba(20, 20, 20, 0.8); {/*profile*/}
+}
+
+html[data-theme='dark'] .footer .secContent .contactDiv .text small,
+html[data-theme='dark'] .footer .secContent .contactDiv .text h2,
+html[data-theme='dark'] .footer .secContent .contactDiv .inputDiv input,
+html[data-theme='dark'] .footer .secContent .contactDiv .inputDiv input::placeholder,
+html[data-theme='dark'] .footer .secContent .contactDiv .inputDiv .btn,
+html[data-theme='dark'] .footer .secContent .footerCard .logoDiv .logo,
+html[data-theme='dark'] .footer .secContent .footerCard .footerParagraph,
+html[data-theme='dark'] .footer .secContent .footerCard .footerSocials .icon,
+html[data-theme='dark'] .footer .secContent .footerCard .footerLinks .linkGroup .groupTitle,
+html[data-theme='dark'] .footer .secContent .footerCard .footerLinks .linkGroup .footerList {
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .footer .secContent .footerCard {
+    background: var(--cardBG);
+}
+
+html[data-theme='dark'] .footer .secContent .footerCard .footerDiv {
+    background:linear-gradient(to bottom, #283593, #64B5F6)
+
+}
+
+
+html[data-theme='dark'] body, html[data-theme='dark'] .home, html[data-theme='dark'] .footer, html[data-theme='dark'] .home .cardDiv, html[data-theme='dark'] .footer .secContent .footerCard {
+    background: linear-gradient(180deg, #1A1A1A 0%, #000000 100%);
+}
+
+html[data-theme='dark'] .home .overlay {
+    background: rgba(30, 80, 100, 0.5); }

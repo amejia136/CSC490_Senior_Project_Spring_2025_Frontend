@@ -107,6 +107,14 @@ const Profile = () => {
         }));
     };
 
+    const handleLanguageChange = (e) => {
+        const {name, value} = e.target;
+        setProfileData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
     const handleSave = async () => {
         if (!user?.uid) return;
         setLoading(true);
@@ -114,7 +122,7 @@ const Profile = () => {
 
         try {
             const response = await axios.post('http://127.0.0.1:5000/profile/save-profile', {
-                userID: user.uid, // must match your backend field
+                userID: user.uid,
                 ...profileData
             });
 
@@ -241,6 +249,21 @@ const Profile = () => {
                             </select>
                         </div>
 
+                        {/*Language*/}
+                        <div className="input-group">
+                            <label htmlFor="language">Language:</label>
+                            <select
+                                id="language"
+                                name="language"
+                                value={profileData.language}
+                                onChange={handleInputChange}
+                            >
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                            </select>
+                        </div>
+
+
                         {/* Bio */}
                         <div className="input-group">
                             <label htmlFor="bio">Bio:</label>
@@ -267,7 +290,7 @@ const Profile = () => {
                                 </p>
                             ))}
 
-                        {/* ✅ Show nested Preferences */}
+                        {/* Show nested Preferences */}
                         <p><strong>Preferences:</strong></p>
                         <ul style={{margin: '0.25rem 0 1rem 1rem', padding: 0, listStyle: 'none'}}>
                             {Object.entries(extras.preferences).map(([subKey, subValue]) => (
@@ -279,7 +302,7 @@ const Profile = () => {
                             ))}
                         </ul>
 
-                        {/* ✅ Show nested Achievement Progress */}
+                        {/* Show nested Achievement Progress */}
                         <p><strong>AchievementProgress:</strong></p>
                         <ul style={{margin: '0.25rem 0 1rem 1rem', padding: 0, listStyle: 'none'}}>
                             {Object.entries(extras.achievementProgress).map(([subKey, subValue]) => (
