@@ -17,6 +17,8 @@ import ItineraryDetailPage from "./Components/ItineraryDetailPage/ItineraryDetai
 import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
 import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
+import './Translations/i18n';
+import { useTranslation } from 'react-i18next';
 
 const App = () => {
     return (

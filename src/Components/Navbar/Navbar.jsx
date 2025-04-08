@@ -6,6 +6,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { TbGridDots } from "react-icons/tb";
 import {AiFillCloseCircle} from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+
 
 
 const Navbar = () => {
@@ -45,6 +47,8 @@ const Navbar = () => {
         navigate('/itinerary'); // ***** Navigate to login page *****
     };
 
+    const { t } = useTranslation();
+
     const handleLogout = () => {
 
         setUser(null);
@@ -68,40 +72,40 @@ const Navbar = () => {
                 <div className={active}>
                     <ul className="navLists flex">
                         <li className="navItem" onClick={handleHome}>
-                            <a href="#" className="navLink">Home</a>
+                            <a href="#" className="navLink">{t('Home')}</a>
                         </li>
 
                         <li className="navItem">
-                            <a href="#" className="navLink">About</a>
+                            <a href="#" className="navLink">{t('About')}</a>
                         </li>
 
                         <li className="navItem" onClick={handleProfile}>
-                            <a href="#" className="navLink">Profile</a>
+                            <a href="#" className="navLink">{t('Profile')}</a>
                         </li>
 
                         <li className="navItem">
-                            <a href="#" className="navLink">Reviews</a>
+                            <a href="#" className="navLink">{t('Reviews')}</a>
                         </li>
 
                         <li className="navItem" onClick={handleAchievements}>
-                            <a href="#" className="navLink">Achievements</a>
+                            <a href="#" className="navLink">{t('Achievements')}</a>
                         </li>
 
                         <li className="navItem" onClick={handleItinerary}>
-                            <a href="#" className="navLink">Itinerary</a>
+                            <a href="#" className="navLink">{t('Itinerary')}</a>
                         </li>
 
                         <li className="navItem">
-                            <a href="#" className="navLink">Contact</a>
+                            <a href="#" className="navLink">{t('Contact')}</a>
                         </li>
 
                         {user ? (
                             <button className='btn' onClick={handleLogout}>
-                                <a href="#">SIGNOUT</a>
+                                <a href="#">{t('SIGNOUT')}</a>
                             </button>
                         ) : (
                             <button className='btn' onClick={handleLogin}>
-                                <a href="#">LOGIN</a>
+                                <a href="#">{t('LOGIN')}</a>
                             </button>
                         )}
                     </ul>
