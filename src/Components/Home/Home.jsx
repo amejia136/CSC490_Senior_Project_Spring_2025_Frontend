@@ -14,6 +14,7 @@ import "aos/dist/aos.css";
 import {UserContext} from '../../UserContext';
 import {useTranslation} from 'react-i18next';
 import i18n from "../../Translations/i18n";
+import { LanguageContext } from "../../LanguageContext";
 
 
 const states = [
@@ -30,9 +31,15 @@ const Home = () => {
     const [selectedLocation, setSelectedLocation] = useState(null);
 
     const {user} = useContext(UserContext);
+    const { language } = useContext(LanguageContext);
     const {t} = useTranslation();
 
-
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('appLanguage') || sessionStorage.getItem('appLanguage');
+        if (savedLanguage) {
+            i18n.changeLanguage(savedLanguage);
+        }
+    }, [language]);
 
     useEffect(() => {
         Aos.init({duration: 2000});

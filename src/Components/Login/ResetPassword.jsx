@@ -14,7 +14,7 @@ const ResetPassword = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    // ✅ Step 1: Extract and verify the oobCode from the URL
+
     useEffect(() => {
         const oobCode = searchParams.get("oobCode");
 
@@ -55,21 +55,20 @@ const ResetPassword = () => {
         }
 
         try {
-            // ✅ Step 2: Reset password in Firebase
+
             await confirmPasswordReset(auth, oobCode, newPassword);
             setSuccessMessage("Password reset successfully. Redirecting to login...");
 
             console.log(`Reset password for email: ${email}`);
 
-            // ✅ Step 3: Sync new password to Firestore using backend
+
             await axios.post("http://127.0.0.1:5000/auth/update-password", {
                 email: email, // ✅ Now you have the email!
                 newPassword: newPassword, // ✅ Send new password to backend
             });
 
             console.log("Password updated in Firestore");
-
-            // ✅ Step 4: Redirect to login after 2 seconds
+            
             setTimeout(() => {
                 navigate("/login");
             }, 2000);

@@ -5,11 +5,14 @@ import {FaEnvelope, FaUser,} from "react-icons/fa"; // Import icons for input fi
 import {RiLockPasswordFill} from "react-icons/ri"; // Import password icon
 import {useLocation, useNavigate} from "react-router-dom";
 import {getAuth, sendPasswordResetEmail} from "firebase/auth";
-import app from "../../firebaseConfig"; // Correct the relative path based on file structure
+import app, {db} from "../../firebaseConfig"; // Correct the relative path based on file structure
 import {auth} from "../../firebaseConfig";
 import {useContext} from 'react';
 import {UserContext} from '../../UserContext';
 import {signInWithEmailAndPassword} from "firebase/auth";
+import {LanguageContext} from "../../LanguageContext";
+import i18n from "../../Translations/i18n";
+import {doc, getDoc} from "firebase/firestore";
 
 
 const Login = () => {
@@ -20,6 +23,7 @@ const Login = () => {
 
     // Initialize navigate function * Navigation Purposes *
     const {setUser} = useContext(UserContext);
+    const {setLanguage} = useContext(LanguageContext);
     const navigate = useNavigate();
 
     //State to track the active form (Login or Register)
@@ -139,7 +143,7 @@ const Login = () => {
             await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
 
             const user = response.data.user; // Assuming the user object is in response.data.user
-            const userId = user.id; // Adjust this if the ID field has a different name
+            const userId = user.id || user.uid; // Adjust this if the ID field has a different name
 
             setUser(user);
 
@@ -152,10 +156,27 @@ const Login = () => {
                 sessionStorage.setItem("user", JSON.stringify(user));
                 sessionStorage.setItem("userId", userId); // Store userId in sessionStorage
             }
+// ✨ Fetch user's language from Firestore ✨
+            const userRef = doc(db, "Users", userId);
+            const userSnap = await getDoc(userRef);
 
-            // Redirect or update UI upon successful login
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+                const language = userData.Language || "English";
+
+                const languageMap = {"English": "en", "Spanish": "es"};
+                const languageCode = languageMap[language] || "en";
+
+                i18n.changeLanguage(languageCode);
+                setLanguage(languageCode);
+                localStorage.setItem('appLanguage', languageCode);
+                sessionStorage.setItem('appLanguage', languageCode);
+            } else {
+                console.error("User profile not found for language setting.");
+            }
+
             setTimeout(() => {
-                navigate("/") // Redirect to dashboard or homepage
+                navigate("/");
                 window.location.reload();
             }, 1000);
 
@@ -273,142 +294,142 @@ const Login = () => {
                     </div>
                 ) : (
                     <>
-                {/* ----------------------------- Login Form ----------------------------- */}
-                {!isForgotPassword ? (
-                    <div className="form-box login">
-                        <form
-                            onSubmit={handleLogin}> {/* When submitted, calls handleLogin, sends API request to backend */}
-                            <h1>Login</h1>
-                            <div className="input-box">
-                                <input type="email"
-                                       name="email" // Backend uses field as "email". If changed, change backend API request
-                                       placeholder='Email'
-                                       value={loginData.email} // Pulls data from state, is sent to login backend
-                                       onChange={handleLoginChange} // Updates the state, is sent to backend
-                                       required/>
-                                <FaUser className='icon'/>
+                        {/* ----------------------------- Login Form ----------------------------- */}
+                        {!isForgotPassword ? (
+                            <div className="form-box login">
+                                <form
+                                    onSubmit={handleLogin}> {/* When submitted, calls handleLogin, sends API request to backend */}
+                                    <h1>Login</h1>
+                                    <div className="input-box">
+                                        <input type="email"
+                                               name="email" // Backend uses field as "email". If changed, change backend API request
+                                               placeholder='Email'
+                                               value={loginData.email} // Pulls data from state, is sent to login backend
+                                               onChange={handleLoginChange} // Updates the state, is sent to backend
+                                               required/>
+                                        <FaUser className='icon'/>
 
+                                    </div>
+                                    <div className="input-box">
+                                        <input
+                                            type="password"
+                                            name="password" // Backend expects this as "password". If changed, change backend API request
+                                            placeholder="Password"
+                                            value={loginData.password} // Pulls password from state, is sent to login backend
+                                            onChange={handleLoginChange} // Updates password state, is sent to backend
+                                            required
+                                        />
+                                        <RiLockPasswordFill className='icon'/>
+                                    </div>
+
+
+                                    <div className="remember-forgot">
+                                        <label><input type="checkbox"
+                                                      checked={rememberMe}
+                                                      onChange={() => setRememberMe(!rememberMe)}
+                                        />Remember me </label>
+                                        <a href="#" onClick={switchToForgotPassword}>Forgot password?</a>
+                                    </div>
+
+
+                                    <button type="submit">Login</button>
+                                    {/*Login request is sent to backend*/}
+
+                                    <div className="register-link">
+                                        <p>Don't have an account? <a href="#" onClick={registerLink}>Register</a></p>
+                                    </div>
+                                </form>
+
+                                {/*Message box for errors and success messages*/}
+                                <div className="message-box">
+                                    {errorMessage &&
+                                        <p className="error">{errorMessage}</p>} {/* Displays backend error messages if login fail */}
+                                    {successMessage &&
+                                        <p className="success">{successMessage}</p>} {/* Displays success message from backend if login is successful */}
+                                </div>
                             </div>
-                            <div className="input-box">
-                                <input
-                                    type="password"
-                                    name="password" // Backend expects this as "password". If changed, change backend API request
-                                    placeholder="Password"
-                                    value={loginData.password} // Pulls password from state, is sent to login backend
-                                    onChange={handleLoginChange} // Updates password state, is sent to backend
-                                    required
-                                />
-                                <RiLockPasswordFill className='icon'/>
+                        ) : (
+                            // ***** Forgot Password Form *****
+                            <div className="form-box forgot-password"> {/* ******** */}
+                                <form onSubmit={handleForgotPassword}>
+                                    <h1>Trouble logging in?</h1>
+                                    <p>Enter your email and we'll send you a link to reset your password.</p>
+                                    <div className="input-box">
+                                        <input
+                                            type="email"
+                                            placeholder="Email"
+                                            value={forgotPasswordEmail}
+                                            onChange={handleForgotPasswordChange}
+                                            required
+                                        />
+                                        <FaEnvelope className="icon"/>
+                                    </div>
+                                    <button type="submit">Send Reset Link</button>
+                                    <div className="register-link">
+                                        <p><a href="#" onClick={switchToLogin}>Back to login</a></p>
+                                    </div>
+                                </form>
+                                <div className="message-box">
+                                    {errorMessage && <p className="error">{errorMessage}</p>}
+                                    {successMessage && <p className="success">{successMessage}</p>}
+                                </div>
                             </div>
+                        )}
 
+                        {/* ----------------------------- Registration Form ----------------------------- */}
+                        <div className="form-box register">
+                            <form
+                                onSubmit={handleRegister}> {/* When submitted, calls handleRegister, sends API request to backend to register user */}
+                                <h1>Registration</h1>
+                                <div className="input-box">
+                                    <input type="text"
+                                           name="username" // Backend expects this as "username". If changed, change backend API request
+                                           placeholder="Username"
+                                           value={registerData.username} // Pulls username from state, is sent to register new user backend
+                                           onChange={handleInputChange} // Updates username state, is sent to backend
+                                           required/>
+                                    <FaUser className='icon'/>
+                                </div>
+                                <div className="input-box">
+                                    <input type="email"
+                                           name="email" // Backend expects this as "email". If changed, change backend API request
+                                           placeholder="Email"
+                                           value={registerData.email} // Pulls email from state, is sent to register new user backend
+                                           onChange={handleInputChange} // Updates email state, is sent to backend
+                                           required/>
+                                    <FaEnvelope className='icon'/>
+                                </div>
+                                <div className="input-box">
+                                    <input type="password"
+                                           name="password" // Backend expects this as "password". If changed, change backend API request
+                                           placeholder="Password"
+                                           value={registerData.password} // Pulls password from state, is sent to register new user backend
+                                           onChange={handleInputChange} // Updates password state, is sent to backend
+                                           required/>
+                                    <RiLockPasswordFill className='icon'/>
 
-                            <div className="remember-forgot">
-                                <label><input type="checkbox"
-                                              checked={rememberMe}
-                                              onChange={() => setRememberMe(!rememberMe)}
-                                />Remember me </label>
-                                <a href="#" onClick={switchToForgotPassword}>Forgot password?</a>
+                                </div>
+
+                                <div className="remember-forgot">
+                                    <label><input type="checkbox"/>I agree to the terms & conditions </label>
+                                </div>
+
+                                <button type="submit">Register</button>
+                                {/* Signup request is sent to backend */}
+
+                                <div className="register-link">
+                                    <p>Already have an account? <a href="#" onClick={loginLink}>Login</a></p>
+                                </div>
+                            </form>
+
+                            {/* Message box for errors and success messages */}
+                            <div className="message-box">
+                                {errorMessage &&
+                                    <p className="error">{errorMessage}</p>} {/* Displays backend error messages if registration fail */}
+                                {successMessage &&
+                                    <p className="success">{successMessage}</p>} {/* Displays success message from backend if registration is successful */}
                             </div>
-
-
-                            <button type="submit">Login</button>
-                            {/*Login request is sent to backend*/}
-
-                            <div className="register-link">
-                                <p>Don't have an account? <a href="#" onClick={registerLink}>Register</a></p>
-                            </div>
-                        </form>
-
-                        {/*Message box for errors and success messages*/}
-                        <div className="message-box">
-                            {errorMessage &&
-                                <p className="error">{errorMessage}</p>} {/* Displays backend error messages if login fail */}
-                            {successMessage &&
-                                <p className="success">{successMessage}</p>} {/* Displays success message from backend if login is successful */}
                         </div>
-                    </div>
-                ) : (
-                    // ***** Forgot Password Form *****
-                    <div className="form-box forgot-password"> {/* ******** */}
-                        <form onSubmit={handleForgotPassword}>
-                            <h1>Trouble logging in?</h1>
-                            <p>Enter your email and we'll send you a link to reset your password.</p>
-                            <div className="input-box">
-                                <input
-                                    type="email"
-                                    placeholder="Email"
-                                    value={forgotPasswordEmail}
-                                    onChange={handleForgotPasswordChange}
-                                    required
-                                />
-                                <FaEnvelope className="icon"/>
-                            </div>
-                            <button type="submit">Send Reset Link</button>
-                            <div className="register-link">
-                                <p><a href="#" onClick={switchToLogin}>Back to login</a></p>
-                            </div>
-                        </form>
-                        <div className="message-box">
-                            {errorMessage && <p className="error">{errorMessage}</p>}
-                            {successMessage && <p className="success">{successMessage}</p>}
-                        </div>
-                    </div>
-                )}
-
-                {/* ----------------------------- Registration Form ----------------------------- */}
-                <div className="form-box register">
-                    <form
-                        onSubmit={handleRegister}> {/* When submitted, calls handleRegister, sends API request to backend to register user */}
-                        <h1>Registration</h1>
-                        <div className="input-box">
-                            <input type="text"
-                                   name="username" // Backend expects this as "username". If changed, change backend API request
-                                   placeholder="Username"
-                                   value={registerData.username} // Pulls username from state, is sent to register new user backend
-                                   onChange={handleInputChange} // Updates username state, is sent to backend
-                                   required/>
-                            <FaUser className='icon'/>
-                        </div>
-                        <div className="input-box">
-                            <input type="email"
-                                   name="email" // Backend expects this as "email". If changed, change backend API request
-                                   placeholder="Email"
-                                   value={registerData.email} // Pulls email from state, is sent to register new user backend
-                                   onChange={handleInputChange} // Updates email state, is sent to backend
-                                   required/>
-                            <FaEnvelope className='icon'/>
-                        </div>
-                        <div className="input-box">
-                            <input type="password"
-                                   name="password" // Backend expects this as "password". If changed, change backend API request
-                                   placeholder="Password"
-                                   value={registerData.password} // Pulls password from state, is sent to register new user backend
-                                   onChange={handleInputChange} // Updates password state, is sent to backend
-                                   required/>
-                            <RiLockPasswordFill className='icon'/>
-
-                        </div>
-
-                        <div className="remember-forgot">
-                            <label><input type="checkbox"/>I agree to the terms & conditions </label>
-                        </div>
-
-                        <button type="submit">Register</button>
-                        {/* Signup request is sent to backend */}
-
-                        <div className="register-link">
-                            <p>Already have an account? <a href="#" onClick={loginLink}>Login</a></p>
-                        </div>
-                    </form>
-
-                    {/* Message box for errors and success messages */}
-                    <div className="message-box">
-                        {errorMessage &&
-                            <p className="error">{errorMessage}</p>} {/* Displays backend error messages if registration fail */}
-                        {successMessage &&
-                            <p className="success">{successMessage}</p>} {/* Displays success message from backend if registration is successful */}
-                    </div>
-                </div>
                     </>
                 )}
             </div>

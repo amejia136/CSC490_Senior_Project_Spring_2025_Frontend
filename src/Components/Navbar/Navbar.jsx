@@ -34,8 +34,6 @@ const Navbar = () => {
         }, 1200); // match the animation time
     };
 
-
-
     useEffect(() => {
         const savedLanguage = localStorage.getItem('appLanguage') || sessionStorage.getItem('appLanguage');
         if (savedLanguage) {
@@ -58,9 +56,12 @@ const Navbar = () => {
     };
 
     const handleProfile = () => {
-        navigate('/profile'); // ***** Navigate to login page *****
+        if (user) {
+            navigate('/profile'); // ***** Navigate to profile page *****
+        } else {
+            navigate('/login'); // ***** Navigate to login page *****
+        }
     };
-
     const handleHome = () => {
         navigate('/'); // ***** Navigate to login page *****
     };

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import './main.css'
 
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -18,7 +18,8 @@ import img9 from '../../Assets/img9.jpg'
 import Aos from 'aos'
 import 'aos/dist/aos.css'
 import { useTranslation } from "react-i18next";
-
+import i18n from "../../Translations/i18n";
+import {LanguageContext} from "../../LanguageContext";
 
 
 const Main = () => {

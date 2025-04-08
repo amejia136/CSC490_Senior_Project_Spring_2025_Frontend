@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import "./footer.css";
 import video2 from '../../Assets/video (2).mp4'
 import { FiSend } from "react-icons/fi";
@@ -12,6 +12,8 @@ import { FiChevronRight } from "react-icons/fi";
 import Aos from 'aos'
 import 'aos/dist/aos.css'
 import {useTranslation} from "react-i18next";
+import {LanguageContext} from "../../LanguageContext";
+import i18n from "../../Translations/i18n";
 
 
 
@@ -19,6 +21,14 @@ import {useTranslation} from "react-i18next";
 const Footer = () => {
 
     const { t } = useTranslation();
+    const { language } = useContext(LanguageContext);
+
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('appLanguage') || sessionStorage.getItem('appLanguage');
+        if (savedLanguage) {
+            i18n.changeLanguage(savedLanguage);
+        }
+    }, [language]);
 
     useEffect(() => {
         Aos.init({duration: 2000})

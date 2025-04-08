@@ -81,7 +81,7 @@ const About = () => {
             </section>
 
             <section className="values" data-aos="fade-up">
-                <h2>Our Values</h2>
+                <h2>{t('Our Values')}</h2>
                 <div className="values-grid">
                     <div className="value-card">{t('Traveler First')}</div>
                     <div className="value-card">{t('Helpful')}</div>
