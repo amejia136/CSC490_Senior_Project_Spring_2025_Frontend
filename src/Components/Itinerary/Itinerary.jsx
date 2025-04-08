@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './itinerary.css';
 import { UserContext } from '../../UserContext';
+import { useTranslation } from 'react-i18next';
+
 
 const ItineraryPage = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [itineraries, setItineraries] = useState([]);
     const [formData, setFormData] = useState({
         tripName: '',
@@ -162,7 +165,7 @@ const ItineraryPage = () => {
     return (
         <div className="itinerary-page">
             <div className="app-container">
-                <h2>Itinerary List</h2>
+                <h2>{t('Itinerary List')}</h2>
 
                 {/* Toast Notification */}
                 {showToast && (
@@ -185,11 +188,11 @@ const ItineraryPage = () => {
                 <table className="itinerary-table">
                     <thead>
                     <tr>
-                        <th>Trip Name</th>
-                        <th>Trip Cost ($)</th>
-                        <th>Trip Type</th>
-                        <th>Trip Duration (Days)</th>
-                        <th>Actions</th>
+                        <th>{t('Trip Name')}</th>
+                        <th>{t('Trip Cost ($)')}</th>
+                        <th>{t('Trip Type')}</th>
+                        <th>{t('Trip Duration (Days)')}</th>
+                        <th>{t('Actions')}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -210,14 +213,14 @@ const ItineraryPage = () => {
                                         disabled={isLoading}
                                         className="edit-btn"
                                     >
-                                        Edit
+                                        {t('Edit')}
                                     </button>
                                     <button
                                         onClick={(e) => handleDeleteItinerary(e, itinerary.id)}
                                         disabled={isLoading}
                                         className="delete-btn"
                                     >
-                                        Delete
+                                        {t('Delete')}
                                     </button>
                                 </td>
                             </tr>
@@ -225,7 +228,7 @@ const ItineraryPage = () => {
                     ) : (
                         <tr>
                             <td colSpan="5" className="no-itineraries">
-                                {isLoading ? "Loading..." : "No itineraries found."}
+                                {isLoading ? t('Loading...') : t('No itineraries found.')}
                             </td>
                         </tr>
                     )}
@@ -233,12 +236,12 @@ const ItineraryPage = () => {
                 </table>
 
                 {/* Add/Edit Form */}
-                <h2>{editMode ? "Edit Itinerary" : "Add New Itinerary"}</h2>
+                <h2>{editMode ? t('Edit Itinerary') : t('Add New Itinerary')}</h2>
                 <form onSubmit={handleSubmit} className="itinerary-form">
                     <input
                         type="text"
                         name="tripName"
-                        placeholder="Trip Name"
+                        placeholder={t('Trip Name')}
                         value={formData.tripName}
                         onChange={handleInputChange}
                         required
@@ -247,7 +250,7 @@ const ItineraryPage = () => {
                     <input
                         type="number"
                         name="tripCost"
-                        placeholder="Trip Cost ($)"
+                        placeholder={t('Trip Cost ($)')}
                         value={formData.tripCost}
                         onChange={handleInputChange}
                         required
@@ -258,7 +261,7 @@ const ItineraryPage = () => {
                     <input
                         type="text"
                         name="tripType"
-                        placeholder="Trip Type"
+                        placeholder={t('Trip Type')}
                         value={formData.tripType}
                         onChange={handleInputChange}
                         required
@@ -267,7 +270,7 @@ const ItineraryPage = () => {
                     <input
                         type="number"
                         name="tripDuration"
-                        placeholder="Trip Duration (Days)"
+                        placeholder={t('Trip Duration (Days)')}
                         value={formData.tripDuration}
                         onChange={handleInputChange}
                         required
@@ -276,11 +279,11 @@ const ItineraryPage = () => {
                     />
                     <div className="form-actions">
                         <button type="submit" disabled={isLoading}>
-                            {editMode ? "Update Itinerary" : "Add Itinerary"}
+                            {editMode ? t('Update Itinerary') : t('Add Itinerary')}
                         </button>
                         {editMode && (
                             <button type="button" onClick={handleCancel} disabled={isLoading} className="cancel-btn">
-                                Cancel
+                                {t('Cancel')}
                             </button>
                         )}
                     </div>

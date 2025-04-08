@@ -35,6 +35,11 @@ const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const languageMap = {
+        English: "en",
+        Spanish: "es",
+    };
+
     const fetchProfileData = useCallback(async () => {
         const userId = user?.uid || user?.id;
         if (!userId) {
@@ -104,10 +109,6 @@ const Profile = () => {
     }, [user?.uid, fetchProfileData]);
 
     useEffect(() => {
-        const languageMap = {
-            English: "en",
-            Spanish: "es",
-        };
 
         if (profileData.language) {
             i18n.changeLanguage(languageMap[profileData.language] || "en");
@@ -143,6 +144,8 @@ const Profile = () => {
             });
 
             console.log("✅ Profile saved successfully:", response.data);
+            localStorage.setItem('appLanguage', languageMap[profileData.language] || 'en');
+            sessionStorage.setItem('appLanguage', languageMap[profileData.language] || 'en');
             setIsEditing(false);
             fetchProfileData();
         } catch (error) {
@@ -196,15 +199,15 @@ const Profile = () => {
             </nav>
 
             <div className="profile-content">
-                <h1>Your Profile</h1>
+                <h1>{t('Your Profile')}</h1>
 
                 {loading ? (
-                    <p>Loading...</p>
+                    <p>{t('Loading...')}</p>
                 ) : isEditing ? (
                     <div className="profile-form">
                         {/* Name */}
                         <div className="input-group">
-                            <label htmlFor="name">Name:</label>
+                            <label htmlFor="name">{t('Name')}:</label>
                             <input
                                 type="text"
                                 id="name"
@@ -216,7 +219,7 @@ const Profile = () => {
 
                         {/* Email */}
                         <div className="input-group">
-                            <label htmlFor="email">Email:</label>
+                            <label htmlFor="email">{t('Email')}:</label>
                             <input
                                 type="email"
                                 id="email"
@@ -228,7 +231,7 @@ const Profile = () => {
 
                         {/* Phone Number */}
                         <div className="input-group">
-                            <label htmlFor="phoneNumber">Phone Number:</label>
+                            <label htmlFor="phoneNumber">{t('Phone Number')}:</label>
                             <input
                                 type="tel"
                                 id="phoneNumber"
@@ -240,7 +243,7 @@ const Profile = () => {
 
                         {/* Username */}
                         <div className="input-group">
-                            <label htmlFor="username">Username:</label>
+                            <label htmlFor="username">{t('Username')}:</label>
                             <input
                                 type="text"
                                 id="username"
@@ -252,37 +255,37 @@ const Profile = () => {
 
                         {/* Gender */}
                         <div className="input-group">
-                            <label htmlFor="gender">Gender:</label>
+                            <label htmlFor="gender">{t('Gender')}:</label>
                             <select
                                 id="gender"
                                 name="gender"
                                 value={profileData.gender}
                                 onChange={handleInputChange}
                             >
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
+                                <option value="Male">{t('Male')}</option>
+                                <option value="Female">{t('Female')}</option>
+                                <option value="Other">{t('Other')}</option>
                             </select>
                         </div>
 
                         {/*Language*/}
                         <div className="input-group">
-                            <label htmlFor="language">Language:</label>
+                            <label htmlFor="language">{t('Language')}:</label>
                             <select
                                 id="language"
                                 name="language"
                                 value={profileData.language}
                                 onChange={handleInputChange}
                             >
-                                <option value="English">English</option>
-                                <option value="Spanish">Spanish</option>
+                                <option value="English">{t('English')}</option>
+                                <option value="Spanish">{t('Spanish')}</option>
                             </select>
                         </div>
 
 
                         {/* Bio */}
                         <div className="input-group">
-                            <label htmlFor="bio">Bio:</label>
+                            <label htmlFor="bio">{t('Bio')}:</label>
                             <textarea
                                 id="bio"
                                 name="bio"
@@ -292,7 +295,7 @@ const Profile = () => {
                         </div>
 
                         <button onClick={handleSave} disabled={loading}>
-                            Save Changes
+                            {t('Save Changes')}
                         </button>
                     </div>
                 ) : (
@@ -302,45 +305,45 @@ const Profile = () => {
                             .filter(key => !['Password', 'Login'].includes(key))
                             .map((key) => (
                                 <p key={key}>
-                                    <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {profileData[key] || 'N/A'}
+                                    <strong>{t(formatKey(key))}:</strong> {profileData[key] || t('N/A')}
                                 </p>
                             ))}
 
                         {/* Show nested Preferences */}
-                        <p><strong>Preferences:</strong></p>
+                        <p><strong>{t('Preferences')}:</strong></p>
                         <ul style={{margin: '0.25rem 0 1rem 1rem', padding: 0, listStyle: 'none'}}>
                             {Object.entries(extras.preferences).map(([subKey, subValue]) => (
                                 <li key={subKey}>
               <span style={{fontWeight: 525}}>
                   {formatKey(subKey)}:
-              </span> {subValue === '' || subValue === 0 ? 'N/A' : subValue}
+              </span> {subValue === '' || subValue === 0 ? t('N/A') : subValue}
                                 </li>
                             ))}
                         </ul>
 
                         {/* Show nested Achievement Progress */}
-                        <p><strong>AchievementProgress:</strong></p>
+                        <p><strong>{t('AchievementProgress')}:</strong></p>
                         <ul style={{margin: '0.25rem 0 1rem 1rem', padding: 0, listStyle: 'none'}}>
                             {Object.entries(extras.achievementProgress).map(([subKey, subValue]) => (
                                 <li key={subKey}>
               <span style={{fontWeight: 525}}>
                   {subKey === "achievementId1.completed"
-                      ? "Achievements Completed:"
+                      ? t('Achievements Completed:')
                       : subKey === "achievementId1.total"
-                          ? "Achievement Total:"
+                          ? t('Achievement Total:')
                           : formatKey(subKey) + ":"}
-              </span> {subValue === '' || subValue === 0 ? 'N/A' : subValue}
+              </span> {subValue === '' || subValue === 0 ? t('N/A') : subValue}
                                 </li>
                             ))}
                         </ul>
 
 
                         <button onClick={handleEdit} disabled={loading}>
-                            Edit Profile
+                            {t('Edit Profile')}
                         </button>
 
                         <button onClick={handleSecurity} disabled={loading}>
-                            Account Security
+                            {t('Account Security')}
                         </button>
 
                     </div>

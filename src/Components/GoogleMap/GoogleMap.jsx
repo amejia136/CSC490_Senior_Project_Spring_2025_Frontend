@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 import stateLocations from "./StateLocations";
 import LocationPopup from '../LocationPopup/LocationPopup';
+import { useTranslation } from "react-i18next";
+
 
 
 const mapContainerStyle = {
@@ -23,6 +25,8 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     const autocompleteRef = useRef(null);
+    const { t } = useTranslation();
+
 
     useEffect(() => {
         if (map) {
@@ -120,7 +124,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
 
                             if (!place || !place.geometry || !place.geometry.location) {
                                 console.warn("No geometry returned for place:", place);
-                                alert("Please select a valid location from the dropdown.");
+                                alert(t("Please select a valid location from the dropdown."));
                                 return;
                             }
 
@@ -152,7 +156,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                 >
                     <input
                         type="text"
-                        placeholder="Search location..."
+                        placeholder={t('Search location...')}
                         className="search-input"
                         style={{
                             width: '100%',

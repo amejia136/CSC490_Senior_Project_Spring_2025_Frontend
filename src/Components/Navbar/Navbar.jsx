@@ -1,21 +1,47 @@
-import React, {useContext, useState} from "react";
-import { UserContext } from '../../UserContext';
+import React, {useContext, useEffect, useState} from "react";
+import {UserContext} from '../../UserContext';
 import './navbar.css'
-import { MdOutlineTravelExplore } from 'react-icons/md';
-import { IoMdCloseCircle } from "react-icons/io";
-import { TbGridDots } from "react-icons/tb";
+import {MdOutlineTravelExplore} from 'react-icons/md';
+import {IoMdCloseCircle} from "react-icons/io";
+import {TbGridDots} from "react-icons/tb";
 import {AiFillCloseCircle} from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
-
+import {useNavigate} from "react-router-dom";
+import {useTranslation} from 'react-i18next';
+import i18n from '../../Translations/i18n';
+import {useDarkMode} from '../DarkMode/DarkMode';
+import {FiSun, FiMoon} from 'react-icons/fi';
 
 
 const Navbar = () => {
-    const[active,setActive] = useState('navBar');
+    const [active, setActive] = useState('navBar');
 
     const navigate = useNavigate();
 
-    const { user, setUser } = useContext(UserContext);
+    const {user, setUser} = useContext(UserContext);
+
+    const {darkMode, toggleDarkMode} = useDarkMode();
+
+    const {t} = useTranslation();
+
+    const [spinning, setSpinning] = useState(false);
+
+    const handleToggleDarkMode = () => {
+        setSpinning(true);
+
+        setTimeout(() => {
+            toggleDarkMode(); // change the mode AFTER animation
+            setSpinning(false);
+        }, 1200); // match the animation time
+    };
+
+
+
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('appLanguage') || sessionStorage.getItem('appLanguage');
+        if (savedLanguage) {
+            i18n.changeLanguage(savedLanguage);
+        }
+    }, []);
 
     //function to toggle navBar
     const showNav = () => {
@@ -47,7 +73,13 @@ const Navbar = () => {
         navigate('/itinerary'); // ***** Navigate to login page *****
     };
 
-    const { t } = useTranslation();
+    const handleAbout = () => {
+        navigate('/about'); // ***** Navigate to login page *****
+    };
+
+    const handleContact = () => {
+        navigate('/contact'); // ***** Navigate to login page *****
+    };
 
     const handleLogout = () => {
 
@@ -56,18 +88,22 @@ const Navbar = () => {
         localStorage.removeItem('user');
         sessionStorage.removeItem('user');
 
+        i18n.changeLanguage('en');
+        localStorage.setItem('appLanguage', 'en');
+        sessionStorage.setItem('appLanguage', 'en');
+
         navigate('/');
     };
 
     return (
-        <section className= 'navBarSection'>
+        <section className='navBarSection'>
             <header className="header flex">
 
-            <div className="logoDiv">
-                <a href="#" className="logo flex">
-                    <h1><MdOutlineTravelExplore className ="icon"/>Travel.</h1>
-                </a>
-            </div>
+                <div className="logoDiv">
+                    <a href="#" className="logo flex">
+                        <h1><MdOutlineTravelExplore className="icon"/>Travel.</h1>
+                    </a>
+                </div>
 
                 <div className={active}>
                     <ul className="navLists flex">
@@ -75,7 +111,7 @@ const Navbar = () => {
                             <a href="#" className="navLink">{t('Home')}</a>
                         </li>
 
-                        <li className="navItem">
+                        <li className="navItem" onClick={handleAbout}>
                             <a href="#" className="navLink">{t('About')}</a>
                         </li>
 
@@ -95,9 +131,21 @@ const Navbar = () => {
                             <a href="#" className="navLink">{t('Itinerary')}</a>
                         </li>
 
-                        <li className="navItem">
+                        <li className="navItem" onClick={handleContact}>
                             <a href="#" className="navLink">{t('Contact')}</a>
                         </li>
+
+                        <button className="darkModeToggle" onClick={handleToggleDarkMode}>
+                            <span className={`iconWrapper ${spinning ? 'reelSpin' : ''}`}>
+                                {darkMode ? (
+                                <FiSun size={22} color="#FDB813" />  /* Yellow sun */
+                                ) : (
+                                 <FiMoon size={22} color="#000000" />
+                                )}
+                            </span>
+                        </button>
+
+
 
                         {user ? (
                             <button className='btn' onClick={handleLogout}>
@@ -110,20 +158,16 @@ const Navbar = () => {
                         )}
                     </ul>
 
-                    <div onClick={removeNavbar} className = "closeNavbar">
+                    <div onClick={removeNavbar} className="closeNavbar">
                         <AiFillCloseCircle className="icon"/>
                     </div>
 
                 </div>
 
 
-                <div onClick ={showNav} className = "toggleNavbar">
-                    <TbGridDots className = "icon"/>
+                <div onClick={showNav} className="toggleNavbar">
+                    <TbGridDots className="icon"/>
                 </div>
-
-
-
-
 
 
             </header>

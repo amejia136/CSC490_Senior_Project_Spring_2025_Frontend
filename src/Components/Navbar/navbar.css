@@ -35,6 +35,8 @@
   color: var(--PrimaryColor);
   transform: translateY(5px);
 }
+
+
 @media screen and (max-width: 768px) {
   .header .navBar {
     position: absolute;

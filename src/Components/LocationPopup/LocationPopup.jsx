@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './LocationPopup.css';
 import ConfirmationPopup from './ConfirmationPopup';
-
+import { useTranslation } from 'react-i18next';
 
 const mockItineraries = [
     { id: 'spring-vacation', name: 'Spring Vacations' },
@@ -11,6 +11,7 @@ const mockItineraries = [
 
 const LocationPopup = ({ location, onClose, onAddToItinerary }) => {
     const [popupState, setPopupState] = useState('initial');
+    const { t } = useTranslation();
 
     const handleYesClick = () => {
         setPopupState('itinerary');
@@ -23,23 +24,20 @@ const LocationPopup = ({ location, onClose, onAddToItinerary }) => {
         console.log("popupState after:", popupState);
     };
 
-
-
-
     return (
         <div className="location-popup">
             {popupState === 'initial' && (
                 <>
                     <h2>{location.name}</h2>
-                    <p>Want to add this location to your itinerary?</p>
-                    <button onClick={handleYesClick}>Yes</button>
-                    <button onClick={onClose}>Cancel</button>
+                    <p>{t("Want to add this location to your itinerary?")}</p>
+                    <button onClick={handleYesClick}>{t("Yes")}</button>
+                    <button onClick={onClose}>{t("Cancel")}</button>
                 </>
             )}
 
             {popupState === 'itinerary' && (
                 <>
-                    <h2>Which itinerary?</h2>
+                    <h2>{t("Which itinerary?")}</h2>
                     {mockItineraries.map((itinerary) => (
                         <button key={itinerary.id} onClick={() => handleSelectItinerary(itinerary.id)}>
                             {itinerary.name}
@@ -50,7 +48,7 @@ const LocationPopup = ({ location, onClose, onAddToItinerary }) => {
 
             {popupState === 'confirmation' && (
                 <>
-                    {console.log('confimation popup rendered')}
+                    {console.log('confirmation popup rendered')}
                     <ConfirmationPopup onClose={onClose} />
                 </>
             )}

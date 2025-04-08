@@ -7,18 +7,18 @@ import {FaInstagram, FaTwitter} from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { FaTripadvisor } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
-import { useDarkMode } from '../DarkMode/DarkMode';
 
 
 import Aos from 'aos'
 import 'aos/dist/aos.css'
+import {useTranslation} from "react-i18next";
 
 
 
 
 const Footer = () => {
 
-    const { darkMode, toggleDarkMode } = useDarkMode();// dark mode
+    const { t } = useTranslation();
 
     useEffect(() => {
         Aos.init({duration: 2000})
@@ -34,16 +34,15 @@ const Footer = () => {
             <div className="secContent container">
                 <div className="contactDiv flex">
                     <div data-aos ="fade-up" className="text">
-                        <small>KEEP IN TOUCH</small>
-                        <h2>Travel with us</h2>
+                        <small>{t('KEEP IN TOUCH')}</small>
+                        <h2>{t('Travel with us')}</h2>
 
                     </div>
 
                     <div className="inputDiv flex">
-                        <input data-aos ="fade-up" type="text" placeholder='Enter Email
-                        Address'/>
+                        <input data-aos ="fade-up" type="text" placeholder={t('Enter Email Address')}/>
                         <button data-aos ="fade-up" className='btn flex type' type='submit'>
-                            SEND <FiSend className = "icon" />
+                            {t('SEND')} <FiSend className = "icon" />
 
                         </button>
                     </div>
@@ -60,12 +59,7 @@ const Footer = () => {
                         </div>
 
                         <div data-aos ="fade-up" className="footerParagraph">
-                            Traveling allows you to step outside your daily routine and experience new cultures,
-                            landscapes, and perspectives. It broadens your mind, enriches your understanding of the world,
-                            and creates lasting memories. Whether it's for adventure, relaxation, or personal growth,
-                            travel offers the opportunity to disconnect, recharge, and explore the beauty and diversity that our planet has to offer.
-                            It’s not just about the destinations you visit, but the journey and the connections you make along the way.
-
+                            {t('TravelParagraph')}
                         </div>
 
                         <div data-aos ="fade-up" className="footerSocials flex">
@@ -85,37 +79,37 @@ const Footer = () => {
                              data-aos-duration="3000"
                              className="linkGroup">
                             <span className="groupTitle">
-                                OUR AGENCY
+                                {t('OUR AGENCY')}
                             </span>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Services
+                                {t('Services')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Insurance
+                                {t('Insurance')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Agency
+                                {t('Agency')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Tourism
+                                {t('Tourism')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Payment
+                                {t('Payment')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Services
+                                {t('Services')}
                             </li>
 
                         </div>
@@ -125,37 +119,37 @@ const Footer = () => {
                              data-aos-duration="4000"
                              className="linkGroup">
                             <span className="groupTitle">
-                                PARTNERS
+                                {t('PARTNERS')}
                             </span>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Bookings
+                                {t('Bookings')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Rentcars
+                                {t('Rentcars')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                HostelWorld
+                                {t('HostelWorld')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Trivago
+                                {t('Trivago')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                TripAdvisor
+                                {t('TripAdvisor')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Services
+                                {t('Services')}
                             </li>
 
                         </div>
@@ -165,37 +159,37 @@ const Footer = () => {
                              data-aos-duration="5000"
                              className="linkGroup">
                             <span className="groupTitle">
-                                LAST MINUTE
+                                {t('LAST MINUTE')}
                             </span>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Oregon
+                                {t('Oregon')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                California
+                                {t('California')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Washington
+                                {t('Washington')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Arizona
+                                {t('Arizona')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Michigan
+                                {t('Michigan')}
                             </li>
 
                             <li className="footerList flex">
                                 <FiChevronRight className="icon" />
-                                Illinois
+                                {t('Illinois')}
                             </li>
 
                         </div>
@@ -204,12 +198,6 @@ const Footer = () => {
 
                     <div className="footerDiv flex">
 
-                    </div>
-
-                    <div className="footerDiv flex">
-                        <button onClick={toggleDarkMode} className="themeToggleBtn">
-                            {darkMode ? 'Light Mode' : 'Dark Mode'}
-                        </button>
                     </div>
                 </div>
 
