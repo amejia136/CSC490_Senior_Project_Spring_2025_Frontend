@@ -1,8 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { LoadScript } from "@react-google-maps/api";
-import { UserProvider } from './UserContext';
-import { DarkModeProvider } from './Components/DarkMode/DarkMode';
+import { UserProvider } from './UserContext'; // Import the UserProvider
 
 import './App.css';
 import Navbar from "./Components/Navbar/Navbar";
@@ -14,113 +13,97 @@ import Profile from "./Components/Profile/Profile";
 import Achievements from "./Components/Achievements/Achievements";
 import GoogleMapComponent from "./Components/GoogleMap/GoogleMap";
 import Itinerary from "./Components/Itinerary/Itinerary";
-import ItineraryDetailPage from "./Components/ItineraryDetailPage/ItineraryDetailPage";
+import ItineraryDetailPage from "./Components/ItineraryDetailPage/ItineraryDetailPage"; // Your import path
 import ResetPassword from "./Components/Login/ResetPassword";
 import AccountSecurity from "./Components/Profile/AccountSecurity";
 import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
-import About from "./Components/About/About";
-import Contact from "./Components/Contact/Contact";
+import './Translations/i18n';
+import { useTranslation } from 'react-i18next';
 
 const App = () => {
     return (
-        <UserProvider>
-            <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} libraries={["places"]}>
-                <DarkModeProvider>
-                    <Router>
-                        <Routes>
-                            {/* Login Page */}
-                            <Route path="/login" element={<Login />} />
+        <UserProvider>      
+            <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+            libraries={["places"]}
+            >
+                <Router>
+                    <Routes>
 
-                            {/* Home Page */}
-                            <Route path="/" element={
-                                <>
-                                    <Navbar />
-                                    <Home />
-                                    <Main />
-                                    <Footer />
-                                </>
-                            } />
+                        {/* Login Page */}
+                        <Route path="/login" element={<Login />} />
 
-                            {/* Profile Page */}
-                            <Route path="/profile" element={
-                                <>
-                                    <Navbar />
-                                    <Profile />
-                                </>
-                            } />
+                        {/* Home Page */}
+                        <Route path="/" element={
+                            <>
+                                <Navbar />
+                                <Home />
+                                <Main />
+                                <Footer />
+                            </>
+                        } />
 
-                            {/* Achievements Page */}
-                            <Route path="/achievements" element={
-                                <>
-                                    <Navbar />
-                                    <Achievements />
-                                </>
-                            } />
+                        {/* Profile Page */}
+                        <Route path="/profile" element={
+                            <>
+                                <Navbar />
+                                <Profile />
+                            </>
+                        } />
 
-                            {/* Itinerary List Page */}
-                            <Route path="/itinerary" element={
-                                <>
-                                    <Navbar/>
-                                    <Itinerary/>
-                                </>
-                            }/>
 
-                            {/* Itinerary Detail Page */}
-                            <Route path="/itinerary/:itineraryId" element={
-                                <>
-                                    <Navbar/>
-                                    <ItineraryDetailPage/>
-                                </>
-                            }/>
+                        {/* Achievements Page */}
+                        <Route path="/achievements" element={
+                            <>
+                                <Navbar />
+                                <Achievements />
+                            </>
+                        } />
+                          
+                    {/* Itinerary List Page */}
+                    <Route path="/itinerary" element={
+                        <>
+                            <Navbar/>
+                            <Itinerary/>
+                        </>
+                    }/>
 
-                            {/* About Page */}
-                            <Route path="/about" element={
-                                <>
-                                    <Navbar/>
-                                    <About/>
-                                    <Footer/>
-                                </>
-                            }/>
+                    {/* Itinerary Detail Page */}
+                    <Route path="/itinerary/:itineraryId" element={
+                        <>
+                            <Navbar/>
+                            <ItineraryDetailPage/>
+                        </>
+                    }/>
 
-                            {/* Contact Page */}
-                            <Route path="/contact" element={
-                                <>
-                                    <Navbar/>
-                                    <Contact/>
-                                    <Footer/>
-                                </>
-                            }/>
+                    {/* Reset Password Page */}
+                    <Route path="/reset-password" element={<ResetPassword/>}/>
 
-                            {/* Reset Password Page */}
-                            <Route path="/reset-password" element={<ResetPassword/>}/>
+                    {/* Account Security Page */}
+                    <Route path="/account-security" element={
+                        <>
+                            <Navbar/>
+                            <AccountSecurity/>
+                        </>
+                    }/>
 
-                            {/* Account Security Page */}
-                            <Route path="/account-security" element={
-                                <>
-                                    <Navbar/>
-                                    <AccountSecurity/>
-                                </>
-                            }/>
+                    {/* Verify Email Page */}
+                    <Route path="/verify-link" element={<VerifyEmailLink/>}/>
 
-                            {/* Verify Email Link Page */}
-                            <Route path="/verify-link" element={<VerifyEmailLink/>}/>
+                      
 
-                            {/* Google Map Page */}
-                            <Route path="/map" element={
-                                <>
-                                    <Navbar />
-                                    <GoogleMapComponent />
-                                    <Footer />
-                                </>
-                            } />
-
-                        </Routes>
-                    </Router>
-                </DarkModeProvider>
+                        {/* Google Map Page */}
+                        <Route path="/map" element={
+                            <>
+                                <Navbar />
+                                <GoogleMapComponent />
+                                <Footer />
+                            </>
+                        } />
+                    </Routes>
+                </Router>
             </LoadScript>
         </UserProvider>
     );
 };
 
 export default App;
-
