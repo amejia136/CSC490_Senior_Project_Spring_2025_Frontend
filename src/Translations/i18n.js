@@ -9,18 +9,28 @@ i18n
                 translation: {
                     "Welcome": "Welcome",
                     "Home": "Home",
+                    "About": "About",
                     "Profile": "Profile",
-                    "Login": "Login",
-                    // 👆 Add all your text keys (match words already in your app)
+                    "Reviews": "Reviews",
+                    "Achievements": "Achievements",
+                    "Itinerary": "Itinerary",
+                    "Contact": "Contact",
+                    "LOGIN": "Login",
+                    "SIGNOUT": "Sign Out"
                 }
             },
             es: {
                 translation: {
                     "Welcome": "Bienvenido",
                     "Home": "Inicio",
+                    "About": "Acerca de",
                     "Profile": "Perfil",
-                    "Login": "Iniciar sesión",
-                    // 👆 Same keys but Spanish values
+                    "Reviews": "Reseñas",
+                    "Achievements": "Logros",
+                    "Itinerary": "Itinerario",
+                    "Contact": "Contacto",
+                    "LOGIN": "Iniciar sesión",
+                    "SIGNOUT": "Cerrar sesión"
                 }
             }
         },
@@ -33,3 +43,4 @@ i18n
     });
 
 export default i18n;
+

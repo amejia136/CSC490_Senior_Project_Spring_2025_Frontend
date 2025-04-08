@@ -8,9 +8,13 @@ import {db} from '../../firebaseConfig';
 import {doc, getDoc, setDoc} from 'firebase/firestore';
 import backgroundVideo from '../../Assets/ProfileVideo.mp4';
 import axios from "axios";
+import {useTranslation} from 'react-i18next';
+import i18n from "../../Translations/i18n";
+
 
 const Profile = () => {
     const {user} = useContext(UserContext);
+    const {t} = useTranslation();
     const navigate = useNavigate();
 
     const [profileData, setProfileData] = useState({
@@ -98,6 +102,18 @@ const Profile = () => {
             fetchProfileData();
         }
     }, [user?.uid, fetchProfileData]);
+
+    useEffect(() => {
+        const languageMap = {
+            English: "en",
+            Spanish: "es",
+        };
+
+        if (profileData.language) {
+            i18n.changeLanguage(languageMap[profileData.language] || "en");
+        }
+    }, [profileData.language]);
+
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
