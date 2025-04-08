@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './LocationPopup.css';
 import ConfirmationPopup from './ConfirmationPopup';
-
-
+// start of maps to itinerary
 const mockItineraries = [
     { id: 'spring-vacation', name: 'Spring Vacations' },
     { id: 'summer-weekend', name: 'Summer Weekend' },
