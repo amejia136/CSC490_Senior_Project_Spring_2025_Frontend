@@ -24,9 +24,13 @@
   --cardBG: rgb(225,225,235);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html, body {
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   background: var(--bodyColor);
+ }
+
 
 
 a{
@@ -97,11 +101,6 @@ img, video {
 
 .input{
   font-size: 100%;
-}
-
-
-body {
-  background : var(--bodyColor);
 }
 
 
