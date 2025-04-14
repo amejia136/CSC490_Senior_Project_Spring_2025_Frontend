@@ -1,5 +1,17 @@
 @import '../../Components/Home/home.css';
 
+
+:root {
+    --primaryColor: #007bff;
+    --secondaryColor: #6c757d;
+    --textColor: #333;
+    --whiteColor: #fff;
+    --greyText: #666;
+    --accentColor:  #FF69B4
+}
+
+
+
 .achievements {
     width: 100%;
     position: relative;
@@ -37,7 +49,7 @@
     align-items: stretch;
     justify-content: center;
     margin: auto;
-    color: var(--whiteColor);
+    color: var(--blackColor);
     z-index: 100;
 }
 
@@ -107,3 +119,70 @@
 .achievements .placeDetails .description {
     font-size: 14px;
 }
+
+
+
+
+.achievements .achievementsNavigation {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.achievements .achievementsNavigation button {
+    background-color: var(--whiteColor);
+    color: var(--primaryColor);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.achievements .achievementsNavigation button:hover {
+    background-color: var(--secondaryColor);
+    color: var(--whiteColor);
+    transform: scale(1.05);
+}
+
+.achievements .achievementsNavigation button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accentColor);
+}
+
+.achievements .achievementsSection {
+    margin-bottom: 4rem;
+}
+
+.achievements .achievementsSection.allAchievementsBottom {
+    margin-bottom: 2rem;
+}
+
+
+.achievements .achievementsSection.allAchievementsBottom .achievementsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-left: 1.5rem;
+    list-style-position: outside;
+}
+
+.achievements .achievementsList .achievementCard.possible::before {
+    content: "\2022";
+    color: var(--primaryColor);
+    font-size: 1.5rem;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.achievements .achievementsList .achievementCard.possible h3 {
+    display: inline;
+    margin-left: 0.5rem;
+
+    .achievements .achievementsList .achievementCard.possible p.description {
+        margin-left: 2rem;
+    }}
