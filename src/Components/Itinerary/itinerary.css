@@ -14,7 +14,7 @@
 
 .itinerary-page th,
 .itinerary-page td {
-    border: 1px solid #ffffff;
+    border: 2px solid var(--borderColor);
     text-align: left;
     padding: 6px;
     font-size: 20px;

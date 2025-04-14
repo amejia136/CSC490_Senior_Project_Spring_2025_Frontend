@@ -294,7 +294,7 @@ const Profile = () => {
                             />
                         </div>
 
-                        <button onClick={handleSave} disabled={loading}>
+                        <button className="save-changes-btn" onClick={handleSave} disabled={loading}>
                             {t('Save Changes')}
                         </button>
                     </div>
@@ -309,7 +309,7 @@ const Profile = () => {
                                 </p>
                             ))}
 
-                        {/* Show nested Preferences */}
+                        {/* Preferences */}
                         <p><strong>{t('Preferences')}:</strong></p>
                         <ul style={{margin: '0.25rem 0 1rem 1rem', padding: 0, listStyle: 'none'}}>
                             {Object.entries(extras.preferences).map(([subKey, subValue]) => (
@@ -338,13 +338,15 @@ const Profile = () => {
                         </ul>
 
 
-                        <button onClick={handleEdit} disabled={loading}>
-                            {t('Edit Profile')}
-                        </button>
+                        <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>
+                            <button onClick={handleEdit} disabled={loading}>
+                                {t('Edit Profile')}
+                            </button>
 
-                        <button onClick={handleSecurity} disabled={loading}>
-                            {t('Account Security')}
-                        </button>
+                            <button onClick={handleSecurity} disabled={loading}>
+                                {t('Account Security')}
+                            </button>
+                        </div>
 
                     </div>
                 )}

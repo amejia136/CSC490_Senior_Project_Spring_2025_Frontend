@@ -1,7 +1,7 @@
 .contact-page {
     font-family: 'Poppins', sans-serif;
-    background-color: #f6faff;
-    color: #333;
+    background-color: var(--bodyColor);
+    color: var(--textColor);
     padding: 60px 20px;
     text-align: center;
 }
@@ -15,12 +15,12 @@
 
 .subtitle {
     font-size: 1.2rem;
-    color: #555;
+    color: var(--textColor);
     margin-bottom: 60px;
 }
 
 .contact-section {
-    background: #ffffff;
+    background: var(--cardBG);
     padding: 40px;
     border-radius: 20px;
     max-width: 600px;
@@ -36,7 +36,7 @@
 
 .contact-section p {
     font-size: 1rem;
-    color: #555;
+    color: var(--textColor);
     line-height: 1.6;
 }
 
@@ -57,7 +57,7 @@
 
 .business-hours p {
     font-size: 1rem;
-    color: #555;
+    color: var(--textColor);
 }
 
 .socials {
@@ -72,7 +72,7 @@
 
 .socials p {
     font-size: 1rem;
-    color: #555;
+    color: var(--textColor);
 }
 
 .location {
@@ -87,6 +87,6 @@
 
 .location p {
     font-size: 1rem;
-    color: #555;
+    color: var(--textColor);
 }
 

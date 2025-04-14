@@ -112,6 +112,32 @@
 .home .homeContent .cardDiv .input input::placeholder {
   font-size: 13px;
 }
+
+
+.home .homeContent .cardDiv .input select,
+.home .homeContent .cardDiv .input input,
+.home .homeContent .cardDiv .input input[type="date"],
+.home .homeContent .cardDiv .input input[type="range"] {
+  background: var(--inputColor);
+  color: var(--textColor);
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+.home .homeContent .cardDiv .input input::placeholder {
+  color: var(--greyText);
+}
+
+
+html[data-theme='dark'] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+
 .home .homeContent .cardDiv .input .icon {
   font-size: 18px;
   color: var(--PrimaryColor) !important;
@@ -133,9 +159,18 @@
   justify-content: center;
   cursor: pointer;
 }
+html[data-theme='dark'] .home .homeContent .cardDiv .searchOptions {
+  background: linear-gradient(to right, hsl(187,85%,33%), hsl(199,100%,23%));
+}
+
 .home .homeContent .cardDiv .searchOptions:hover {
   background: var(--PrimaryColor);
 }
+
+html[data-theme='dark'] .home .homeContent .cardDiv .searchOptions:hover {
+  background: linear-gradient(to right, hsl(187,85%,38%), hsl(199,100%,28%));
+}
+
 .home .homeContent .cardDiv .searchOptions .icon {
   font-size: 18px;
 }
@@ -212,6 +247,53 @@
   .home .homeContent .cardDiv .searchOptions span {
     font-size: 17px;
   }
+
+  /* Styling for Show Map button */
+  .showMapBtn {
+    background: var(--gradientColor);
+    color: var(--whiteColor); /* 🌟 Force white text always */
+    padding: 0.6rem 1.2rem;
+    margin-top: 1rem;
+    margin-bottom: .5rem;
+    border: none;
+    border-radius: 1rem;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.3s ease, filter 0.3s ease, color 0.3s ease;
+  }
+
+
+  .showMapBtn:hover {
+    filter: brightness(0.9);
+  }
+
+  /* Dark Mode styling for Show Map button */
+  html[data-theme='dark'] .showMapBtn {
+    color: var(--whiteColor); /* white text */
+    border: none;
+    border-radius: 1rem;
+    transition: background 0.3s ease;
+  }
+
+  html[data-theme='dark'] .showMapBtn:hover {
+
+  }
+
+  html[data-theme='dark'] .searchOptions {
+
+  }
+
+  html[data-theme='dark'] .searchOptions:hover {
+
+  }
+
+
+
+
+
+
+
 }
 
 /*# sourceMappingURL=home.css.map */

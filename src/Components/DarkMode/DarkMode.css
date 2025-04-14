@@ -10,6 +10,7 @@
     --inputColor: rgb(239, 239, 239);
     --bodyColor: rgb(240, 240, 246);
     --cardBG: rgb(225, 225, 235);
+    --borderColor: #ffffff;
     background-color: rgba(255, 255, 255, 0.8);
 }
 
@@ -17,15 +18,17 @@ html[data-theme='dark'] {
     --PrimaryColor: #64B5F6;
     --SecondaryColor: #26A69A;
     --gradientColor: linear-gradient(to bottom, #283593, #64B5F6);
-    --whiteColor: #1E1E1E;
+    --whiteColor: #FFFFFF;
     --blackColor: #E0E0E0;
     --textColor: #E0E0E0;
     --whiteColorDeam: #282828;
     --greyText: #B0BEC5;
-    --inputColor: lightgrey;
+    --inputColor: #2C2C2C;
+    --inputTextColor: #E0E0E0;
     --bodyColor: #121212;
     --cardBG: #212121;
-
+    --primaryDarkColor: #204080;
+    --borderColor: #555555;
 }
 
 
@@ -58,6 +61,146 @@ html[data-theme='dark'] .home .homeContent .cardDiv {
     background: var(--cardBG);
 }
 
+html[data-theme='dark'] .feature-card {
+    background: #212121; /* solid dark background */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6); /* optional: slight shadow for lift */
+}
+
+html[data-theme='dark'] .value-card {
+    background: #212121; /* solid dark background */
+    color: var(--PrimaryColor); /* optional: make the text color match your theme blue */
+}
+
+html[data-theme='dark'] .join {
+    background: #212121; /* solid dark background */
+}
+
+html[data-theme='dark'] .join-btn {
+    background: linear-gradient(to right, hsl(187, 85%, 33%), hsl(199, 100%, 23%));
+    color: var(--whiteColor);
+}
+
+html[data-theme='dark'] .hero h1 {
+    color: var(--PrimaryColor); /* matches all dark mode titles */
+}
+
+html[data-theme='dark'] .itinerary-page h2 {
+    color: var(--whiteColor);
+}
+
+html[data-theme='dark'] .itinerary-page th {
+    background: linear-gradient(to right, hsl(187, 85%, 33%), hsl(199, 100%, 23%));
+    color: var(--whiteColor);
+}
+
+html[data-theme='dark'] .itinerary-page td {
+    background-color: #2C2C2C;
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .itinerary-page th {
+    background: linear-gradient(to right, hsl(187, 85%, 33%), hsl(199, 100%, 23%));
+    color: var(--whiteColor);
+}
+
+html[data-theme='dark'] .itinerary-page button,
+html[data-theme='dark'] .itinerary-page form button {
+    background: radial-gradient(
+            circle at center,
+            hsl(187, 85%, 43%) 0%,       /* lighter blue at center */
+            hsl(199, 100%, 28%) 60%,      /* fades to darker blue outward */
+            hsl(199, 100%, 23%) 100%      /* even darker at edges */
+    );
+    color: var(--whiteColor);
+    border: none;
+}
+
+html[data-theme='dark'] .itinerary-page button:hover,
+html[data-theme='dark'] .itinerary-page form button:hover {
+    background: radial-gradient(
+            circle at center,
+            hsl(187, 85%, 48%) 0%,       /* a bit brighter on hover */
+            hsl(199, 100%, 33%) 60%,
+            hsl(199, 100%, 28%) 100%
+    );
+}
+
+html[data-theme='dark'] .edit-btn,
+html[data-theme='dark'] .delete-btn {
+    background: radial-gradient(
+            circle at center,
+            hsl(187, 85%, 48%) 30%,  /* lighter color spreads more out */
+            hsl(199, 100%, 33%) 65%,
+            hsl(199, 100%, 23%) 100%
+    );
+    color: var(--whiteColor);
+    border-radius: 8px;
+    transition: background 0.4s ease;
+    border: none;
+}
+
+html[data-theme='dark'] .edit-btn:hover,
+html[data-theme='dark'] .delete-btn:hover {
+    background: radial-gradient(
+            circle at center,
+            hsl(187, 85%, 53%) 30%,  /* slightly lighter when hovered */
+            hsl(199, 100%, 38%) 65%,
+            hsl(199, 100%, 28%) 100%
+    );
+}
+
+
+
+
+html[data-theme='dark'] .input-group input,
+html[data-theme='dark'] .input-group select,
+html[data-theme='dark'] .input-group textarea {
+    background-color: var(--inputColor); /* Already your dark background */
+    color: var(--whiteColor); /* White text inside input */
+    border: 2px solid #1a1a1a;  /* Bold white border */
+    box-shadow: 0 0 4px rgba(100, 181, 246, 0.4);
+}
+
+html[data-theme='dark'] .input-group input::placeholder,
+html[data-theme='dark'] .input-group textarea::placeholder {
+    color: var(--greyText); /* Optional: grey placeholder text */
+}
+
+
+html[data-theme='dark'] input.pac-target-input {
+    background-color: var(--inputColor) !important;
+    color: var(--whiteColor) !important;
+    border: 1px solid #444 !important;
+    border-radius: 8px !important;
+}
+
+html[data-theme='dark'] input.pac-target-input::placeholder {
+    color: var(--whiteColor) !important;
+}
+
+
+html[data-theme='dark'] .btn,
+html[data-theme='dark'] .showMapBtn,
+html[data-theme='dark'] .searchOptions,
+html[data-theme='dark'] .profile-view button,
+html[data-theme='dark'] .save-changes-btn {
+    background: linear-gradient(to right, hsl(187, 85%, 33%), hsl(199, 100%, 23%));
+}
+
+html[data-theme='dark'] .btn:hover,
+html[data-theme='dark'] .showMapBtn:hover,
+html[data-theme='dark'] .searchOptions:hover,
+html[data-theme='dark'] .profile-view button:hover,
+html[data-theme='dark'] .save-changes-btn:hover {
+    background: linear-gradient(to right, hsl(187, 85%, 38%), hsl(199, 100%, 28%));
+}
+
+html[data-theme='dark'] .main .secContent .singleDestination .cardInfo .fees .grade small {
+    background: linear-gradient(to right, hsl(187, 85%, 33%), hsl(199, 100%, 23%)); /* Same dark blue as buttons */
+    color: var(--whiteColor);
+}
+
+
 html[data-theme='dark'] .home .homeContent .cardDiv label,
 html[data-theme='dark'] .home .homeContent .cardDiv .total {
     color: var(--textColor);
@@ -79,7 +222,9 @@ html[data-theme='dark'] .footer {
 
 
 html[data-theme='dark'] .profile-view {
-    background-color: rgba(20, 20, 20, 0.8); {/*profile*/}
+    background-color: rgba(20, 20, 20, 0.8);
+{ /*profile*/
+}
 }
 
 html[data-theme='dark'] .footer .secContent .contactDiv .text small,
@@ -100,7 +245,7 @@ html[data-theme='dark'] .footer .secContent .footerCard {
 }
 
 html[data-theme='dark'] .footer .secContent .footerCard .footerDiv {
-    background:linear-gradient(to bottom, #283593, #64B5F6)
+    background: linear-gradient(to bottom, #283593, #64B5F6)
 
 }
 
@@ -110,7 +255,8 @@ html[data-theme='dark'] body, html[data-theme='dark'] .home, html[data-theme='da
 }
 
 html[data-theme='dark'] .home .overlay {
-    background: rgba(30, 80, 100, 0.5); }
+    background: rgba(30, 80, 100, 0.5);
+}
 
 .darkModeToggle {
     background: none;
@@ -144,8 +290,4 @@ html[data-theme='dark'] .home .overlay {
 .reelSpin {
     transform: translateY(-100px);
 }
-
-
-
-
 

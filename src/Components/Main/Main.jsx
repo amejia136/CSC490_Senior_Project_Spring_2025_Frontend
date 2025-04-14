@@ -24,6 +24,14 @@ import {LanguageContext} from "../../LanguageContext";
 
 const Main = () => {
     const { t } = useTranslation();
+    const { language } = useContext(LanguageContext);
+
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('appLanguage') || sessionStorage.getItem('appLanguage');
+        if (savedLanguage) {
+            i18n.changeLanguage(savedLanguage);
+        }
+    }, [language]);
 
     const Data = [
         {

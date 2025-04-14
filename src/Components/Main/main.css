@@ -51,8 +51,14 @@
 .main .secContent .singleDestination:hover {
   background: var(--cardHover);
   box-shadow: 0 4px 4px rgba(85, 85, 114, 0.549);
-  transition: 0.3ease;
+  transition: 0.3ms;
 }
+html[data-theme='dark'] {
+  box-shadow: 0 4px 4px rgba(85, 85, 114, 0.549);
+  transition: 0.3ms;
+  --cardHover: #2c2c2c; /* 🔥 Dark grey hover for cards */
+}
+
 .main .secContent .singleDestination .imageDiv {
   height: 180px;
   width: 100%;

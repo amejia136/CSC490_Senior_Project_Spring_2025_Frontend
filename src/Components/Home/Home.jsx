@@ -129,9 +129,9 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div>
+                <div data-aos="fade-up">
                     {/* Google Map Load and Toggle */}
-                    <button onClick={toggleMap}>
+                    <button className ="showMapBtn" onClick={toggleMap} >
                         {showMap ? t('Hide Map') : t('Show Map')}
                     </button>
 
