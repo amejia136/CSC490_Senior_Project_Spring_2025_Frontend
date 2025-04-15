@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './LocationPopup.css';
 import ConfirmationPopup from './ConfirmationPopup';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,19 @@ const mockItineraries = [
 const LocationPopup = ({ location, onClose, onAddToItinerary }) => {
     const [popupState, setPopupState] = useState('initial');
     const { t } = useTranslation();
+    const [itineraries, setItineraries] = useState([]);
+
+    useEffect(() => {
+        const updateItineraries = () => {
+            const stored = JSON.parse(localStorage.getItem('all-itineraries')) || [];
+            setItineraries(stored);
+        };
+
+        updateItineraries();
+        window.addEventListener('storage', updateItineraries);
+
+        return () => window.removeEventListener('storage', updateItineraries);
+    }, []);
 
     const handleYesClick = () => {
         setPopupState('itinerary');
@@ -23,6 +36,9 @@ const LocationPopup = ({ location, onClose, onAddToItinerary }) => {
         setPopupState('confirmation');
         console.log("popupState after:", popupState);
     };
+
+
+
 
     return (
         <div className="location-popup">
@@ -38,11 +54,24 @@ const LocationPopup = ({ location, onClose, onAddToItinerary }) => {
             {popupState === 'itinerary' && (
                 <>
                     <h2>{t("Which itinerary?")}</h2>
-                    {mockItineraries.map((itinerary) => (
-                        <button key={itinerary.id} onClick={() => handleSelectItinerary(itinerary.id)}>
-                            {itinerary.name}
-                        </button>
-                    ))}
+                    <div className="itinerary-buttons">
+                        {itineraries.length > 0 ? (
+                            itineraries.map((itinerary) => (
+                                <button
+                                    key={itinerary.id}
+                                    onClick={() => handleSelectItinerary(itinerary.id)}
+                                    className="select-itinerary-btn"
+                                >
+                                    {itinerary.TripName}
+                                </button>
+                            ))
+                        ) : (
+                            <p>No itineraries found. Please add one first.</p>
+                        )}
+                    </div>
+                    <button onClick={onClose} className="cancel-itinerary-popup-btn" style={{ marginTop: '10px' }}>
+                        Cancel
+                    </button>
                 </>
             )}
 
