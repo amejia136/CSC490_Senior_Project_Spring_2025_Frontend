@@ -86,21 +86,27 @@ const ItineraryPage = () => {
                     `http://127.0.0.1:5000/itinerary/update/itinerary/${userId}/${currentItineraryId}`,
                     submissionData
                 );
-                setItineraries(prevItineraries =>
-                    prevItineraries.map(itinerary =>
-                        itinerary.id === currentItineraryId
-                            ? { ...itinerary, ...submissionData }
-                            : itinerary
-                    )
+                const updated = itineraries.map(itinerary =>
+                    itinerary.id === currentItineraryId
+                        ? { ...itinerary, ...submissionData }
+                        : itinerary
                 );
+                setItineraries(updated);
+                localStorage.setItem('all-itineraries', JSON.stringify(updated));
                 setEditMode(false);
             } else {
                 await axios.post(
                     `http://127.0.0.1:5000/itinerary/add/itinerary/${userId}`,
                     submissionData
                 );
-                fetchItineraries();
+                const refreshed = await axios.get(
+                    `http://127.0.0.1:5000/itinerary/get/itineraries/${userId}`
+                );
+                const newItineraries = refreshed.data.data || [];
+                setItineraries(newItineraries);
+                localStorage.setItem('all-itineraries', JSON.stringify(newItineraries));
             }
+
             resetForm();
         } catch (error) {
             setError(
@@ -134,8 +140,11 @@ const ItineraryPage = () => {
         try {
             await axios.delete(
                 `http://127.0.0.1:5000/itinerary/delete/itinerary/${userId}/${itineraryId}`
-            );
-            setItineraries(prev => prev.filter(itinerary => itinerary.id !== itineraryId));
+        );
+            const updated = itineraries.filter(itinerary => itinerary.id !== itineraryId);
+            setItineraries(updated);
+            localStorage.setItem('all-itineraries', JSON.stringify(updated));
+            localStorage.removeItem(`itinerary-${itineraryId}`);
         } catch (error) {
             setError(error.response?.data?.error || "Failed to delete itinerary.");
             console.error("Error deleting itinerary:", error);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './itineraryDetail.css';
 
@@ -6,33 +6,45 @@ const ItineraryDetailsPage = () => {
     const { itineraryId } = useParams();
     const navigate = useNavigate();
 
-    // Mock data
-    const mockItinerary = {
-        id: itineraryId,
-        TripName: `Trip ${itineraryId}`,
-        TripCost: 1200,
-        TripType: 'beach',
-        TripDuration: 5,
-        locations: [
-            {
-                id: 'loc1',
-                name: 'Sunset Beach',
-                address: '123 Coastal Highway',
-                priceLevel: 2
-            },
-            {
-                id: 'loc2',
-                name: 'Marina Restaurant',
-                address: '456 Harbor Way',
-                priceLevel: 3
-            }
-        ]
-    };
-
-    const [locations, setLocations] = useState(mockItinerary.locations);
+    const [itinerary, setItinerary] = useState(null);
+    const [locations, setLocations] = useState([]);
     const [draggedItem, setDraggedItem] = useState(null);
 
-    // Native drag and drop implementation
+    // Load itinerary info from localStorage and listen for changes
+    useEffect(() => {
+        const loadItinerary = () => {
+            const allItineraries = JSON.parse(localStorage.getItem('all-itineraries')) || [];
+            const current = allItineraries.find(i => String(i.id) === itineraryId);
+            setItinerary(current || null);
+        };
+
+        loadItinerary();
+        window.addEventListener('storage', loadItinerary);
+        window.addEventListener('focus', loadItinerary);
+
+        return () => {
+            window.removeEventListener('storage', loadItinerary);
+            window.removeEventListener('focus', loadItinerary);
+        };
+    }, [itineraryId]);
+
+    // Load locations and stay in sync
+    useEffect(() => {
+        const updateLocations = () => {
+            const stored = JSON.parse(localStorage.getItem(`itinerary-${itineraryId}`)) || [];
+            setLocations(stored);
+        };
+
+        updateLocations();
+        window.addEventListener('storage', updateLocations);
+        window.addEventListener('focus', updateLocations);
+
+        return () => {
+            window.removeEventListener('storage', updateLocations);
+            window.removeEventListener('focus', updateLocations);
+        };
+    }, [itineraryId]);
+
     const handleDragStart = (e, index) => {
         setDraggedItem(locations[index]);
         e.dataTransfer.effectAllowed = "move";
@@ -50,16 +62,17 @@ const ItineraryDetailsPage = () => {
 
     const handleDragEnd = () => {
         setDraggedItem(null);
+        localStorage.setItem(`itinerary-${itineraryId}`, JSON.stringify(locations));
     };
 
-    // Delete location
     const handleDeleteLocation = (locationId) => {
         if (window.confirm("Are you sure you want to delete this location?")) {
-            setLocations(locations.filter(location => location.id !== locationId));
+            const updated = locations.filter(location => location.id !== locationId);
+            setLocations(updated);
+            localStorage.setItem(`itinerary-${itineraryId}`, JSON.stringify(updated));
         }
     };
 
-    // Packing recommendations
     const getPackingRecommendations = () => {
         const recommendations = {
             beach: ['Sunscreen', 'Swimsuit', 'Beach towel', 'Sunglasses', 'Flip flops'],
@@ -68,8 +81,17 @@ const ItineraryDetailsPage = () => {
             winter: ['Winter jacket', 'Gloves', 'Thermal wear', 'Ski goggles', 'Hand warmers'],
             business: ['Business attire', 'Laptop', 'Notebook', 'Travel adapter', 'Business cards']
         };
-        return recommendations[mockItinerary.TripType] || [];
+        return itinerary?.TripType ? recommendations[itinerary.TripType] || [] : [];
     };
+
+    if (!itinerary) {
+        return (
+            <div className="itinerary-details-container">
+                <button onClick={() => navigate(-1)} className="back-button">← Back</button>
+                <p>Itinerary not found.</p>
+            </div>
+        );
+    }
 
     return (
         <div className="itinerary-details-container">
@@ -78,11 +100,11 @@ const ItineraryDetailsPage = () => {
             </button>
 
             <div className="itinerary-header">
-                <h1>{mockItinerary.TripName}</h1>
+                <h1>{itinerary.TripName}</h1>
                 <div className="trip-meta">
-                    <span><strong>Type:</strong> {mockItinerary.TripType}</span>
-                    <span><strong>Duration:</strong> {mockItinerary.TripDuration} days</span>
-                    <span><strong>Budget:</strong> ${mockItinerary.TripCost}</span>
+                    <span><strong>Type:</strong> {itinerary.TripType}</span>
+                    <span><strong>Duration:</strong> {itinerary.TripDuration} days</span>
+                    <span><strong>Budget:</strong> ${itinerary.TripCost}</span>
                 </div>
             </div>
 
@@ -103,7 +125,7 @@ const ItineraryDetailsPage = () => {
                                     <h3>{location.name}</h3>
                                     <p>{location.address}</p>
                                     <div className="price-level">
-                                        {'$'.repeat(location.priceLevel)}
+                                        {'$'.repeat(Number(location.priceLevel) || 0)}
                                     </div>
                                 </div>
                                 <button
@@ -119,7 +141,7 @@ const ItineraryDetailsPage = () => {
                         ))}
                     </div>
 
-                    <button className="add-location-button">
+                    <button className="add-location-button" onClick={() => navigate('/map')}>
                         + Add Location
                     </button>
                 </div>

@@ -104,8 +104,19 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
         setIsPopupOpen(true);
     };
     const handleAddToItinerary = (location, itineraryId) => {
-        console.log('Adding location:', location, 'to itinerary:', itineraryId);
-        //  location and itinerary database
+        const itineraryKey = `itinerary-${itineraryId}`;
+        const existing = JSON.parse(localStorage.getItem(itineraryKey)) || [];
+
+        const newLocation = {
+            id: `loc-${Date.now()}`,
+        name: location.name,
+            address: location.address,
+            priceLevel: location.price_level
+    };
+
+        const updated = [...existing, newLocation];
+        localStorage.setItem(itineraryKey, JSON.stringify(updated));
+        window.dispatchEvent(new Event("storage"));
         setIsPopupOpen(false);
     };
 
