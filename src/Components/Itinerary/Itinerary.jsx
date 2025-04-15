@@ -164,7 +164,6 @@ const ItineraryPage = () => {
 
     return (
         <div className="itinerary-page">
-            <div className="app-container">
                 <h2>{t('Itinerary List')}</h2>
 
                 {/* Toast Notification */}
@@ -288,7 +287,6 @@ const ItineraryPage = () => {
                         )}
                     </div>
                 </form>
-            </div>
         </div>
     );
 };
