@@ -3,8 +3,10 @@ import { GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 import stateLocations from "./StateLocations";
 import LocationPopup from '../LocationPopup/LocationPopup';
 import { useTranslation } from "react-i18next";
-
-
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import { useContext } from "react";
+import { UserContext } from "../../UserContext";
 
 const mapContainerStyle = {
     width: "100%",
@@ -26,6 +28,8 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
 
     const autocompleteRef = useRef(null);
     const { t } = useTranslation();
+    const { user } = useContext(UserContext);
+    const userId = user?.uid;
 
 
     useEffect(() => {
@@ -107,21 +111,23 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
         onLocationSelect({ ...locationData });
         setIsPopupOpen(true);
     };
-    const handleAddToItinerary = (location, itineraryId) => {
-        const itineraryKey = `itinerary-${itineraryId}`;
-        const existing = JSON.parse(localStorage.getItem(itineraryKey)) || [];
+    const handleAddToItinerary = async (location, itineraryId) => {
+        if (!userId || !itineraryId) return;
 
-        const newLocation = {
-            id: `loc-${Date.now()}`,
-        name: location.name,
+        const locationData = {
+            name: location.name,
             address: location.address,
-            priceLevel: location.price_level
-    };
+            priceLevel: location.price_level !== "N/A" ? location.price_level : 0,
+            timestamp: Date.now()
+        };
 
-        const updated = [...existing, newLocation];
-        localStorage.setItem(itineraryKey, JSON.stringify(updated));
-        window.dispatchEvent(new Event("storage"));
-        setIsPopupOpen(false);
+        try {
+            const locationRef = collection(db, "Users", userId, "Itineraries", itineraryId, "Locations");
+            await addDoc(locationRef, locationData);
+            setIsPopupOpen(false);
+        } catch (error) {
+            console.error("Failed to add location to Firestore:", error);
+        }
     };
 
     return (

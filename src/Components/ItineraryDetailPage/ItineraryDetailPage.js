@@ -1,49 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './itineraryDetail.css';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+import { UserContext } from '../../UserContext';
 
 const ItineraryDetailsPage = () => {
     const { itineraryId } = useParams();
     const navigate = useNavigate();
+    const { user } = useContext(UserContext);
+    const userId = user?.uid;
 
     const [itinerary, setItinerary] = useState(null);
     const [locations, setLocations] = useState([]);
     const [draggedItem, setDraggedItem] = useState(null);
 
-    // Load itinerary info from localStorage and listen for changes
     useEffect(() => {
-        const loadItinerary = () => {
-            const allItineraries = JSON.parse(localStorage.getItem('all-itineraries')) || [];
-            const current = allItineraries.find(i => String(i.id) === itineraryId);
-            setItinerary(current || null);
+        const fetchItinerary = async () => {
+            if (!userId || !itineraryId) return;
+            try {
+                const itineraryRef = doc(db, "Users", userId, "Itineraries", itineraryId);
+                const docSnap = await getDoc(itineraryRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    setItinerary({ id: docSnap.id, ...data });
+                    setLocations(data.mapLocations || []);
+                } else {
+                    setItinerary(null);
+                }
+            } catch (error) {
+                console.error("❌ Error loading itinerary from Firestore:", error);
+                setItinerary(null);
+            }
         };
-
-        loadItinerary();
-        window.addEventListener('storage', loadItinerary);
-        window.addEventListener('focus', loadItinerary);
-
-        return () => {
-            window.removeEventListener('storage', loadItinerary);
-            window.removeEventListener('focus', loadItinerary);
-        };
-    }, [itineraryId]);
-
-    // Load locations and stay in sync
-    useEffect(() => {
-        const updateLocations = () => {
-            const stored = JSON.parse(localStorage.getItem(`itinerary-${itineraryId}`)) || [];
-            setLocations(stored);
-        };
-
-        updateLocations();
-        window.addEventListener('storage', updateLocations);
-        window.addEventListener('focus', updateLocations);
-
-        return () => {
-            window.removeEventListener('storage', updateLocations);
-            window.removeEventListener('focus', updateLocations);
-        };
-    }, [itineraryId]);
+        fetchItinerary();
+    }, [userId, itineraryId]);
 
     const handleDragStart = (e, index) => {
         setDraggedItem(locations[index]);
@@ -62,14 +53,31 @@ const ItineraryDetailsPage = () => {
 
     const handleDragEnd = () => {
         setDraggedItem(null);
-        localStorage.setItem(`itinerary-${itineraryId}`, JSON.stringify(locations));
     };
 
-    const handleDeleteLocation = (locationId) => {
-        if (window.confirm("Are you sure you want to delete this location?")) {
-            const updated = locations.filter(location => location.id !== locationId);
-            setLocations(updated);
-            localStorage.setItem(`itinerary-${itineraryId}`, JSON.stringify(updated));
+    const handleSaveOrderToFirestore = async () => {
+        if (!userId || !itineraryId) return;
+        try {
+            const validLocations = locations.filter(loc => loc && loc.name);
+            await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
+                mapLocations: validLocations
+            });
+            console.log("✅ Order saved to Firestore");
+        } catch (error) {
+            console.error("❌ Error saving order to Firestore:", error);
+        }
+    };
+
+    const handleDeleteLocation = async (locationIndex) => {
+        if (!window.confirm("Are you sure you want to delete this location?")) return;
+        const updated = locations.filter((_, i) => i !== locationIndex);
+        setLocations(updated);
+        try {
+            await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
+                mapLocations: updated
+            });
+        } catch (err) {
+            console.error("Error deleting location:", err);
         }
     };
 
@@ -113,7 +121,7 @@ const ItineraryDetailsPage = () => {
                     <div className="locations-list">
                         {locations.map((location, index) => (
                             <div
-                                key={location.id}
+                                key={index} // 🔑 FIX: ensure key exists
                                 className={`location-card ${draggedItem === location ? 'dragging' : ''}`}
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, index)}
@@ -125,14 +133,14 @@ const ItineraryDetailsPage = () => {
                                     <h3>{location.name}</h3>
                                     <p>{location.address}</p>
                                     <div className="price-level">
-                                        {'$'.repeat(Number(location.priceLevel) || 0)}
+                                        {'$'.repeat(Number(location.pricelevel || 0))}
                                     </div>
                                 </div>
                                 <button
                                     className="delete-btn"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        handleDeleteLocation(location.id);
+                                        handleDeleteLocation(index);
                                     }}
                                 >
                                     Delete
@@ -140,6 +148,10 @@ const ItineraryDetailsPage = () => {
                             </div>
                         ))}
                     </div>
+
+                    <button className="save-order-button" onClick={handleSaveOrderToFirestore}>
+                        💾 Save Order
+                    </button>
 
                     <button className="add-location-button" onClick={() => navigate('/map')}>
                         + Add Location
