@@ -67,7 +67,7 @@ const AccountSecurity = () => {
                     verifyUrl: "http://localhost:3000/verify-link"
                 }),
             });
-
+//
             if (!response.ok) {
                 const errMessage = await response.text();
                 throw new Error(`Backend returned ${response.status}: ${errMessage}`);
