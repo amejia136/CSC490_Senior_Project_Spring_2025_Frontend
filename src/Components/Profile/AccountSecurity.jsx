@@ -6,6 +6,8 @@ import { TbApps } from "react-icons/tb";
 import "./AccountSecurity.css";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../UserContext";
+import i18n from "../../Translations/i18n";
+import {LanguageContext} from "../../LanguageContext";
 
 const db = getFirestore();
 
@@ -15,8 +17,18 @@ const AccountSecurity = () => {
     const [emailSent, setEmailSent] = useState(false);
     const [error, setError] = useState("");
     const [emailVerified, setEmailVerified] = useState(false);
+    const { language } = useContext(LanguageContext);
+
+
 
     const handleBackToHome = () => navigate("/");
+
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('appLanguage') || sessionStorage.getItem('appLanguage');
+        if (savedLanguage) {
+            i18n.changeLanguage(savedLanguage);
+        }
+    }, [language]);
 
     useEffect(() => {
         const checkVerificationStatus = async () => {

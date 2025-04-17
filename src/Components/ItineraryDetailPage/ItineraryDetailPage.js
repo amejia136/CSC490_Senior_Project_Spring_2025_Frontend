@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './itineraryDetail.css';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
+import { getAuth } from 'firebase/auth'; // 🔐 Import for debug
 import { UserContext } from '../../UserContext';
 
 const ItineraryDetailsPage = () => {
@@ -17,22 +18,47 @@ const ItineraryDetailsPage = () => {
 
     useEffect(() => {
         const fetchItinerary = async () => {
-            if (!userId || !itineraryId) return;
+            console.log("📌 Firestore fetch triggered...");
+            console.log("🧑‍💻 UserContext user object:", user);
+            console.log("👤 userId:", userId);
+            console.log("🧾 itineraryId:", itineraryId);
+
+            const auth = getAuth(); // 🧪 Add auth debug
+            console.log("👀 Firebase Auth currentUser:", auth.currentUser);
+
+            if (!userId || !itineraryId) {
+                console.warn("⚠️ Missing userId or itineraryId — skipping fetch.");
+                return;
+            }
+
             try {
+                const itineraryRefPath = `Users/${userId}/Itineraries/${itineraryId}`;
+                console.log("📂 Firestore doc path:", itineraryRefPath);
+
                 const itineraryRef = doc(db, "Users", userId, "Itineraries", itineraryId);
                 const docSnap = await getDoc(itineraryRef);
+
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+                    console.log("✅ Firestore document found:", data);
+
                     setItinerary({ id: docSnap.id, ...data });
-                    setLocations(data.mapLocations || []);
+
+                    const mappedLocations = data.mapLocations || [];
+                    console.log("📍 Locations loaded:", mappedLocations);
+
+                    setLocations(mappedLocations);
                 } else {
+                    console.error("❌ Document does not exist:", itineraryRefPath);
                     setItinerary(null);
                 }
             } catch (error) {
-                console.error("❌ Error loading itinerary from Firestore:", error);
+                console.error("❌ Firestore fetch error:", error.message);
+                console.error("📛 Full error object:", error);
                 setItinerary(null);
             }
         };
+
         fetchItinerary();
     }, [userId, itineraryId]);
 
@@ -62,7 +88,7 @@ const ItineraryDetailsPage = () => {
             await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
                 mapLocations: validLocations
             });
-            console.log("✅ Order saved to Firestore");
+            console.log("✅ Order saved to Firestore:", validLocations);
         } catch (error) {
             console.error("❌ Error saving order to Firestore:", error);
         }
@@ -76,8 +102,9 @@ const ItineraryDetailsPage = () => {
             await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
                 mapLocations: updated
             });
+            console.log("🗑️ Location deleted and updated in Firestore.");
         } catch (err) {
-            console.error("Error deleting location:", err);
+            console.error("❌ Error deleting location:", err);
         }
     };
 
@@ -91,6 +118,14 @@ const ItineraryDetailsPage = () => {
         };
         return itinerary?.TripType ? recommendations[itinerary.TripType] || [] : [];
     };
+
+    if (!user) {
+        return (
+            <div className="itinerary-details-container">
+                <p>⏳ Waiting for user authentication...</p>
+            </div>
+        );
+    }
 
     if (!itinerary) {
         return (
@@ -121,7 +156,7 @@ const ItineraryDetailsPage = () => {
                     <div className="locations-list">
                         {locations.map((location, index) => (
                             <div
-                                key={index} // 🔑 FIX: ensure key exists
+                                key={index}
                                 className={`location-card ${draggedItem === location ? 'dragging' : ''}`}
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, index)}
