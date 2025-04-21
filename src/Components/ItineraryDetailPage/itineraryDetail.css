@@ -260,3 +260,64 @@
 .location-card > *:not(.delete-btn) {
     pointer-events: none;
 }
+
+/* Enhanced Save Order Button Styles */
+.save-order-button {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 16px 0 8px 0;
+    background: linear-gradient(135deg, #4a6fa5 0%, #3a5a8f 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.save-order-button:hover {
+    background: linear-gradient(135deg, #3a5a8f 0%, #2c4a7f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.save-order-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.save-order-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.3);
+}
+
+.save-order-button::before {
+    content: "💾";
+    font-size: 1.2em;
+    transition: transform 0.2s ease;
+}
+
+.save-order-button:hover::before {
+    transform: scale(1.1);
+}
+
+.save-order-button:disabled {
+    background: #e2e8f0;
+    color: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+
+
+
+

@@ -16,6 +16,8 @@ const ItineraryDetailsPage = () => {
     const [locations, setLocations] = useState([]);
     const [draggedItem, setDraggedItem] = useState(null);
 
+
+
     useEffect(() => {
         const fetchItinerary = async () => {
             console.log("📌 Firestore fetch triggered...");
@@ -60,7 +62,9 @@ const ItineraryDetailsPage = () => {
         };
 
         fetchItinerary();
-    }, [userId, itineraryId]);
+    }, [userId, itineraryId, user]);
+
+
 
     const handleDragStart = (e, index) => {
         setDraggedItem(locations[index]);
@@ -81,6 +85,8 @@ const ItineraryDetailsPage = () => {
         setDraggedItem(null);
     };
 
+    const [saveSuccess, setSaveSuccess] = useState(false);
+
     const handleSaveOrderToFirestore = async () => {
         if (!userId || !itineraryId) return;
         try {
@@ -89,6 +95,8 @@ const ItineraryDetailsPage = () => {
                 mapLocations: validLocations
             });
             console.log("✅ Order saved to Firestore:", validLocations);
+            setSaveSuccess(true);
+            setTimeout(() => setSaveSuccess(false), 3000); // Hide after 3 seconds
         } catch (error) {
             console.error("❌ Error saving order to Firestore:", error);
         }
@@ -105,6 +113,21 @@ const ItineraryDetailsPage = () => {
             console.log("🗑️ Location deleted and updated in Firestore.");
         } catch (err) {
             console.error("❌ Error deleting location:", err);
+        }
+    };
+
+    const toggleCompleteStatus = async () => {
+        if (!userId || !itineraryId) return;
+
+        try {
+            const newStatus = !itinerary.isCompleted;
+            await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
+                isCompleted: newStatus
+            });
+            setItinerary(prev => ({ ...prev, isCompleted: newStatus }));
+            console.log(`✅ Itinerary marked as ${newStatus ? 'complete' : 'incomplete'}`);
+        } catch (error) {
+            console.error("❌ Error updating completion status:", error);
         }
     };
 
@@ -158,7 +181,7 @@ const ItineraryDetailsPage = () => {
                             <div
                                 key={index}
                                 className={`location-card ${draggedItem === location ? 'dragging' : ''}`}
-                                draggable
+                                draggable={true}
                                 onDragStart={(e) => handleDragStart(e, index)}
                                 onDragOver={(e) => handleDragOver(e, index)}
                                 onDragEnd={handleDragEnd}
@@ -185,11 +208,24 @@ const ItineraryDetailsPage = () => {
                     </div>
 
                     <button className="save-order-button" onClick={handleSaveOrderToFirestore}>
-                        💾 Save Order
+                         Save Order
                     </button>
+
+                    {saveSuccess && (
+                        <div className="save-confirmation">
+                            ✓ Changes saved successfully!
+                        </div>
+                    )}
 
                     <button className="add-location-button" onClick={() => navigate('/map')}>
                         + Add Location
+                    </button>
+
+                    <button
+                        onClick={toggleCompleteStatus}
+                        className={`complete-button ${itinerary.isCompleted ? 'completed' : ''}`}
+                    >
+                        {itinerary.isCompleted ? '✓ Completed' : 'Mark as Complete'}
                     </button>
                 </div>
 

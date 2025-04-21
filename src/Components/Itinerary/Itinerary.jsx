@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './itinerary.css';
 import { UserContext } from '../../UserContext';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../firebaseConfig';
-import {addDoc, collection} from 'firebase/firestore';
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 
 const ItineraryPage = () => {
     const navigate = useNavigate();
@@ -43,7 +43,7 @@ const ItineraryPage = () => {
         }
     }, [error]);
 
-    const fetchItineraries = async () => {
+    const fetchItineraries = useCallback(async () => {
         if (!userId) return;
         setIsLoading(true);
         setError(null);
@@ -55,6 +55,41 @@ const ItineraryPage = () => {
         } catch (error) {
             setError(error.response?.data?.error || "Failed to fetch itineraries.");
             console.error("Error fetching itineraries:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [userId]); // Declare all dependencies here
+
+    // Updated useEffect with proper dependencies
+    useEffect(() => {
+        fetchItineraries();
+    }, [fetchItineraries]);
+
+    const toggleCompleteStatus = async (itineraryId, currentStatus) => {
+        if (!userId) return;
+
+        setIsLoading(true);
+        try {
+            const newStatus = !currentStatus;
+            await axios.put(
+                `http://127.0.0.1:5000/itinerary/update/itinerary/${userId}/${itineraryId}`,
+                { isCompleted: newStatus }
+            );
+
+            // Update Firestore
+            await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
+                isCompleted: newStatus
+            });
+
+            // Update local state
+            const updated = itineraries.map(i =>
+                i.id === itineraryId ? { ...i, isCompleted: newStatus } : i
+            );
+            setItineraries(updated);
+            localStorage.setItem('all-itineraries', JSON.stringify(updated));
+
+        } catch (error) {
+            setError(error.response?.data?.error || "Failed to update status");
         } finally {
             setIsLoading(false);
         }
@@ -80,6 +115,7 @@ const ItineraryPage = () => {
             TripCost: parseFloat(formData.tripCost),
             TripType: formData.tripType,
             TripDuration: parseInt(formData.tripDuration),
+            isCompleted: false, // Default to not completed
             timestamp: Date.now()
         };
 
@@ -101,17 +137,13 @@ const ItineraryPage = () => {
                 localStorage.setItem('all-itineraries', JSON.stringify(updated));
                 setEditMode(false);
             } else {
-                console.log("Sending POST to backend...");
                 await axios.post(
                     `http://127.0.0.1:5000/itinerary/add/itinerary/${userId}`,
                     submissionData
                 );
-                console.log("Backend itinerary POST success:", submissionData);
 
                 try {
-                    console.log("Writing itinerary to Firestore...");
                     await addDoc(collection(db, "Users", userId, "Itineraries"), submissionData);
-                    console.log("Successfully added to Firestore.");
                 } catch (firestoreError) {
                     console.error("Failed to sync itinerary to Firestore:", firestoreError);
                 }
@@ -140,6 +172,8 @@ const ItineraryPage = () => {
 
     const handleEditClick = (e, itinerary) => {
         e.stopPropagation();
+        if (itinerary.isCompleted) return;
+
         setEditMode(true);
         setCurrentItineraryId(itinerary.id);
         setFormData({
@@ -213,6 +247,7 @@ const ItineraryPage = () => {
                     <th>{t('Trip Cost ($)')}</th>
                     <th>{t('Trip Type')}</th>
                     <th>{t('Trip Duration (Days)')}</th>
+                    <th>{t('Status')}</th>
                     <th>{t('Actions')}</th>
                 </tr>
                 </thead>
@@ -221,17 +256,24 @@ const ItineraryPage = () => {
                     itineraries.map((itinerary) => (
                         <tr
                             key={itinerary.id}
-                            onClick={() => !isLoading && navigate(`/itinerary/${itinerary.id}`)}
-                            className={isLoading ? 'disabled-row' : ''}
+                            onClick={() => !itinerary.isCompleted && !isLoading && navigate(`/itinerary/${itinerary.id}`)}
+                            className={`${isLoading ? 'disabled-row' : ''} ${itinerary.isCompleted ? 'completed-row' : ''}`}
                         >
                             <td>{itinerary.TripName}</td>
                             <td>${itinerary.TripCost}</td>
                             <td>{itinerary.TripType}</td>
                             <td>{itinerary.TripDuration}</td>
+                            <td>
+                                {itinerary.isCompleted ? (
+                                    <span className="status-badge completed">{t('Completed')}</span>
+                                ) : (
+                                    <span className="status-badge active">{t('Active')}</span>
+                                )}
+                            </td>
                             <td className="actions" onClick={(e) => e.stopPropagation()}>
                                 <button
                                     onClick={(e) => handleEditClick(e, itinerary)}
-                                    disabled={isLoading}
+                                    disabled={isLoading || itinerary.isCompleted}
                                     className="edit-btn"
                                 >
                                     {t('Edit')}
@@ -243,12 +285,22 @@ const ItineraryPage = () => {
                                 >
                                     {t('Delete')}
                                 </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleCompleteStatus(itinerary.id, itinerary.isCompleted);
+                                    }}
+                                    disabled={isLoading}
+                                    className={`complete-btn ${itinerary.isCompleted ? 'completed' : ''}`}
+                                >
+                                    {itinerary.isCompleted ? t('✓ Completed') : t('Mark Complete')}
+                                </button>
                             </td>
                         </tr>
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="5" className="no-itineraries">
+                        <td colSpan="6" className="no-itineraries">
                             {isLoading ? t('Loading...') : t('No itineraries found.')}
                         </td>
                     </tr>
