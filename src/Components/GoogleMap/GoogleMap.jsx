@@ -100,6 +100,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect, activeFilters }) 
                     price_level: "N/A",
                     rating: "N/A",
                     types: "Unknown",
+                    address_components: place.address_components,
                 };
                 if (locationData.place_id) {
                     fetchPlaceDetails(locationData);
@@ -115,7 +116,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect, activeFilters }) 
         service.getDetails(
             {
                 placeId: locationData.place_id,
-                fields: ["name", "price_level", "types", "rating", "formatted_address"],
+                fields: ["name", "price_level", "types", "rating", "formatted_address", "address_components"],
             },
             (place, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
