@@ -53,13 +53,23 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect, activeFilters }) 
 
             service.nearbySearch(request, (results, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                    const newMarkers = results.map((place) => ({
-                        id: place.place_id,
-                        name: place.name,
-                        lat: place.geometry.location.lat(),
-                        lng: place.geometry.location.lng(),
-                        type: type,
-                    }));
+                    const newMarkers = results.map((place) => {
+                        const rating = place.rating ? place.rating.toFixed(1) : "N/A";
+                        const types = Array.isArray(place.types)
+                            ? place.types.map(t => t.replace(/_/g, ' ')).join(", ")
+                            : "Unknown";
+
+                        return {
+                            id: place.place_id,
+                            name: place.name,
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng(),
+                            type: type,
+                            rating,
+                            types
+                        };
+                    });
+
                     setFilteredMarkers((prev) => [
                         ...prev.filter((m) => m.type !== type),
                         ...newMarkers,
@@ -73,6 +83,7 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect, activeFilters }) 
     }, [activeFilters, map]);
 
     const handleMapClick = (event) => {
+        if (!event.latLng) return;
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
         const geocoder = new window.google.maps.Geocoder();
@@ -123,6 +134,12 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect, activeFilters }) 
         setSelectedLocation({ ...locationData });
         onLocationSelect({ ...locationData });
         setIsPopupOpen(true);
+    };
+
+    const handleAddToItinerary = (location, itineraryId) => {
+        console.log('Adding location:', location, 'to itinerary:', itineraryId);
+        // location and itinerary database
+        setIsPopupOpen(false);
     };
 
     return (
@@ -225,18 +242,17 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect, activeFilters }) 
                         ))
                     }
                 </MarkerClusterer>
-                {/* End clusterer */}
+
             </GoogleMap>
 
             {isPopupOpen && (
                 <LocationPopup
                     location={selectedLocation}
                     onClose={() => setIsPopupOpen(false)}
-                    onAddToItinerary={() => setIsPopupOpen(false)}
+                    onAddToItinerary={handleAddToItinerary}
                 />
             )}
         </>
     );
 };
-
 export default GoogleMapComponent;
