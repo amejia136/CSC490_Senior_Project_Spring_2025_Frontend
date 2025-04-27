@@ -217,7 +217,7 @@ const ItineraryDetailsPage = () => {
                         </div>
                     )}
 
-                    <button className="add-location-button" onClick={() => navigate('/map')}>
+                    <button className="add-location-button" onClick={() => navigate('/')}>
                         + Add Location
                     </button>
 
