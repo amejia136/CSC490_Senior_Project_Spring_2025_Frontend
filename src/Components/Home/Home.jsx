@@ -26,6 +26,8 @@ const Home = () => {
     const [selectedState, setSelectedState] = useState("");
     const [selectedLocation, setSelectedLocation] = useState(null);
 
+    const [activeFilters, setActiveFilters] = useState([]);
+
     useEffect(() => {
         Aos.init({ duration: 2000 });
     }, []);
@@ -45,6 +47,14 @@ const Home = () => {
 
     const toggleMap = () => {
         setShowMap((prevShowMap) => !prevShowMap);
+    };
+
+    const setFilterType = (type, enabled) => {
+        setActiveFilters((prev) => {
+            return enabled
+                ? [...new Set([...prev, type])]
+                : prev.filter((t) => t !== type);
+        });
     };
 
     const { user } = useContext(UserContext);
@@ -114,6 +124,52 @@ const Home = () => {
                     </div>
                 </div>
 
+
+
+                {/*  Centered Filter Bar Wrapper */}
+                {showMap && (
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div
+                            style={{
+                                marginTop: '1rem',
+                                marginBottom: '-40px',
+                                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                padding: '10px 15px',
+                                borderRadius: '8px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '3.0 rem',
+                                color: 'white',
+                            }}
+                        >
+                            <label style={{ fontSize: '1.2rem' }}>
+                                <input
+                                    type="checkbox"
+                                    style={{ transform: 'scale(1.5)', marginRight: '8px' }}
+                                    onChange={(e) => setFilterType("restaurant", e.target.checked)}
+                                />
+                                🍽️🔵 Restaurants ||
+                            </label>
+                            <label style={{ fontSize: '1.2rem' }}>
+                                <input
+                                    type="checkbox"
+                                    style={{ transform: 'scale(1.5)', marginRight: '8px' }}
+                                    onChange={(e) => setFilterType("hotel", e.target.checked)}
+                                />
+                                🏨🟡 Hotels ||
+                            </label>
+                            <label style={{ fontSize: '1.2rem' }}>
+                                <input
+                                    type="checkbox"
+                                    style={{ transform: 'scale(1.5)', marginRight: '8px' }}
+                                    onChange={(e) => setFilterType("tourist_attraction", e.target.checked)}
+                                />
+                                🗺️🟢 Attractions
+                            </label>
+                        </div>
+                    </div>
+                )}
+
                 <div>
                     {/* Google Map Load and Toggle */}
                     <button onClick={toggleMap}>
@@ -124,6 +180,7 @@ const Home = () => {
                         <GoogleMapComponent
                             selectedState={selectedState}
                             onLocationSelect={handleLocationSelect}
+                            activeFilters={activeFilters}
                         />
                     </div>
 

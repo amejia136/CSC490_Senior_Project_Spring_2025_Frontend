@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 import stateLocations from "./StateLocations";
 import LocationPopup from '../LocationPopup/LocationPopup';
-
+import { MarkerClusterer } from "@react-google-maps/api";
 
 const mapContainerStyle = {
     width: "100%",
@@ -12,42 +12,86 @@ const mapContainerStyle = {
 };
 
 const defaultCenter = {
-    lat: 39.8283, // Default center (USA)
+    lat: 39.8283,
     lng: -98.5795,
 };
 
-const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
+const GoogleMapComponent = ({ selectedState, onLocationSelect, activeFilters }) => {
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [map, setMap] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(6);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+    const [filteredMarkers, setFilteredMarkers] = useState([]);
     const autocompleteRef = useRef(null);
 
+    const markerIcons = {
+        restaurant: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+        hotel: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+        tourist_attraction: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+    };
+
     useEffect(() => {
-        if (map) {
-            if (selectedState) {
-                const newCenter = stateLocations[selectedState] || defaultCenter;
-                map.panTo(newCenter);
-                setZoomLevel(6);
-            }
+        if (map && selectedState) {
+            const newCenter = stateLocations[selectedState] || defaultCenter;
+            map.panTo(newCenter);
+            setZoomLevel(6);
         }
     }, [selectedState, map]);
 
+    useEffect(() => {
+        if (!map || !window.google) return;
+
+        const service = new window.google.maps.places.PlacesService(map);
+
+        const fetchPlacesByType = (type) => {
+            const request = {
+                location: map.getCenter(),
+                radius: 7000,
+                type: type,
+            };
+
+            service.nearbySearch(request, (results, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                    const newMarkers = results.map((place) => {
+                        const rating = place.rating ? place.rating.toFixed(1) : "N/A";
+                        const types = Array.isArray(place.types)
+                            ? place.types.map(t => t.replace(/_/g, ' ')).join(", ")
+                            : "Unknown";
+
+                        return {
+                            id: place.place_id,
+                            name: place.name,
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng(),
+                            type: type,
+                            rating,
+                            types
+                        };
+                    });
+
+                    setFilteredMarkers((prev) => [
+                        ...prev.filter((m) => m.type !== type),
+                        ...newMarkers,
+                    ]);
+                }
+            });
+        };
+
+        setFilteredMarkers([]);
+        activeFilters.forEach((type) => fetchPlacesByType(type));
+    }, [activeFilters, map]);
+
     const handleMapClick = (event) => {
         if (!event.latLng) return;
-
         const lat = event.latLng.lat();
         const lng = event.latLng.lng();
-
-        if (!window.google || !window.google.maps) return;
-
         const geocoder = new window.google.maps.Geocoder();
+
         geocoder.geocode({ location: { lat, lng } }, (results, status) => {
             if (status === "OK" && results[0]) {
                 const place = results[0];
-
-                let locationData = {
+                const locationData = {
                     name: place.formatted_address,
                     address: place.formatted_address,
                     latitude: lat,
@@ -58,7 +102,6 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                     types: "Unknown",
                     address_components: place.address_components,
                 };
-
                 if (locationData.place_id) {
                     fetchPlaceDetails(locationData);
                 } else {
@@ -69,30 +112,20 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
     };
 
     const fetchPlaceDetails = (locationData) => {
-        if (!locationData.place_id || !window.google || !window.google.maps || !map) {
-            updateSelectedLocation(locationData);
-            return;
-        }
-
         const service = new window.google.maps.places.PlacesService(map);
-
         service.getDetails(
-            { placeId: locationData.place_id, fields: ["name", "price_level", "types", "rating", "formatted_address","address_components"] },
+            {
+                placeId: locationData.place_id,
+                fields: ["name", "price_level", "types", "rating", "formatted_address", "address_components"],
+            },
             (place, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
                     locationData.name = place.name || locationData.name;
                     locationData.address = place.formatted_address || locationData.address;
                     locationData.price_level = place.price_level !== undefined ? place.price_level : "N/A";
-                    locationData.rating = place.rating
-                        ? place.rating.toFixed(1)
-                        : "N/A";
-                    locationData.types = place.types
-                        ? place.types
-                            .map(type => type.replace(/_/g, ' '))
-                            .join(", ")
-                        : "Unknown";
+                    locationData.rating = place.rating ? place.rating.toFixed(1) : "N/A";
+                    locationData.types = place.types ? place.types.join(", ") : "Unknown";
                 }
-
                 updateSelectedLocation(locationData);
             }
         );
@@ -103,9 +136,10 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
         onLocationSelect({ ...locationData });
         setIsPopupOpen(true);
     };
+
     const handleAddToItinerary = (location, itineraryId) => {
         console.log('Adding location:', location, 'to itinerary:', itineraryId);
-        //  location and itinerary database
+        // location and itinerary database
         setIsPopupOpen(false);
     };
 
@@ -168,7 +202,11 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
 
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={selectedLocation ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude } : defaultCenter}
+                center={
+                    selectedLocation
+                        ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude }
+                        : defaultCenter
+                }
                 zoom={zoomLevel}
                 onClick={handleMapClick}
                 onLoad={(map) => setMap(map)}
@@ -177,13 +215,37 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
                     <Marker
                         position={{ lat: selectedLocation.latitude, lng: selectedLocation.longitude }}
                         label={{
-                            text: selectedLocation.name.length > 15 ? selectedLocation.name.substring(0, 15) + "..." : selectedLocation.name,
+                            text: selectedLocation.name.length > 15
+                                ? selectedLocation.name.substring(0, 15) + "..."
+                                : selectedLocation.name,
                             fontSize: "14px",
                             fontWeight: "bold",
                         }}
                     />
                 )}
+
+                <MarkerClusterer>
+                    {(clusterer) =>
+                        filteredMarkers.map((marker) => (
+                            <Marker
+                                key={marker.id}
+                                position={{ lat: marker.lat, lng: marker.lng }}
+                                clusterer={clusterer}
+                                icon={{ url: markerIcons[marker.type] }}
+                                title={marker.name}
+                                onClick={() => {
+                                    if (map) {
+                                        map.panTo({ lat: marker.lat, lng: marker.lng }); //  Center
+                                        map.setZoom(17); //  Zoom in
+                                    }
+                                }}
+                            />
+                        ))
+                    }
+                </MarkerClusterer>
+
             </GoogleMap>
+
             {isPopupOpen && (
                 <LocationPopup
                     location={selectedLocation}
@@ -194,5 +256,4 @@ const GoogleMapComponent = ({ selectedState, onLocationSelect }) => {
         </>
     );
 };
-
 export default GoogleMapComponent;
