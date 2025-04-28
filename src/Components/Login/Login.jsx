@@ -212,7 +212,7 @@ const Login = () => {
                 sessionStorage.setItem("userId", user.uid);
             }
 
-            setSuccessMessage("2FA verified. Logging in...");
+            setSuccessMessage("Two factor authentication verified. Logging in...");
             setTimeout(() => {
                 navigate("/");
                 window.location.reload();
@@ -274,7 +274,7 @@ const Login = () => {
                 {loginStage === "2fa" ? (
                     <div className="form-box login">
                         <form onSubmit={handleVerifyCode}>
-                            <h1>2FA Verification</h1>
+                            <h1>Two-Factor Authentication Verification</h1>
                             <p>We sent a 4-digit code to your email.</p>
                             <div className="input-box">
                                 <input
@@ -350,7 +350,7 @@ const Login = () => {
                             </div>
                         ) : (
                             // ***** Forgot Password Form *****
-                            <div className="form-box forgot-password"> {/* ******** */}
+                            <div className="form-box forgot-password">
                                 <form onSubmit={handleForgotPassword}>
                                     <h1>Trouble logging in?</h1>
                                     <p>Enter your email and we'll send you a link to reset your password.</p>
