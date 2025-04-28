@@ -12,11 +12,6 @@
 }
 
 
-body, html {
-    height: 100vh;
-    overflow: hidden;
-}
-
 .achievements {
     width: 100%;
     position: relative;
