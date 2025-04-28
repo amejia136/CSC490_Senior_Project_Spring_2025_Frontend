@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { getAuth } from 'firebase/auth'; // 🔐 Import for debug
 import { UserContext } from '../../UserContext';
+import Itinerary from "../Itinerary/Itinerary";
 
 const ItineraryDetailsPage = () => {
     const { itineraryId } = useParams();
@@ -198,8 +199,12 @@ const ItineraryDetailsPage = () => {
                                     className="delete-btn"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        handleDeleteLocation(index);
+                                        if (!itinerary.isCompleted) {
+                                            handleDeleteLocation(index);
+                                        }
                                     }}
+                                    disabled={itinerary.isCompleted}
+                                    style={itinerary.isCompleted ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                                 >
                                     Delete
                                 </button>
@@ -207,8 +212,13 @@ const ItineraryDetailsPage = () => {
                         ))}
                     </div>
 
-                    <button className="save-order-button" onClick={handleSaveOrderToFirestore}>
-                         Save Order
+                    <button
+                        className="save-order-button"
+                        onClick={handleSaveOrderToFirestore}
+                        disabled={itinerary.isCompleted}
+                        style={itinerary.isCompleted ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                    >
+                        Save Order
                     </button>
 
                     {saveSuccess && (
@@ -217,16 +227,29 @@ const ItineraryDetailsPage = () => {
                         </div>
                     )}
 
-                    <button className="add-location-button" onClick={() => navigate('/')}>
+                    <button
+                        className="add-location-button"
+                        onClick={() => navigate('/')}
+                        disabled={itinerary.isCompleted}
+                        style={itinerary.isCompleted ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                    >
                         + Add Location
                     </button>
 
                     <button
                         onClick={toggleCompleteStatus}
+                        disabled={itinerary.isCompleted}
                         className={`complete-button ${itinerary.isCompleted ? 'completed' : ''}`}
                     >
                         {itinerary.isCompleted ? '✓ Completed' : 'Mark as Complete'}
                     </button>
+
+                    {itinerary.isCompleted && (
+                        <div style={{ marginTop: '10px', color: 'green' }}>
+                            This itinerary is completed. Editing is disabled.
+                        </div>
+                    )}
+
                 </div>
 
                 <div className="packing-section">

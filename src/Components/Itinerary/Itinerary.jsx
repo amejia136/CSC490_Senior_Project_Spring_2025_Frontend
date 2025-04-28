@@ -256,7 +256,7 @@ const ItineraryPage = () => {
                     itineraries.map((itinerary) => (
                         <tr
                             key={itinerary.id}
-                            onClick={() => !itinerary.isCompleted && !isLoading && navigate(`/itinerary/${itinerary.id}`)}
+                            onClick={() => !isLoading && navigate(`/itinerary/${itinerary.id}`)}
                             className={`${isLoading ? 'disabled-row' : ''} ${itinerary.isCompleted ? 'completed-row' : ''}`}
                         >
                             <td>{itinerary.TripName}</td>

@@ -29,7 +29,8 @@ const LocationPopup = ({ location, onClose, onAddToItinerary }) => {
                     const data = doc.data();
                     console.log("[doc.id]:", doc.id, "data:", data);
                     return { id: doc.id, ...data };
-                });
+                })
+                    .filter(itinerary => !itinerary.isCompleted);
 
                 setItineraries(firestoreItineraries);
                 console.log("[LocationPopup] Final itineraries set:", firestoreItineraries);
