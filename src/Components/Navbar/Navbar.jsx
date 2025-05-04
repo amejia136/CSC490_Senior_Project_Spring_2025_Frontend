@@ -12,6 +12,7 @@ import {useDarkMode} from '../DarkMode/DarkMode';
 import {FiSun, FiMoon} from 'react-icons/fi';
 
 
+
 const Navbar = () => {
     const [active, setActive] = useState('navBar');
 
@@ -24,6 +25,8 @@ const Navbar = () => {
     const {t} = useTranslation();
 
     const [spinning, setSpinning] = useState(false);
+
+
 
     const handleToggleDarkMode = () => {
         setSpinning(true);
@@ -82,6 +85,10 @@ const Navbar = () => {
         navigate('/contact'); // ***** Navigate to login page *****
     };
 
+    const handleDetails = () => {
+        navigate('/details');
+    };
+
     const handleLogout = () => {
 
         setUser(null);
@@ -120,9 +127,10 @@ const Navbar = () => {
                             <a href="#" className="navLink">{t('Profile')}</a>
                         </li>
 
-                        <li className="navItem">
-                            <a href="#" className="navLink">{t('Reviews')}</a>
+                        <li className="navItem" onClick={handleDetails}>
+                            <a href="#" className="navLink">{t('Details')}</a>
                         </li>
+
 
                         <li className="navItem" onClick={handleAchievements}>
                             <a href="#" className="navLink">{t('Achievements')}</a>

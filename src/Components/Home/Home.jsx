@@ -14,7 +14,8 @@ import "aos/dist/aos.css";
 import {UserContext} from '../../UserContext';
 import {useTranslation} from 'react-i18next';
 import i18n from "../../Translations/i18n";
-import { LanguageContext } from "../../LanguageContext";
+import {LanguageContext} from "../../LanguageContext";
+
 
 
 const states = [

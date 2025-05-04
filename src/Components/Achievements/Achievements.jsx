@@ -2,10 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import './Achievements.css';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
-//import niagaraFalls from '../../Assets/niagaraFalls.jpg';
-//import miami from '../../Assets/miami.jpg';
-//import NYC from '../../Assets/NYC.jpg';
-//import vegasPicture from '../../Assets/vegasPicture.jpg';
+
 
 const AchievementsPage = () => {
     useEffect(() => {
