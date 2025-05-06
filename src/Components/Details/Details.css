@@ -22,6 +22,7 @@
     background: var(--gradientColor);
 }
 
+
 .recommendedTitle {
     font-size: 2rem;
     color: var(--PrimaryColor);
@@ -221,7 +222,7 @@
     color: var(--blackColor);
 }
 
-/* Add Comment Form */
+
 .addCommentForm {
     margin-top: 2rem;
     display: flex;
@@ -259,7 +260,7 @@
     transform: translateY(-2px);
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .stateImagesCarousel {
         flex-direction: column;
@@ -277,4 +278,88 @@
     .stateDropdown {
         font-size: 1rem;
     }
+}
+
+.stateImage {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+}
+
+.stateImage:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+.commentButton,
+.addCommentButton {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: var(--PrimaryColor);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.commentButton:hover,
+.addCommentButton:hover {
+    background-color: #1E88E5;
+    transform: translateY(-2px);
+}
+
+.commentButton:focus,
+.addCommentButton:focus {
+    outline: 2px solid #64B5F6;
+}
+
+
+.stateDropdown {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.stateDropdown:hover {
+    background-color: #e0f2f1;
+}
+
+
+.commentsSection {
+    animation: fadeIn 0.5s ease-in-out;
+    background-color: var(--cardBG);
+    border: 1px solid var(--borderColor);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stateDetails {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--cardBG);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.stateDetails:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+
+.detailsTitle {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: var(--PrimaryColor);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

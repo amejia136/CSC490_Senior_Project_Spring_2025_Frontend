@@ -10,7 +10,8 @@ import {useTranslation} from 'react-i18next';
 import i18n from '../../Translations/i18n';
 import {useDarkMode} from '../DarkMode/DarkMode';
 import {FiSun, FiMoon} from 'react-icons/fi';
-
+import logo from '../../Assets/logo.png';
+import logoDark from '../../Assets/logo-dark.png';
 
 
 const Navbar = () => {
@@ -109,7 +110,12 @@ const Navbar = () => {
 
                 <div className="logoDiv">
                     <a href="#" className="logo flex">
-                        <h1><MdOutlineTravelExplore className="icon"/>Travel.</h1>
+                        <img
+                            src={darkMode ? logoDark : logo}
+                            alt="Travel Logo"
+                            className="customLogo"
+                        />
+
                     </a>
                 </div>
 

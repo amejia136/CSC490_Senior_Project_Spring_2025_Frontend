@@ -4,6 +4,9 @@ import {arrayUnion, doc, getDoc, updateDoc} from 'firebase/firestore';
 import { db } from '../../firebaseConfig'
 import stateImages from "../../Assets/stateImages";
 import { getAuth } from 'firebase/auth';
+import Aos from 'aos';
+import 'aos/dist/aos.css';
+
 
 
 
@@ -15,6 +18,7 @@ const DetailsPage = () => {
     const [showAddCommentForm, setShowAddCommentForm] = useState(false);
     const [newComment, setNewComment] = useState({ comment: '', place: '' });
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
 
 
     const allStates = [
@@ -318,11 +322,11 @@ const DetailsPage = () => {
 
     return (
         <section className="detailPageSection">
-            <div className="detailsContent container">
-                <h2 className="detailsTitle">Details!</h2>
-                <p className="detailsIntro">Explore places so you can find your destination for your next trip.</p>
+            <div className="detailsContent container" data-aos="fade">
+                <h2 className="detailsTitle" data-aos="zoom-in">Details!</h2>
+                <p className="detailsIntro" data-aos="fade-in">Explore places so you can find your destination for your next trip.</p>
 
-                <div className="dropdownContainer">
+                <div className="dropdownContainer" data-aos="fade-up">
                     <select value={selectedState} onChange={handleStateChange} className="stateDropdown">
                         <option value="">Choose a state</option>
                         {Object.keys(stateImages).map((stateName) => (
@@ -333,10 +337,10 @@ const DetailsPage = () => {
 
 
                 {!selectedState && (
-                    <div className="recommendedStates">
+                    <div className="recommendedStates" data-aos="fade-up">
                         <h3 className="recommendedTitle"> Our Recommended Destinations for This Summer</h3>
                         {["Hawaii", "California", "Florida"].map((state) => (
-                            <div key={state} className="stateDetails">
+                            <div key={state} className="stateDetails" data-aos="fade-up">
                                 <h2>{state}</h2>
                                 {stateImages[state] && (
                                     <div className="stateImagesCarousel">
@@ -368,10 +372,8 @@ const DetailsPage = () => {
                     </div>
                 )}
 
-
-
                 {selectedState && stateInfo && (
-                    <div className="stateDetails">
+                    <div className="stateDetails" data-aos="fade">
                         <h2>{selectedState}</h2>
                         {stateInfo.whyVisit && (
                             <div className="infoBox">
