@@ -3,9 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './itineraryDetail.css';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
-import { getAuth } from 'firebase/auth'; // 🔐 Import for debug
+import { getAuth } from 'firebase/auth';
 import { UserContext } from '../../UserContext';
 import Itinerary from "../Itinerary/Itinerary";
+import axios from "axios";
 
 const ItineraryDetailsPage = () => {
     const { itineraryId } = useParams();
@@ -16,8 +17,8 @@ const ItineraryDetailsPage = () => {
     const [itinerary, setItinerary] = useState(null);
     const [locations, setLocations] = useState([]);
     const [draggedItem, setDraggedItem] = useState(null);
-
-
+    const [saveSuccess, setSaveSuccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const fetchItinerary = async () => {
@@ -26,7 +27,10 @@ const ItineraryDetailsPage = () => {
             console.log("👤 userId:", userId);
             console.log("🧾 itineraryId:", itineraryId);
 
-            const auth = getAuth(); // 🧪 Add auth debug
+            const auth = getAuth();
+            console.log(" Firebase Auth UID:", auth.currentUser?.uid);
+            console.log(" Context UID:", user?.uid);
+            console.log(" Trying to fetch:", `Users/${user?.uid}/Itineraries/${itineraryId}`);
             console.log("👀 Firebase Auth currentUser:", auth.currentUser);
 
             if (!userId || !itineraryId) {
@@ -44,12 +48,10 @@ const ItineraryDetailsPage = () => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     console.log("✅ Firestore document found:", data);
-
                     setItinerary({ id: docSnap.id, ...data });
 
                     const mappedLocations = data.mapLocations || [];
                     console.log("📍 Locations loaded:", mappedLocations);
-
                     setLocations(mappedLocations);
                 } else {
                     console.error("❌ Document does not exist:", itineraryRefPath);
@@ -57,7 +59,6 @@ const ItineraryDetailsPage = () => {
                 }
             } catch (error) {
                 console.error("❌ Firestore fetch error:", error.message);
-                console.error("📛 Full error object:", error);
                 setItinerary(null);
             }
         };
@@ -65,14 +66,14 @@ const ItineraryDetailsPage = () => {
         fetchItinerary();
     }, [userId, itineraryId, user]);
 
-
-
     const handleDragStart = (e, index) => {
+        if (itinerary?.isCompleted) return;
         setDraggedItem(locations[index]);
         e.dataTransfer.effectAllowed = "move";
     };
 
     const handleDragOver = (e, index) => {
+        if (itinerary?.isCompleted) return;
         e.preventDefault();
         const draggedOverItem = locations[index];
         if (draggedItem === draggedOverItem) return;
@@ -86,49 +87,76 @@ const ItineraryDetailsPage = () => {
         setDraggedItem(null);
     };
 
-    const [saveSuccess, setSaveSuccess] = useState(false);
-
     const handleSaveOrderToFirestore = async () => {
-        if (!userId || !itineraryId) return;
+        if (!userId || !itineraryId || itinerary?.isCompleted) return;
+
+        setIsLoading(true);
         try {
             const validLocations = locations.filter(loc => loc && loc.name);
             await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
                 mapLocations: validLocations
             });
-            console.log("✅ Order saved to Firestore:", validLocations);
             setSaveSuccess(true);
-            setTimeout(() => setSaveSuccess(false), 3000); // Hide after 3 seconds
+            setTimeout(() => setSaveSuccess(false), 3000);
         } catch (error) {
-            console.error("❌ Error saving order to Firestore:", error);
+            console.error("Error saving order:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleDeleteLocation = async (locationIndex) => {
-        if (!window.confirm("Are you sure you want to delete this location?")) return;
-        const updated = locations.filter((_, i) => i !== locationIndex);
-        setLocations(updated);
+        if (itinerary?.isCompleted || !window.confirm("Are you sure you want to delete this location?")) return;
+
+        setIsLoading(true);
         try {
+            const updated = locations.filter((_, i) => i !== locationIndex);
+            setLocations(updated);
             await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
                 mapLocations: updated
             });
-            console.log("🗑️ Location deleted and updated in Firestore.");
         } catch (err) {
-            console.error("❌ Error deleting location:", err);
+            console.error("Error deleting location:", err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const toggleCompleteStatus = async () => {
-        if (!userId || !itineraryId) return;
+        if (!user) {
+            alert("Please sign in to complete trips");
+            return;
+        }
 
+        if (!itineraryId || itinerary?.isCompleted) return;
+
+        const confirmComplete = window.confirm("Marking this trip as complete is permanent. Continue?");
+        if (!confirmComplete) return;
+
+        setIsLoading(true);
         try {
-            const newStatus = !itinerary.isCompleted;
-            await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
-                isCompleted: newStatus
-            });
-            setItinerary(prev => ({ ...prev, isCompleted: newStatus }));
-            console.log(`✅ Itinerary marked as ${newStatus ? 'complete' : 'incomplete'}`);
+            const response = await axios.post(
+                `http://127.0.0.1:5000/itinerary/complete-itinerary/${userId}/${itineraryId}`
+            );
+
+            if (response.data.success) {
+                setItinerary(prev => ({
+                    ...prev,
+                    isCompleted: true,
+                    completedAt: new Date()
+                }));
+
+                if (response.data.unlocked_achievements?.length > 0) {
+                    alert(`Unlocked achievements:\n${response.data.unlocked_achievements.join("\n")}`);
+                }
+            } else {
+                throw new Error(response.data.error || "Failed to complete itinerary");
+            }
         } catch (error) {
-            console.error("❌ Error updating completion status:", error);
+            console.error("Completion failed:", error);
+            alert(`Action failed: ${error.message}`);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -161,7 +189,7 @@ const ItineraryDetailsPage = () => {
     }
 
     return (
-        <div className="itinerary-details-container">
+        <div className={`itinerary-details-container ${itinerary.isCompleted ? 'completed-trip' : ''}`}>
             <button onClick={() => navigate(-1)} className="back-button">
                 ← Back to Itineraries
             </button>
@@ -172,6 +200,7 @@ const ItineraryDetailsPage = () => {
                     <span><strong>Type:</strong> {itinerary.TripType}</span>
                     <span><strong>Duration:</strong> {itinerary.TripDuration} days</span>
                     <span><strong>Budget:</strong> ${itinerary.TripCost}</span>
+                    {itinerary.isCompleted && <span className="completed-badge">✓ Completed</span>}
                 </div>
             </div>
 
@@ -182,7 +211,7 @@ const ItineraryDetailsPage = () => {
                             <div
                                 key={index}
                                 className={`location-card ${draggedItem === location ? 'dragging' : ''}`}
-                                draggable={true}
+                                draggable={!itinerary.isCompleted}
                                 onDragStart={(e) => handleDragStart(e, index)}
                                 onDragOver={(e) => handleDragOver(e, index)}
                                 onDragEnd={handleDragEnd}
@@ -212,36 +241,36 @@ const ItineraryDetailsPage = () => {
                         ))}
                     </div>
 
-                    <button
-                        className="save-order-button"
-                        onClick={handleSaveOrderToFirestore}
-                        disabled={itinerary.isCompleted}
-                        style={itinerary.isCompleted ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
-                    >
-                        Save Order
-                    </button>
-
-                    {saveSuccess && (
-                        <div className="save-confirmation">
-                            ✓ Changes saved successfully!
-                        </div>
+                    {!itinerary.isCompleted && (
+                        <>
+                            <button
+                                className="save-order-button"
+                                onClick={handleSaveOrderToFirestore}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Saving...' : 'Save Order'}
+                            </button>
+                            {saveSuccess && (
+                                <div className="save-confirmation">
+                                    ✓ Changes saved successfully!
+                                </div>
+                            )}
+                            <button
+                                className="add-location-button"
+                                onClick={() => navigate('/')}
+                                disabled={isLoading}
+                            >
+                                + Add Location
+                            </button>
+                        </>
                     )}
 
                     <button
-                        className="add-location-button"
-                        onClick={() => navigate('/')}
-                        disabled={itinerary.isCompleted}
-                        style={itinerary.isCompleted ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
-                    >
-                        + Add Location
-                    </button>
-
-                    <button
                         onClick={toggleCompleteStatus}
-                        disabled={itinerary.isCompleted}
-                        className={`complete-button ${itinerary.isCompleted ? 'completed' : ''}`}
+                        disabled={itinerary.isCompleted || isLoading}
+                        className={`complete-button ${itinerary.isCompleted ? 'permanent-complete' : ''}`}
                     >
-                        {itinerary.isCompleted ? '✓ Completed' : 'Mark as Complete'}
+                        {itinerary.isCompleted ? '✓ Permanently Completed' : 'Mark as Complete'}
                     </button>
 
                     {itinerary.isCompleted && (
@@ -249,7 +278,6 @@ const ItineraryDetailsPage = () => {
                             This itinerary is completed. Editing is disabled.
                         </div>
                     )}
-
                 </div>
 
                 <div className="packing-section">
@@ -257,7 +285,11 @@ const ItineraryDetailsPage = () => {
                     <div className="packing-items">
                         {getPackingRecommendations().map((item, index) => (
                             <div key={index} className="packing-item">
-                                <input type="checkbox" id={`item-${index}`} />
+                                <input
+                                    type="checkbox"
+                                    id={`item-${index}`}
+                                    disabled={itinerary.isCompleted}
+                                />
                                 <label htmlFor={`item-${index}`}>{item}</label>
                             </div>
                         ))}
