@@ -63,8 +63,8 @@ const ResetPassword = () => {
 
 
             await axios.post("http://127.0.0.1:5000/auth/update-password", {
-                email: email, // ✅ Now you have the email!
-                newPassword: newPassword, // ✅ Send new password to backend
+                email: email,
+                newPassword: newPassword, // Send new password to backend
             });
 
             console.log("Password updated in Firestore");

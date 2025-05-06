@@ -239,6 +239,18 @@
     font-size: 16px;
     padding: 5px 0;
   }
+
+  .footerList a {
+    color: var(--textColor);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footerList a:hover {
+    color: var(--PrimaryColor);
+  }
+
+
 }
 
 /*# sourceMappingURL=footer.css.map */

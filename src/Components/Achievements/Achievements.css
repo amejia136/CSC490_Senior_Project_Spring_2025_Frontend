@@ -1,15 +1,15 @@
+/* Achievements.css */
+
 @import '../../Components/Home/home.css';
 
-
 :root {
-    --primaryColor: #007bff;
+    --primaryColor: #3a86ff; /* updated softer blue */
     --secondaryColor: #6c757d;
     --textColor: #333;
     --whiteColor: #fff;
     --greyText: #666;
-    --accentColor:  #FF69B4
+    --accentColor: #FF69B4;
 }
-
 
 
 .achievements {
@@ -22,11 +22,7 @@
     min-height: 100vh;
     background: linear-gradient(to bottom, rgba(0, 128, 255, 0.7), rgba(0, 200, 255, 0.4), rgba(224, 255, 255, 0));
 }
-.light-blue-white-fade {
-    width: 100%;
-    height: 100vh;
-    background: linear-gradient(to bottom, rgba(173, 216, 230, 0.5), rgba(255, 255, 255, 0));
-}
+
 .achievements .overlay {
     position: absolute;
     height: 100%;
@@ -37,7 +33,6 @@
     z-index: 1;
     mix-blend-mode: hard-light;
 }
-
 
 .achievements .achievementsContent {
     width: 100%;
@@ -58,129 +53,270 @@
     text-align: center;
 }
 
-.achievements .visitedPlaces,
-.achievements .plannedPlaces {
-    margin-bottom: 3rem;
+.progressBarContainer {
+    width: 80%;
+    margin: 1rem auto 2rem auto;
+    text-align: center;
 }
 
-.achievements .visitedPlaces h2,
-.achievements .plannedPlaces h2 {
-    color: var(--whiteColor);
-    margin-bottom: 1rem;
-}
-
-.achievements .placesList {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.achievements .placeCard {
-    background: var(--whiteColor);
-    border-radius: 10px;
-    padding: 1rem;
-    color: var(--textColor);
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-}
-
-.achievements .placeCard:hover {
-    transform: translateY(-5px);
-}
-
-.achievements .placeCard img {
-    width: 200px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.achievements .placeDetails {
-    flex: 1;
-    text-align: left;
-}
-
-.achievements .placeDetails h3 {
+.progressBar {
+    background: #e6e6e6;
+    width: 100%;
+    height: 25px;
+    border-radius: 50px;
+    overflow: hidden;
     margin-bottom: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.achievements .placeDetails .location {
-    font-style: italic;
-    color: var(--greyText);
-    margin-bottom: 0.5rem;
+.progressFill {
+    background: linear-gradient(90deg, #6ea8fe, #3a86ff);
+    height: 100%;
+    width: 0%;
+    transition: width 1s ease-in-out;
+    border-radius: 50px 0 0 50px;
 }
 
-.achievements .placeDetails .description {
-    font-size: 14px;
-}
 
-
-
-
-.achievements .achievementsNavigation {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.achievements .achievementsNavigation button {
-    background-color: var(--whiteColor);
-    color: var(--primaryColor);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 20px;
+.progressText {
     font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: var(--textColor);
+    margin-top: 0.5rem;
 }
 
-.achievements .achievementsNavigation button:hover {
-    background-color: var(--secondaryColor);
-    color: var(--whiteColor);
-    transform: scale(1.05);
+.achievementsLayout {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
-.achievements .achievementsNavigation button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--accentColor);
+.sidebarTabsWrapper {
+    flex: 0 0 250px;
 }
 
-.achievements .achievementsSection {
-    margin-bottom: 4rem;
-}
-
-.achievements .achievementsSection.allAchievementsBottom {
-    margin-bottom: 2rem;
-}
-
-
-.achievements .achievementsSection.allAchievementsBottom .achievementsList {
+.sidebarTabs {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding-left: 1.5rem;
-    list-style-position: outside;
 }
 
-.achievements .achievementsList .achievementCard.possible::before {
-    content: "\2022";
+.tabButton {
+    background: #ffffff;
     color: var(--primaryColor);
-    font-size: 1.5rem;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
+    border: 2px solid var(--primaryColor);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
 }
 
-.achievements .achievementsList .achievementCard.possible h3 {
-    display: inline;
-    margin-left: 0.5rem;
+.tabButton:hover {
+    background: #e0f0ff;
+    transform: translateX(5px);
+}
 
-    .achievements .achievementsList .achievementCard.possible p.description {
-        margin-left: 2rem;
-    }}
+.tabButton.active {
+    background: var(--primaryColor);
+    color: #ffffff;
+}
+
+.achievementsCards {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.achievementsCards::-webkit-scrollbar {
+    width: 8px;
+}
+
+.achievementsCards::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 10px;
+}
+
+.achievementsCards::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 10px;
+}
+
+.cardGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.achievementCardRow {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.achievementCardRow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.achievementImage {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-right: 2rem;
+}
+
+
+.achievementInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.achievementInfo h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--primaryColor);
+}
+
+.achievementInfo p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--textColor);
+}
+
+.achievementInfo .status {
+    margin-top: 0.5rem;
+    font-weight: bold;
+    color: var(--secondaryColor);
+}
+
+.completeButton {
+    background: var(--primaryColor);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.completeButton:hover {
+    background: #0056b3;
+}
+
+
+.achievementImage {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-right: 2rem;
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+}
+
+
+.achievementCardRow:hover .achievementImage {
+    filter: grayscale(0%);
+}
+
+
+.achievementImage.completed {
+    filter: none;
+}
+
+
+.grayscaleCard {
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+}
+
+
+.grayscaleCard:hover {
+    filter: grayscale(0%);
+}
+
+
+.completeButton {
+    background: var(--primaryColor);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background-color 0.3s ease, filter 0.5s ease;
+}
+
+
+.grayscaleCard .completeButton {
+    background: var(--primaryColor);
+    color: white;
+}
+
+
+.grayscaleCard:hover .completeButton {
+    filter: grayscale(0%);
+}
+
+.achievementsTitle {
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.completeStatusTag {
+    margin-top: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    width: fit-content;
+    user-select: none;
+}
+
+.completeStatusTag.done {
+    background-color: #d4edda;
+    color: #2e7d32;
+    cursor: default;
+}
+
+.completeStatusTag.notDone {
+    background-color: #f0f0f0;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.inProgressButton {
+    background-color: orange;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: not-allowed;
+    margin-top: 8px;
+}
+
+
+
+
+
+
+
+
+
