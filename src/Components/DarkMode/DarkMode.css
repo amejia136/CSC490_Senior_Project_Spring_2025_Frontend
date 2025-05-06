@@ -21,7 +21,7 @@ html[data-theme='dark'] {
     --whiteColor: #FFFFFF;
     --blackColor: #E0E0E0;
     --textColor: #E0E0E0;
-    --whiteColorDeam: #282828;
+    --whiteColorDeam: #262626;
     --greyText: #B0BEC5;
     --inputColor: #2C2C2C;
     --inputTextColor: #E0E0E0;
@@ -289,4 +289,96 @@ html[data-theme='dark'] .home .overlay {
 
 .reelSpin {
     transform: translateY(-100px);
+}
+
+
+
+/* Detail Page Styles for Dark Mode */
+html[data-theme='dark'] .detailPageSection {
+    background-color: #121212;
+    color: #E0E0E0;
+}
+html[data-theme='dark'] .detailsTitle {
+    color: #64B5F6;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+html[data-theme='dark'] .detailsIntro {
+    color: #121212
+}
+html[data-theme='dark'] .stateDropdown {
+    background-color: #2C2C2C;
+    color: #E0E0E0;
+    border: 1px solid #555555;
+}
+
+html[data-theme='dark'] .recommendedStates {
+    background-color: #1E1E1E;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+html[data-theme='dark'] .recommendedTitle {
+    color: #64B5F6;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+html[data-theme='dark'] .stateDetails {
+    background-color: #2C2C2C;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+html[data-theme='dark'] .infoBox {
+    background-color: #1E1E1E;
+    border: 1px solid #555;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+html[data-theme='dark'] .infoTitle {
+    color: #90CAF9;
+}
+
+html[data-theme='dark'] .infoDesc {
+    color: #F5F5F5;
+}
+
+html[data-theme='dark'] .stateImagesCarousel {
+    background-color: transparent;
+    margin-top: 1rem;
+}
+
+html[data-theme='dark'] .stateImage {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    border: 2px solid #333;
+}
+
+html[data-theme='dark'] .commentButton,
+html[data-theme='dark'] .addCommentButton {
+    background-color: #42A5F5;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    margin-top: 1rem;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+html[data-theme='dark'] .commentButton:hover,
+html[data-theme='dark'] .addCommentButton:hover {
+    background-color: #1E88E5;
+}
+
+html[data-theme='dark'] .commentsSection {
+    background-color: grey;
+    border: 1px solid #444;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    color: #E0E0E0;
 }
