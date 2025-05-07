@@ -26,6 +26,25 @@ const ItineraryPage = () => {
     const { user } = useContext(UserContext);
     const userId = user?.uid;
 
+    const tripTypeOptions = [
+        { value: 'beach', label: 'Beach Vacation' },
+        { value: 'hiking', label: 'Hiking Adventure' },
+        { value: 'city', label: 'City Exploration' },
+        { value: 'winter', label: 'Winter Getaway' },
+        { value: 'business', label: 'Business Trip' },
+        { value: 'family', label: 'Family Vacation' },
+        { value: 'adventure', label: 'Adventure Travel' },
+        { value: 'cruise', label: 'Cruise' },
+        { value: 'camping', label: 'Camping Trip' },
+        { value: 'roadtrip', label: 'Road Trip' }
+    ];
+
+    useEffect(() => {
+        if (userId) {
+            fetchItineraries();
+        }
+    }, [userId]);
+
     useEffect(() => {
         if (error) {
             setShowToast(true);
@@ -60,30 +79,34 @@ const ItineraryPage = () => {
     }, [fetchItineraries]);
 
     const toggleCompleteStatus = async (itineraryId, currentStatus) => {
-        if (!userId) return;
+        if (!userId || currentStatus) return;
+
+        if (!window.confirm("Are you sure you want to mark this trip as complete?\n\nThis action cannot be undone.")) {
+            return;
+        }
 
         setIsLoading(true);
         try {
-            const newStatus = !currentStatus;
-            await axios.put(
-                `http://127.0.0.1:5000/itinerary/update/itinerary/${userId}/${itineraryId}`,
-                { isCompleted: newStatus }
+            const response = await axios.post(
+                `http://127.0.0.1:5000/itinerary/complete-itinerary/${userId}/${itineraryId}`
             );
 
-            // Update Firestore
-            await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
-                isCompleted: newStatus
-            });
+            if (response.data.success) {
+                const updated = itineraries.map(i =>
+                    i.id === itineraryId ? { ...i, isCompleted: true } : i
+                );
+                setItineraries(updated);
+                localStorage.setItem('all-itineraries', JSON.stringify(updated));
 
-            // Update local state
-            const updated = itineraries.map(i =>
-                i.id === itineraryId ? { ...i, isCompleted: newStatus } : i
-            );
-            setItineraries(updated);
-            localStorage.setItem('all-itineraries', JSON.stringify(updated));
-
+                if (response.data.unlocked_achievements?.length > 0) {
+                    alert(`Unlocked achievements:\n${response.data.unlocked_achievements.join("\n")}`);
+                }
+            } else {
+                throw new Error(response.data.error || "Failed to complete itinerary");
+            }
         } catch (error) {
-            setError(error.response?.data?.error || "Failed to update status");
+            setError(error.message || "Failed to complete itinerary.");
+            console.error("Completion failed:", error);
         } finally {
             setIsLoading(false);
         }
@@ -109,7 +132,7 @@ const ItineraryPage = () => {
             TripCost: parseFloat(formData.tripCost),
             TripType: formData.tripType,
             TripDuration: parseInt(formData.tripDuration),
-            isCompleted: false, // Default to not completed
+            isCompleted: false,
             timestamp: Date.now()
         };
 
@@ -120,8 +143,6 @@ const ItineraryPage = () => {
                     submissionData
                 );
 
-                window.dispatchEvent(new Event("itinerary-updated"));
-
                 const updated = itineraries.map(itinerary =>
                     itinerary.id === currentItineraryId
                         ? { ...itinerary, ...submissionData }
@@ -131,25 +152,18 @@ const ItineraryPage = () => {
                 localStorage.setItem('all-itineraries', JSON.stringify(updated));
                 setEditMode(false);
             } else {
-                await axios.post(
+                const response = await axios.post(
                     `http://127.0.0.1:5000/itinerary/add/itinerary/${userId}`,
                     submissionData
                 );
-
-                try {
-                    await addDoc(collection(db, "Users", userId, "Itineraries"), submissionData);
-                } catch (firestoreError) {
-                    console.error("Failed to sync itinerary to Firestore:", firestoreError);
-                }
 
                 window.dispatchEvent(new Event("itinerary-updated"));
 
                 const refreshed = await axios.get(
                     `http://127.0.0.1:5000/itinerary/get/itineraries/${userId}`
                 );
-                const newItineraries = refreshed.data.data || [];
-                setItineraries(newItineraries);
-                localStorage.setItem('all-itineraries', JSON.stringify(newItineraries));
+                setItineraries(refreshed.data.data || []);
+                localStorage.setItem('all-itineraries', JSON.stringify(refreshed.data.data || []));
             }
 
             resetForm();
@@ -166,7 +180,10 @@ const ItineraryPage = () => {
 
     const handleEditClick = (e, itinerary) => {
         e.stopPropagation();
-        if (itinerary.isCompleted) return;
+        if (itinerary.isCompleted) {
+            alert("Completed trips cannot be modified");
+            return;
+        }
 
         setEditMode(true);
         setCurrentItineraryId(itinerary.id);
@@ -180,6 +197,11 @@ const ItineraryPage = () => {
 
     const handleDeleteItinerary = async (e, itineraryId) => {
         e.stopPropagation();
+        const itinerary = itineraries.find(i => i.id === itineraryId);
+        if (itinerary?.isCompleted) {
+            alert("Completed trips cannot be deleted");
+            return;
+        }
         if (!window.confirm("Are you sure you want to delete this itinerary?")) return;
         if (!userId) return;
 
@@ -238,7 +260,7 @@ const ItineraryPage = () => {
                 <thead>
                 <tr>
                     <th>{t('Trip Name')}</th>
-                    <th>{t('Trip Budget ($)')}</th>
+                    <th>{t('Trip Cost ($)')}</th>
                     <th>{t('Trip Type')}</th>
                     <th>{t('Trip Duration (Days)')}</th>
                     <th>{t('Status')}</th>
@@ -250,7 +272,7 @@ const ItineraryPage = () => {
                     itineraries.map((itinerary) => (
                         <tr
                             key={itinerary.id}
-                            onClick={() => !isLoading && navigate(`/itinerary/${itinerary.id}`)}
+                            onClick={() => !itinerary.isCompleted && !isLoading && navigate(`/itinerary/${itinerary.id}`)}
                             className={`${isLoading ? 'disabled-row' : ''} ${itinerary.isCompleted ? 'completed-row' : ''}`}
                         >
                             <td>{itinerary.TripName}</td>
@@ -282,12 +304,14 @@ const ItineraryPage = () => {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        toggleCompleteStatus(itinerary.id, itinerary.isCompleted);
+                                        if (!itinerary.isCompleted) {
+                                            toggleCompleteStatus(itinerary.id, itinerary.isCompleted);
+                                        }
                                     }}
-                                    disabled={isLoading}
+                                    disabled={isLoading || itinerary.isCompleted}
                                     className={`complete-btn ${itinerary.isCompleted ? 'completed' : ''}`}
                                 >
-                                    {itinerary.isCompleted ? t('✓ Completed') : t('Mark Complete')}
+                                    {itinerary.isCompleted ? '✓ Completed' : 'Mark Complete'}
                                 </button>
                             </td>
                         </tr>
@@ -324,15 +348,21 @@ const ItineraryPage = () => {
                     min="0"
                     step="0.01"
                 />
-                <input
-                    type="text"
+                <select
                     name="tripType"
-                    placeholder={t('Trip Type')}
                     value={formData.tripType}
                     onChange={handleInputChange}
                     required
                     disabled={isLoading}
-                />
+                    className="trip-type-select"
+                >
+                    <option value="">{t('Select Trip Type')}</option>
+                    {tripTypeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {t(option.label)}
+                        </option>
+                    ))}
+                </select>
                 <input
                     type="number"
                     name="tripDuration"

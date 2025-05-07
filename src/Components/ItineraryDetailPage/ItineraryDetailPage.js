@@ -9,6 +9,19 @@ import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
 import Itinerary from "../Itinerary/Itinerary";
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+import { UserContext } from '../../UserContext';
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    writeBatch,
+    serverTimestamp
+} from 'firebase/firestore';
+import axios from "axios";
+
 
 const ItineraryDetailsPage = () => {
     const {itineraryId} = useParams();
@@ -44,26 +57,15 @@ const ItineraryDetailsPage = () => {
         setCurrentCost(total);
     }, [locations]);
 
+    const [isLoading, setIsLoading] = useState(false);
+    const [saveSuccess, setSaveSuccess] = useState(false);
 
     useEffect(() => {
         const fetchItinerary = async () => {
-            console.log("📌 Firestore fetch triggered...");
-            console.log("🧑‍💻 UserContext user object:", user);
-            console.log("👤 userId:", userId);
-            console.log("🧾 itineraryId:", itineraryId);
+            if (!userId || !itineraryId) return;
 
-            const auth = getAuth(); // 🧪 Add auth debug
-            console.log("👀 Firebase Auth currentUser:", auth.currentUser);
-
-            if (!userId || !itineraryId) {
-                console.warn("⚠️ Missing userId or itineraryId — skipping fetch.");
-                return;
-            }
-
+            setIsLoading(true);
             try {
-                const itineraryRefPath = `Users/${userId}/Itineraries/${itineraryId}`;
-                console.log("📂 Firestore doc path:", itineraryRefPath);
-
                 const itineraryRef = doc(db, "Users", userId, "Itineraries", itineraryId);
                 const docSnap = await getDoc(itineraryRef);
 
@@ -77,14 +79,16 @@ const ItineraryDetailsPage = () => {
                     console.log("📍 Locations loaded:", mappedLocations);
 
                     setLocations(mappedLocations);
+                    setItinerary({ id: docSnap.id, ...data });
+                    setLocations(data.mapLocations || []);
                 } else {
-                    console.error("❌ Document does not exist:", itineraryRefPath);
                     setItinerary(null);
                 }
             } catch (error) {
-                console.error("❌ Firestore fetch error:", error.message);
-                console.error("📛 Full error object:", error);
+                console.error("Error fetching itinerary:", error);
                 setItinerary(null);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -92,12 +96,16 @@ const ItineraryDetailsPage = () => {
     }, [userId, itineraryId, user]);
 
 
+    }, [userId, itineraryId]);
+
     const handleDragStart = (e, index) => {
+        if (itinerary?.isCompleted) return;
         setDraggedItem(locations[index]);
         e.dataTransfer.effectAllowed = "move";
     };
 
     const handleDragOver = (e, index) => {
+        if (itinerary?.isCompleted) return;
         e.preventDefault();
         const draggedOverItem = locations[index];
         if (draggedItem === draggedOverItem) return;
@@ -111,39 +119,55 @@ const ItineraryDetailsPage = () => {
         setDraggedItem(null);
     };
 
-    const [saveSuccess, setSaveSuccess] = useState(false);
-
     const handleSaveOrderToFirestore = async () => {
-        if (!userId || !itineraryId) return;
+        if (!userId || !itineraryId || itinerary?.isCompleted) return;
+
+        setIsLoading(true);
         try {
             const validLocations = locations.filter(loc => loc && loc.name);
             await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
                 mapLocations: validLocations
             });
-            console.log("✅ Order saved to Firestore:", validLocations);
             setSaveSuccess(true);
-            setTimeout(() => setSaveSuccess(false), 3000); // Hide after 3 seconds
+            setTimeout(() => setSaveSuccess(false), 3000);
         } catch (error) {
-            console.error("❌ Error saving order to Firestore:", error);
+            console.error("Error saving order:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleDeleteLocation = async (locationIndex) => {
-        if (!window.confirm("Are you sure you want to delete this location?")) return;
-        const updated = locations.filter((_, i) => i !== locationIndex);
-        setLocations(updated);
+        if (itinerary?.isCompleted || !window.confirm("Are you sure you want to delete this location?")) return;
+
+        setIsLoading(true);
         try {
+            const updated = locations.filter((_, i) => i !== locationIndex);
+            setLocations(updated);
             await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
                 mapLocations: updated
             });
-            console.log("🗑️ Location deleted and updated in Firestore.");
         } catch (err) {
-            console.error("❌ Error deleting location:", err);
+            console.error("Error deleting location:", err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const toggleCompleteStatus = async () => {
-        if (!userId || !itineraryId) return;
+        if (!user) {
+            alert("Please sign in to complete trips");
+            return;
+        }
+
+        if (!itineraryId || itinerary?.isCompleted) return;
+
+        const confirmComplete = window.confirm(
+            "Marking this trip as complete is permanent. Continue?"
+        );
+        if (!confirmComplete) return;
+
+        setIsLoading(true);
 
         try {
             const newStatus = !itinerary.isCompleted;
@@ -152,18 +176,86 @@ const ItineraryDetailsPage = () => {
             });
             setItinerary(prev => ({...prev, isCompleted: newStatus}));
             console.log(`✅ Itinerary marked as ${newStatus ? 'complete' : 'incomplete'}`);
+            // Call your Flask backend endpoint
+            const response = await axios.post(
+                `http://127.0.0.1:5000/itinerary/complete-itinerary/${userId}/${itineraryId}`
+            );
+
+            if (response.data.success) {
+                // Update local state
+                setItinerary(prev => ({
+                    ...prev,
+                    isCompleted: true,
+                    completedAt: new Date() // You might want to update this from response if available
+                }));
+
+                // Show unlocked achievements if any
+                if (response.data.unlocked_achievements?.length > 0) {
+                    alert(`Unlocked achievements:\n${response.data.unlocked_achievements.join("\n")}`);
+                }
+            } else {
+                throw new Error(response.data.error || "Failed to complete itinerary");
+            }
         } catch (error) {
-            console.error("❌ Error updating completion status:", error);
+            console.error("Completion failed:", error);
+            alert(`Action failed: ${error.message}`);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const getPackingRecommendations = () => {
         const recommendations = {
-            beach: ['Sunscreen', 'Swimsuit', 'Beach towel', 'Sunglasses', 'Flip flops'],
-            hiking: ['Hiking boots', 'Water bottle', 'Backpack', 'First aid kit', 'Map'],
-            city: ['Comfortable shoes', 'City map', 'Umbrella', 'Camera', 'Portable charger'],
-            winter: ['Winter jacket', 'Gloves', 'Thermal wear', 'Ski goggles', 'Hand warmers'],
-            business: ['Business attire', 'Laptop', 'Notebook', 'Travel adapter', 'Business cards']
+            beach: [
+                'Sunscreen', 'Swimsuit', 'Beach towel', 'Sunglasses', 'Flip flops',
+                'Hat', 'Beach bag', 'Waterproof phone case', 'Aloe vera', 'Beach umbrella',
+                'Sand toys (if with kids)', 'Cooler', 'Beach chair', 'Snorkel gear'
+            ],
+            hiking: [
+                'Hiking boots', 'Water bottle', 'Backpack', 'First aid kit', 'Map',
+                'Compass', 'Hiking poles', 'Energy snacks', 'Bug spray', 'Sun hat',
+                'Multi-tool', 'Headlamp', 'Rain jacket', 'Emergency blanket'
+            ],
+            city: [
+                'Comfortable shoes', 'City map', 'Umbrella', 'Camera', 'Portable charger',
+                'Guidebook', 'Crossbody bag', 'Travel adapter', 'Reusable water bottle',
+                'Sunglasses', 'Light jacket', 'Tote bag', 'Travel-sized toiletries'
+            ],
+            winter: [
+                'Winter jacket', 'Gloves', 'Thermal wear', 'Ski goggles', 'Hand warmers',
+                'Scarf', 'Warm socks', 'Lip balm', 'Moisturizer', 'Snow boots',
+                'Ski pants', 'Hot water bottle', 'Thermal flask', 'Traction cleats'
+            ],
+            business: [
+                'Business attire', 'Laptop', 'Notebook', 'Travel adapter', 'Business cards',
+                'Portfolio', 'Dress shoes', 'Blazer', 'Travel steamer', 'Grooming kit',
+                'Tablet', 'Presentation materials', 'Expense tracker', 'Travel-sized iron'
+            ],
+            family: [
+                'Diapers/wipes', 'Baby carrier', 'Snacks', 'First aid kit', 'Entertainment',
+                'Stroller', 'Car seat', 'Baby monitor', 'Favorite toys', 'Child medications',
+                'Night light', 'Portable crib', 'Bottle warmer', 'Kid-sized utensils'
+            ],
+            adventure: [
+                'Quick-dry clothes', 'Water shoes', 'Dry bag', 'Binoculars', 'Waterproof watch',
+                'Adventure camera', 'Paracord bracelet', 'Survival kit', 'Multi-tool', 'Trekking poles',
+                'Hydration pack', 'GPS device', 'Solar charger', 'Emergency whistle'
+            ],
+            cruise: [
+                'Cruise documents', 'Lanyard', 'Formal wear', 'Sea sickness pills', 'Waterproof phone case',
+                'Magnetic hooks', 'Over-door organizer', 'Travel mug', 'Highlighter (for daily schedules)',
+                'Small bills for tips', 'Luggage tags', 'Wrinkle release spray', 'Power strip (cruise-approved)'
+            ],
+            camping: [
+                'Tent', 'Sleeping bag', 'Camping stove', 'Lantern', 'Cooler',
+                'Camping chairs', 'Fire starter', 'Cooking utensils', 'Water filter',
+                'Bear spray (if applicable)', 'Air mattress', 'Pillow', 'Camping shower'
+            ],
+            roadtrip: [
+                'Road atlas', 'Car charger', 'Cooler', 'Travel pillow', 'Car organizer',
+                'Emergency car kit', 'Audiobooks/podcasts', 'Snacks', 'Window shades',
+                'Car trash can', 'Seat cushion', 'Travel mug', 'Car air freshener'
+            ]
         };
         return itinerary?.TripType ? recommendations[itinerary.TripType] || [] : [];
     };
@@ -357,130 +449,161 @@ const ItineraryDetailsPage = () => {
             ref={pdfRef}
         >
 
-            <button onClick={() => navigate(-1)} className="back-button">
-                ← Back to Itineraries
-            </button>
+            <div className={`itinerary-details-container ${itinerary.isCompleted ? 'completed-trip' : ''}`}>
+                <button onClick={() => navigate(-1)} className="back-button">
+                    ← Back to Itineraries
+                </button>
 
-            <div className="itinerary-header">
-                <h1 className="trip-title">{itinerary.TripName}</h1>
+                <div className="itinerary-header">
+                    <h1 className="trip-title">{itinerary.TripName}</h1>
 
-                <div className="trip-meta">
-                    <span><strong>Type:</strong> {itinerary.TripType}</span>
-                    <span><strong>Duration:</strong> {itinerary.TripDuration} days</span>
-                    <span><strong>Budget:</strong> ${itinerary?.TripCost}</span>
-                    <span><strong>Current Cost:</strong> ${currentCost}</span>
+                    <div className="trip-meta">
+                        <span><strong>Type:</strong> {itinerary.TripType}</span>
+                        <span><strong>Duration:</strong> {itinerary.TripDuration} days</span>
+                        <span><strong>Budget:</strong> ${itinerary.TripCost}</span>
+                        <span><strong>Current Cost:</strong> ${currentCost}</span>
+                        {itinerary.isCompleted && <span className="completed-badge">✓ Completed</span>}
+                    </div>
+
+                    {currentCost > itinerary?.TripCost && (
+                        <div className="budget-warning">
+                            ⚠️ Warning: Over budget!
+                        </div>
+                    )}
                 </div>
 
-                {currentCost > itinerary?.TripCost && (
-                    <div className="budget-warning">
-                        ⚠️ Warning: Over budget!
-                    </div>
-                )}
-            </div>
 
-
-            <div className="details-content">
-                <div className="locations-section">
-                    <div className="locations-list">
-                        {locations.map((location, index) => (
-                            <div
-                                key={index}
-                                className={`location-card ${draggedItem === location ? 'dragging' : ''}`}
-                                draggable={true}
-                                onDragStart={(e) => handleDragStart(e, index)}
-                                onDragOver={(e) => handleDragOver(e, index)}
-                                onDragEnd={handleDragEnd}
-                            >
-                                <div className="location-order">{index + 1}</div>
-                                <div className="location-info">
-                                    <h3>{location.name}</h3>
-                                    <p>{location.address}</p>
-                                    <div className="price-level">
-                                        {'$'.repeat(Number(location.pricelevel || 0))}
-                                    </div>
-                                </div>
-                                <button
-                                    className="delete-btn"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        if (!itinerary.isCompleted) {
-                                            handleDeleteLocation(index);
-                                        }
-                                    }}
-                                    disabled={itinerary.isCompleted}
-                                    style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
+                <div className="details-content">
+                    <div className="locations-section">
+                        <div className="locations-list">
+                            {locations.map((location, index) => (
+                                <div
+                                    key={index}
+                                    className={`location-card ${draggedItem === location ? 'dragging' : ''}`}
+                                    draggable={!itinerary.isCompleted}
+                                    onDragStart={(e) => handleDragStart(e, index)}
+                                    onDragOver={(e) => handleDragOver(e, index)}
+                                    onDragEnd={handleDragEnd}
                                 >
-                                    Delete
-                                </button>
+                                    <div className="location-order">{index + 1}</div>
+                                    <div className="location-info">
+                                        <h3>{location.name}</h3>
+                                        <p>{location.address}</p>
+                                        <div className="price-level">
+                                            {'$'.repeat(Number(location.pricelevel || 0))}
+                                        </div>
+                                    </div>
+                                    {!itinerary.isCompleted && (
+                                        <button
+                                            className="delete-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteLocation(index);
+                                            }}
+                                            disabled={itinerary.isCompleted}
+                                            style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
+                                        >
+                                            Delete
+                                        </button>
+
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        <button
+                            className="save-order-button"
+                            onClick={handleSaveOrderToFirestore}
+                            disabled={itinerary.isCompleted}
+                            style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
+                        >
+                            Save Order
+                        </button>
+
+                        {saveSuccess && (
+                            <div className="save-confirmation">
+                                ✓ Changes saved successfully!
                             </div>
-                        ))}
+                        )}
+
+                        <button
+                            className="add-location-button"
+                            onClick={() => navigate('/')}
+                            disabled={itinerary.isCompleted}
+                            style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
+                        >
+                            + Add Location
+                        </button>
+                        {!itinerary.isCompleted && (
+                            <>
+                                <button
+                                    className="save-order-button"
+                                    onClick={handleSaveOrderToFirestore}
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? 'Saving...' : 'Save Order'}
+                                </button>
+                                {saveSuccess && (
+                                    <div className="save-confirmation">
+                                        ✓ Changes saved successfully!
+                                    </div>
+                                )}
+                                <button
+                                    className="add-location-button"
+                                    onClick={() => navigate('/map')}
+                                    disabled={isLoading}
+                                >
+                                    + Add Location
+                                </button>
+                            </>
+                        )}
+
+                        <button
+                            onClick={handleDownloadPDF}
+                            style={{
+                                backgroundColor: '#dc3545',
+                                color: 'white',
+                                padding: '10px 20px',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                marginBottom: '1rem'
+                            }}
+                        >
+                            Download PDF
+                        </button>
+
+
+                        <button
+                            onClick={toggleCompleteStatus}
+                            disabled={itinerary.isCompleted || isLoading}
+                            className={`complete-button ${itinerary.isCompleted ? 'permanent-complete' : ''}`}
+                        >
+                            {itinerary.isCompleted ? '✓ Permanently Completed' : 'Mark as Complete'}
+                        </button>
+
+                        {itinerary.isCompleted && (
+                            <div style={{marginTop: '10px', color: 'green'}}>
+                                This itinerary is completed. Editing is disabled.
+                            </div>
+                        )}
+
                     </div>
 
-                    <button
-                        className="save-order-button"
-                        onClick={handleSaveOrderToFirestore}
-                        disabled={itinerary.isCompleted}
-                        style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
-                    >
-                        Save Order
-                    </button>
-
-                    {saveSuccess && (
-                        <div className="save-confirmation">
-                            ✓ Changes saved successfully!
+                    <div className="packing-section">
+                        <h2>Packing List</h2>
+                        <div className="packing-items">
+                            {getPackingRecommendations().map((item, index) => (
+                                <div key={index} className="packing-item">
+                                    <input
+                                        type="checkbox"
+                                        id={`item-${index}`}
+                                        disabled={itinerary.isCompleted}
+                                    />
+                                    <label htmlFor={`item-${index}`}>{item}</label>
+                                </div>
+                            ))}
                         </div>
-                    )}
-
-                    <button
-                        className="add-location-button"
-                        onClick={() => navigate('/')}
-                        disabled={itinerary.isCompleted}
-                        style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
-                    >
-                        + Add Location
-                    </button>
-
-                    <button
-                        onClick={handleDownloadPDF}
-                        style={{
-                            backgroundColor: '#dc3545',
-                            color: 'white',
-                            padding: '10px 20px',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            marginBottom: '1rem'
-                        }}
-                    >
-                        Download PDF
-                    </button>
-
-
-                    <button
-                        onClick={toggleCompleteStatus}
-                        disabled={itinerary.isCompleted}
-                        className={`complete-button ${itinerary.isCompleted ? 'completed' : ''}`}
-                    >
-                        {itinerary.isCompleted ? '✓ Completed' : 'Mark as Complete'}
-                    </button>
-
-                    {itinerary.isCompleted && (
-                        <div style={{marginTop: '10px', color: 'green'}}>
-                            This itinerary is completed. Editing is disabled.
-                        </div>
-                    )}
-
-                </div>
-
-                <div className="packing-section">
-                    <h2>Packing List</h2>
-                    <div className="packing-items">
-                        {getPackingRecommendations().map((item, index) => (
-                            <div key={index} className="packing-item">
-                                <input type="checkbox" id={`item-${index}`}/>
-                                <label htmlFor={`item-${index}`}>{item}</label>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </div>
