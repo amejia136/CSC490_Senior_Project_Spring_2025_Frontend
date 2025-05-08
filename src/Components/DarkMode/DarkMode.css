@@ -382,3 +382,83 @@ html[data-theme='dark'] .commentsSection {
     margin-top: 1rem;
     color: #E0E0E0;
 }
+
+
+html[data-theme='dark'] .achievements {
+    background: linear-gradient(180deg, #1A1A1A 0%, #000000 100%);
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .achievements .achievementsContent {
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .achievementCardRow {
+    background-color: var(--cardBG);
+    color: var(--textColor);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme='dark'] .achievementInfo h3 {
+    color: var(--PrimaryColor);
+}
+
+html[data-theme='dark'] .achievementInfo p {
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .progressBar {
+    background: #2C2C2C;
+}
+
+html[data-theme='dark'] .progressText {
+    color: var(--textColor);
+}
+
+html[data-theme='dark'] .tabButton {
+    background: #1E1E1E;
+    color: var(--PrimaryColor);
+    border: 2px solid var(--PrimaryColor);
+}
+
+html[data-theme='dark'] .tabButton.active {
+    background: var(--PrimaryColor);
+    color: white;
+}
+
+html[data-theme='dark'] .completeStatusTag.done {
+    background-color: #2E7D32;
+    color: #C8E6C9;
+}
+
+html[data-theme='dark'] .completeStatusTag.notDone {
+    background-color: #333;
+    color: #aaa;
+}
+
+html[data-theme='dark'] .inProgressButton {
+    background-color: #FFA726;
+    color: black;
+}
+
+html[data-theme='dark'] .completeButton {
+    background-color: #64B5F6;
+    color: #fff;
+}
+
+html[data-theme='dark'] .achievementsCards::-webkit-scrollbar-thumb {
+    background: #64B5F6;
+}
+
+/* Force white progress bar and dark text in Achievements dark mode */
+html[data-theme='dark'] .progressBar {
+    background: #e6e6e6 !important;  /* Keep light bar */
+}
+
+html[data-theme='dark'] .achievementsTitle,
+html[data-theme='dark'] .progressText {
+    color: #1a1a1a !important;  /* Dark text color */
+    text-shadow: none !important;  /* Remove shadow if unwanted */
+}
+
+

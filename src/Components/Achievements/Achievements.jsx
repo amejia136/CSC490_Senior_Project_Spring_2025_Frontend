@@ -6,6 +6,10 @@ import 'aos/dist/aos.css';
 import { getAuth } from 'firebase/auth';
 import {collection, doc, getDoc, getDocs} from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
+import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
+import { LanguageContext } from '../../LanguageContext';
+
 
 
 import nycCard from '../../Assets/Achievements_Card/nyc_card-300x300.jpg';
@@ -22,6 +26,10 @@ import mountainsBackground from '../../Assets/mountains_achieve.jpg';
 
 
 const AchievementsPage = () => {
+    const { t } = useTranslation();
+    const { language } = useContext(LanguageContext);
+
+
     useEffect(() => {
         Aos.init({ duration: 2000 });
     }, []);
@@ -38,6 +46,110 @@ const AchievementsPage = () => {
         { id: 9, name: 'Visited Mount Rushmore', description: 'Visit Mount Rushmore in South Dakota.', image: mountRushmoreCard, status: 'not started' }, // reused Statue of Liberty
         { id: 10, name: 'Visited Great Smoky Mountains', description: 'Visit Great Smoky Mountains National Park.', image: greatSmokyMountainsCard, status: 'not started' }, // reused Grand Canyon
     ]);
+
+    const achievementTranslations = {
+        "Visit the Golden Gate Bridge": {
+            title: {
+                en: "Visit the Golden Gate Bridge",
+                es: "Visita el Puente Golden Gate"
+            },
+            desc: {
+                en: "Visit the Golden Gate Bridge on a trip to California!",
+                es: "¡Visita el Puente Golden Gate en un viaje a California!"
+            }
+        },
+        "Visit Yellowstone National Park": {
+            title: {
+                en: "Visit Yellowstone National Park",
+                es: "Visita el Parque Nacional de Yellowstone"
+            },
+            desc: {
+                en: "Visit the Yellowstone National Park in Wyoming!",
+                es: "¡Visita el Parque Nacional de Yellowstone en Wyoming!"
+            }
+        },
+        "Go to the Empire State Building": {
+            title: {
+                en: "Go to the Empire State Building",
+                es: "Ve al Empire State Building"
+            },
+            desc: {
+                en: "Visit the Empire State Building on a trip to NYC!",
+                es: "¡Visita el Empire State Building en un viaje a Nueva York!"
+            }
+        },
+        "Visit the Great Smoky Mountains!": {
+            title: {
+                en: "Visit the Great Smoky Mountains!",
+                es: "¡Visita las Grandes Montañas Humeantes!"
+            },
+            desc: {
+                en: "On a trip to Tennessee, visit the Great Smoky Mountains!",
+                es: "¡En un viaje a Tennessee, visita las Grandes Montañas Humeantes!"
+            }
+        },
+        "Visit New York!": {
+            title: {
+                en: "Visit New York!",
+                es: "¡Visita Nueva York!"
+            },
+            desc: {
+                en: "Visit the state of New York on a trip!",
+                es: "¡Visita el estado de Nueva York en un viaje!"
+            }
+        },
+        "Visit Mount Rushmore!": {
+            title: {
+                en: "Visit Mount Rushmore!",
+                es: "¡Visita el Monte Rushmore!"
+            },
+            desc: {
+                en: "Visit Mount Rushmore on a trip to South Dakota!",
+                es: "¡Visita el Monte Rushmore en un viaje a Dakota del Sur!"
+            }
+        },
+        "Visit Florida": {
+            title: {
+                en: "Visit Florida",
+                es: "Visita Florida"
+            },
+            desc: {
+                en: "Visit the state of Florida on a trip!",
+                es: "¡Visita el estado de Florida en un viaje!"
+            }
+        },
+        "Visit the Grand Canyon": {
+            title: {
+                en: "Visit the Grand Canyon",
+                es: "Visita el Gran Cañón"
+            },
+            desc: {
+                en: "Visit the Grand Canyon in Arizona on one of your trips!",
+                es: "¡Visita el Gran Cañón en Arizona en uno de tus viajes!"
+            }
+        },
+        "Visit the Statue of Liberty": {
+            title: {
+                en: "Visit the Statue of Liberty",
+                es: "Visita la Estatua de la Libertad"
+            },
+            desc: {
+                en: "Visit the Statue of Liberty on a trip to New York!",
+                es: "¡Visita la Estatua de la Libertad en un viaje a Nueva York!"
+            }
+        },
+        "Visit California": {
+            title: {
+                en: "Visit California",
+                es: "Visita California"
+            },
+            desc: {
+                en: "Visit the state of California on a trip!",
+                es: "¡Visita el estado de California en un viaje!"
+            }
+        }
+    };
+
 
     useEffect(() => {
         const fetchAchievements = async () => {
@@ -136,7 +248,6 @@ const AchievementsPage = () => {
 
 
     const [completedAchievements, setCompletedAchievements] = useState([]);
-
     const [showCompleted, setShowCompleted] = useState(true);
     const [showAll, setShowAll] = useState(false);
 
@@ -153,7 +264,7 @@ const AchievementsPage = () => {
       linear-gradient(
         to bottom, 
         rgba(255,255,255,0.0) 0%, 
-        rgba(255,255,255,0.0) 22%, /* <<< Start fade lower */
+        rgba(255,255,255,0.0) 22%, 
         rgba(173,216,230,0.7) 34%, 
         rgba(160,202,220,0.85) 40%, 
         rgba(144,195,212,1) 60%
@@ -165,16 +276,13 @@ const AchievementsPage = () => {
                 backgroundPosition: 'top center'
             }}
         >
-
-
-        <div className="overlay"></div>
+            <div className="overlay"></div>
 
             <div className="achievementsContent container">
                 <h1 data-aos="fade-up" className="achievementsTitle">
-                    Your Travel Achievements
+                    {t('Your Travel Achievements')}
                 </h1>
 
-                {/* Progress Bar */}
                 <div className="progressBarContainer" data-aos="fade-up">
                     <div className="progressBar">
                         <div
@@ -183,65 +291,89 @@ const AchievementsPage = () => {
                         ></div>
                     </div>
                     <p className="progressText">
-                        {completedAchievements.length} / {completedAchievements.length + allAchievementsData.length} Achievements Completed
+                        {t('Achievements Completed:')} {completedAchievements.length} / {completedAchievements.length + allAchievementsData.length}
                     </p>
                 </div>
 
-                {/* Layout */}
                 <div className="achievementsLayout" data-aos="fade-up">
                     <div className="sidebarTabsWrapper">
                         <div className="sidebarTabs">
-                            <button className={showCompleted ? "tabButton active" : "tabButton"} onClick={() => { setShowCompleted(true); setShowAll(false); }}>🏆 Completed Achievements</button>
-                            <button className={showAll ? "tabButton active" : "tabButton"} onClick={() => { setShowCompleted(false); setShowAll(true); }}>🗺️ All Achievements</button>
+                            <button
+                                className={showCompleted ? "tabButton active" : "tabButton"}
+                                onClick={() => {
+                                    setShowCompleted(true);
+                                    setShowAll(false);
+                                }}
+                            >
+                                {t('🏆 Completed Achievements')}
+                            </button>
+                            <button
+                                className={showAll ? "tabButton active" : "tabButton"}
+                                onClick={() => {
+                                    setShowCompleted(false);
+                                    setShowAll(true);
+                                }}
+                            >
+                                {t('🗺️ All Achievements')}
+                            </button>
                         </div>
                     </div>
 
                     <div className="achievementsCards">
                         <div className="cardGrid">
+                            {showCompleted &&
+                                completedAchievements.map((achievement) => {
+                                    const translatedTitle = achievementTranslations[achievement.name]?.title[language] || achievement.name;
+                                    const translatedDesc = achievementTranslations[achievement.name]?.desc[language] || achievement.description;
 
-                            {/* COMPLETED Achievements - NO grayscale */}
-                            {showCompleted && completedAchievements.map((achievement) => (
-                                <div key={achievement.id} className="achievementCardRow">
-                                    <img src={achievement.image} alt={achievement.name} className="achievementImage completed" />
-                                    <div className="achievementInfo">
-                                        <h3>{achievement.name}</h3>
-                                        <p>{achievement.description}</p>
-                                        <p className="status">✅ Completed</p>
-                                    </div>
-                                </div>
-                            ))}
-
-                            {/* ALL Achievements - WITH grayscale */}
-                            {showAll && allAchievementsData.map((achievement) => (
-                                <div key={achievement.id} className="achievementCardRow grayscaleCard">
-                                    <img src={achievement.image} alt={achievement.name} className="achievementImage" />
-                                    <div className="achievementInfo">
-                                        <h3>{achievement.name}</h3>
-                                        <p>{achievement.description}</p>
-                                        <p className="status">Progress: {achievement.status}</p>
-                                        <div className={`completeStatusTag ${achievement.status === 'completed' ? 'done' : 'notDone'}`}>
-                                            {achievement.status === 'completed' ? '✅ Completed' : '❌ Not Completed'}
+                                    return (
+                                        <div key={achievement.id} className="achievementCardRow">
+                                            <img src={achievement.image} alt={achievement.name} className="achievementImage completed" />
+                                            <div className="achievementInfo">
+                                                <h3>{translatedTitle}</h3>
+                                                <p>{translatedDesc}</p>
+                                                <p className="status">{t('✅ Completed')}</p>
+                                            </div>
                                         </div>
+                                    );
+                                })}
 
-                                        {achievement.status === 'in progress' ? (
-                                            <button className="inProgressButton" disabled>🕒 In Progress</button>
-                                        ) : (
-                                            <button className="completeButton" onClick={() => handleCompleteAchievement(achievement)}>✅ Complete</button>
-                                        )}
+                            {showAll &&
+                                allAchievementsData.map((achievement) => {
+                                    return (
+                                        <div key={achievement.id} className="achievementCardRow grayscaleCard">
+                                            <img src={achievement.image} alt={achievement.name}
+                                                 className="achievementImage"/>
+                                            <div className="achievementInfo">
+                                                <h3>{achievement.name}</h3>
+                                                <p>{achievement.description}</p>
+                                                <p className="status">{t('Progress: {{status}}', {status: achievement.status})}</p>
+                                                <div
+                                                    className={`completeStatusTag ${achievement.status === 'completed' ? 'done' : 'notDone'}`}>
+                                                    {achievement.status === 'completed' ? t('✅ Completed') : t('❌ Not Completed')}
+                                                </div>
 
-                                    </div>
-                                </div>
-                            ))}
+                                                {achievement.status === 'in progress' ? (
+                                                    <button className="inProgressButton"
+                                                            disabled>{t('🕒 In Progress')}</button>
+                                                ) : (
+                                                    <button className="completeButton" disabled>
+                                                        {t('✅ Complete')}
+                                                    </button>
 
-                        </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                     </div>
-
                 </div>
             </div>
-        </section>
-    );
+        </div>
+</section>
+);
 };
 
-export default AchievementsPage;
+    export default AchievementsPage;
 
 

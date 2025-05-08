@@ -251,7 +251,7 @@
 }
 
 
-.completeButton {
+.completeButton:disabled {
     background: var(--primaryColor);
     color: white;
     border: none;

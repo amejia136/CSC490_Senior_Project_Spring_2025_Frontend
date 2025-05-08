@@ -6,6 +6,8 @@ import stateImages from "../../Assets/stateImages";
 import { getAuth } from 'firebase/auth';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import { useDarkMode } from '../DarkMode/DarkMode';
+
 
 
 
@@ -18,6 +20,7 @@ const DetailsPage = () => {
     const [showAddCommentForm, setShowAddCommentForm] = useState(false);
     const [newComment, setNewComment] = useState({ comment: '', place: '' });
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const { darkMode } = useDarkMode();
 
 
 
