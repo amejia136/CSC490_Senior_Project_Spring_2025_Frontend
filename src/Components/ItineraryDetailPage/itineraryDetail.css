@@ -317,7 +317,77 @@
     box-shadow: none;
 }
 
+.download-pdf-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+
+/* Completed trip styling */
+.completed-trip {
+    opacity: 0.9;
+}
+
+.completed-trip .location-card {
+    background-color: #f8f9fa;
+}
+
+.completed-badge {
+    background-color: #38b000;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    margin-left: 12px;
+}
+
+/* Permanent complete button */
+.permanent-complete {
+    background-color: #38b000;
+    color: white;
+    cursor: default;
+    border: none;
+}
+
+.permanent-complete:hover {
+    background-color: #38b000;
+    transform: none;
+}
+
+/* Disabled state for completed trips */
+.completed-trip .location-card {
+    pointer-events: none;
+}
+
+.completed-trip .delete-btn {
+    display: none;
+}
+
+/* Loading state */
+.itinerary-details-container.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.save-confirmation {
+    background-color: #38b000;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 8px;
+    animation: fadeInOut 3s ease-in-out;
+}
 
 
 
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    20%, 80% { opacity: 1; }
+}
 
