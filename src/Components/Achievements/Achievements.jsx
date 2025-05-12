@@ -39,7 +39,7 @@ const AchievementsPage = () => {
         { id: 6, name: 'Visit the Golden Gate Bridge', description: 'Visit the Golden Gate Bridge in San Francisco.', image: goldenGateBridgeCard, keyword: 'Golden Gate' },
         { id: 7, name: 'Visit the Grand Canyon', description: 'Visit the Grand Canyon National Park.', image: grandCanyonCard, keyword: 'Grand Canyon' },
         { id: 8, name: 'Visit Yellowstone National Park', description: 'Visit Yellowstone National Park.', image: yellowstoneCard, keyword: 'Yellowstone' },
-        { id: 9, name: 'Visit Mount Rushmore', description: 'Visit Mount Rushmore in South Dakota.', image: mountRushmoreCard, keyword: 'Rushmore' },
+        { id: 9, name: 'Visit Mount Rushmore!', description: 'Visit Mount Rushmore in South Dakota!', image: mountRushmoreCard, keyword: 'Rushmore' },
         { id: 10, name: 'Visit the Great Smoky Mountains!', description: 'Visit Great Smoky Mountains National Park.', image: greatSmokyMountainsCard, keyword: 'Smoky Mountains' },
     ];
 

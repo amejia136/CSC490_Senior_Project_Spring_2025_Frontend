@@ -343,7 +343,17 @@ i18n
                     "Visited Mount Rushmore - Description": "Visit Mount Rushmore.",
 
                     "Visited Great Smoky Mountains": "Visited Great Smoky Mountains",
-                    "Visited Great Smoky Mountains - Description": "Visit Great Smoky Mountains."
+                    "Visited Great Smoky Mountains - Description": "Visit Great Smoky Mountains.",
+
+                    "Two-Factor Authentication": "Two-Factor Authentication",
+                    "Protect your account with a second layer of security using your email address.": "Protect your account with a second layer of security using your email address.",
+                    "Verified ✅": "Verified ✅",
+                    "Verification link sent ✅": "Verification link sent ✅",
+                    "Not verified": "Not verified",
+                    "Pair with email...": "Pair with email...",
+                    "User ID not found. Please ensure you're logged in.": "User ID not found. Please ensure you're logged in.",
+                    "Failed to send verification email. Error:": "Failed to send verification email. Error:",
+
 
                 }
             },
@@ -808,7 +818,16 @@ i18n
                     "Visit Mount Rushmore - Description": "Visita Mount Rushmore.",
 
                     "Visit the Great Smoky Mountains!": "Has visitado Great Smoky Mountains.",
-                    "Visit the Great Smoky Mountains! - Description": "Visita Great Smoky Mountains."
+                    "Visit the Great Smoky Mountains! - Description": "Visita Great Smoky Mountains.",
+                    "Two-Factor Authentication": "Autenticación de Dos Factores",
+                    "Protect your account with a second layer of security using your email address.": "Protege tu cuenta con una capa adicional de seguridad utilizando tu correo electrónico.",
+                    "Verified ✅": "Verificado ✅",
+                    "Verification link sent ✅": "Enlace de verificación enviado ✅",
+                    "Not verified": "No verificado",
+                    "Pair with email...": "Emparejar con correo electronico...",
+                    "User ID not found. Please ensure you're logged in.": "ID de usuario no encontrado. Asegúrate de haber iniciado sesión.",
+                    "Failed to send verification email. Error:": "Error al enviar el correo de verificación. Error:",
+
 
 
                 }
