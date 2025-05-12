@@ -10,6 +10,7 @@ import backgroundVideo from '../../Assets/ProfileVideo.mp4';
 import axios from "axios";
 import {useTranslation} from 'react-i18next';
 import i18n from "../../Translations/i18n";
+import { collection, getDocs } from "firebase/firestore";
 
 
 const Profile = () => {
@@ -68,9 +69,27 @@ const Profile = () => {
                     bio: rawData.bio || '',
                 };
 
+                // 👇 Fetch userAchievements and count completed + total
+                const achievementsRef = collection(db, `Users/${userId}/userAchievements`);
+                const achievementsSnap = await getDocs(achievementsRef);
+
+                let completed = 0;
+                let total = 0;
+
+                achievementsSnap.forEach((doc) => {
+                    const data = doc.data();
+                    total++;
+                    if (data.isComplete === true) {
+                        completed++;
+                    }
+                });
+
                 const extractedExtras = {
                     preferences: rawData.preferences || {},
-                    achievementProgress: rawData.achievementProgress || {},
+                    achievementProgress: {
+                        "achievementId1.completed": completed,
+                        "achievementId1.total": total
+                    },
                 };
 
                 setProfileData(prev => ({
@@ -79,7 +98,6 @@ const Profile = () => {
                 }));
 
                 setExtras(extractedExtras);
-
             } else {
                 setError(`Profile for user ID "${userId}" not found in Firestore.`);
             }
@@ -101,6 +119,7 @@ const Profile = () => {
             setLoading(false);
         }
     }, [user?.uid, user?.id]);
+
 
     useEffect(() => {
         if (user?.uid) {

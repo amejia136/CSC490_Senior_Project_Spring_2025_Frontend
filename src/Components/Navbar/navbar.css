@@ -36,6 +36,16 @@
   transform: translateY(5px);
 }
 
+.customLogo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+body.dark-mode .customLogo {
+  filter: brightness(0) invert(1);
+}
+
+
 
 @media screen and (max-width: 768px) {
   .header .navBar {

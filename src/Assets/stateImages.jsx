@@ -1,0 +1,207 @@
+import alabama1 from './StatesPics/Alabama1.jpg';
+import alabama2 from './StatesPics/Alabama2.jpg';
+import alabama3 from './StatesPics/Alabam3.jpg';
+import alaska1 from './StatesPics/Alaska1.jpg';
+import alaska2 from './StatesPics/Alaska2.jpg';
+import alaska3 from './StatesPics/Alaska3.jpg'
+import arizona1 from './StatesPics/Arizona1.jpg';
+import arizona2 from './StatesPics/Arizona2.jpg';
+import arizona3 from './StatesPics/Arizona3.jpg';
+import arkansas1 from './StatesPics/Arkansas1.jpg';
+import arkansas2 from './StatesPics/Arkansas2.jpg';
+import arkansas3 from './StatesPics/Arkansas3.jpg';
+import california1 from './StatesPics/California1.jpg';
+import california2 from './StatesPics/California2.jpg';
+import california3 from './StatesPics/California3.jpg';
+import colorado1 from './StatesPics/Colorado1.jpg';
+import colorado2 from './StatesPics/Colorado2.jpg';
+import colorado3 from './StatesPics/Colorado3.jpg';
+import connecticut1 from './StatesPics/Connecticut1.jpg';
+import connecticut2 from './StatesPics/Connecticut2.jpg';
+import connecticut3 from './StatesPics/Connecticut3.jpg';
+import delaware1 from './StatesPics/Delaware1.jpg';
+import delaware2 from './StatesPics/Delaware2.jpg';
+import delaware3 from './StatesPics/Delaware3.jpg';
+import florida1 from './StatesPics/Florida1.jpg';
+import florida2 from './StatesPics/Florida2.jpg';
+import florida3 from './StatesPics/Florida3.jpg';
+import georgia1 from './StatesPics/Georgia1.jpg';
+import georgia2 from './StatesPics/Georgia2.jpg';
+import georgia3 from './StatesPics/Georgia3.jpg';
+import hawaii1 from './StatesPics/Hawaii1.jpg';
+import hawaii2 from './StatesPics/Hawaii2.jpg';
+import hawaii3 from './StatesPics/Hawaii3.jpg';
+import idaho1 from './StatesPics/Idaho1.jpg';
+import idaho2 from './StatesPics/Idaho.jpg';
+import idaho3 from './StatesPics/Idaho3.jpg';
+import illinois1 from './StatesPics/Illinois1.jpg';
+import illinois2 from './StatesPics/Illinois2.jpg';
+import illinois3 from './StatesPics/Illinois3.jpg';
+import indiana1 from './StatesPics/Indiana1.jpg';
+import indiana2 from './StatesPics/Indiana2.jpg';
+import indiana3 from './StatesPics/Indiana.jpg';
+import iowa1 from './StatesPics/Iowa1.jpg';
+import iowa2 from './StatesPics/Iowa2.jpg';
+import iowa3 from './StatesPics/Iowa3.jpg';
+import kansas1 from './StatesPics/Kansas1.jpg';
+import kansas2 from './StatesPics/Kansas2.jpg';
+import kansas3 from './StatesPics/Kansas3.jpg';
+import kentucky1 from './StatesPics/Kentucky1.jpg';
+import kentucky2 from './StatesPics/Kentucky2.jpg';
+import louisiana1 from './StatesPics/Louisiana1.jpg';
+import louisiana2 from './StatesPics/Louisiana2.jpg';
+import louisiana3 from './StatesPics/Louisiana3.jpg';
+import maine1 from './StatesPics/Maine.jpg';
+import maine2 from './StatesPics/Maine2.jpg';
+import maine3 from './StatesPics/Maine3.jpg';
+import maryland1 from './StatesPics/Maryland1.jpg';
+import maryland2 from './StatesPics/Maryland2.jpg';
+import maryland3 from './StatesPics/Maryland3.jpg';
+import massachusetts1 from './StatesPics/Massachusetts1.jpg';
+import massachusetts2 from './StatesPics/Massachusetts2.jpg';
+import massachusetts3 from './StatesPics/Massachusetts3.jpg';
+import michigan1 from './StatesPics/Michigan1.jpg';
+import michigan2 from './StatesPics/Michigan2.jpg';
+import michigan3 from './StatesPics/Michigan3.jpg';
+import minnesota1 from './StatesPics/Minnesota1.jpg';
+import minnesota2 from './StatesPics/Minnesota2.jpg';
+import minnesota3 from './StatesPics/Minnesota3.jpg';
+import mississippi1 from './StatesPics/Mississippi1.jpg';
+import mississippi2 from './StatesPics/Mississippi2.jpg';
+import mississippi3 from './StatesPics/Mississippi3.jpg';
+import missouri1 from './StatesPics/Missouri1.jpg';
+import missouri2 from './StatesPics/Missouri2.jpg';
+import missouri3 from './StatesPics/Missouri3.jpg';
+import montana1 from './StatesPics/Montana1.jpg';
+import montana2 from './StatesPics/Montana2.jpg';
+import montana3 from './StatesPics/Montana3.jpg';
+import nebraska1 from './StatesPics/Nebraska1.jpg';
+import nebraska2 from './StatesPics/Nebraska2.jpg';
+import nebraska3 from './StatesPics/Nebraska3.jpg';
+import nevada1 from './StatesPics/Nevada1.jpg';
+import nevada2 from './StatesPics/Nevada2.jpg';
+import nevada3 from './StatesPics/Nevada3.jpg';
+import newhampshire1 from './StatesPics/NewHampshire1.jpg';
+import newhampshire2 from './StatesPics/NewHampshire2.jpg';
+import newhampshire3 from './StatesPics/NewHampshire3.jpg';
+import newjersey1 from './StatesPics/NewJersey1.jpg';
+import newjersey2 from './StatesPics/NewJersey2.jpg';
+import newjersey3 from './StatesPics/NewJersey3.jpg';
+import newmexico1 from './StatesPics/NewMexico1.jpg';
+import newmexico2 from './StatesPics/NewMexico2.jpg';
+import newmexico3 from './StatesPics/NewMexico3.jpg';
+import newyork1 from './StatesPics/Newyork1.jpg';
+import newyork2 from './StatesPics/Newyork2.jpg';
+import newyork3 from './StatesPics/Newyork3.jpg';
+import northcarolina1 from './StatesPics/NorthCarolina1.jpg';
+import northcarolina2 from './StatesPics/NorthCarolina2.jpg';
+import northcarolina3 from './StatesPics/NorthCarolina3.jpg';
+import northdakota1 from './StatesPics/NorthDakota1.jpg';
+import northdakota2 from './StatesPics/NorthDakota2.jpg';
+import northdakota3 from './StatesPics/NorthDakota3.jpg';
+import ohio1 from './StatesPics/Ohio1.jpg';
+import ohio2 from './StatesPics/Ohio2.jpg';
+import ohio3 from './StatesPics/Ohio3.jpg';
+import oklahoma1 from './StatesPics/Oklahoma1.jpg';
+import oklahoma2 from './StatesPics/Oklahoma2.jpg';
+import oklahoma3 from './StatesPics/Oklahoma3.jpg';
+import oregon1 from './StatesPics/Oregon1.jpg';
+import oregon2 from './StatesPics/Oregon2.jpg';
+import oregon3 from './StatesPics/Oregon3.jpg';
+import pennsylvania1 from './StatesPics/Pennsylvania1.jpg';
+import pennsylvania2 from './StatesPics/Pennsylvania2.jpg';
+import pennsylvania3 from './StatesPics/Pennsylvania3.jpg';
+import rhodeisland1 from './StatesPics/RhodeIsland1.jpg';
+import rhodeisland2 from './StatesPics/RhodeIsland2.jpg';
+import rhodeisland3 from './StatesPics/RhodeIsland3.jpg';
+import southcarolina1 from './StatesPics/SouthCarolina1.jpg';
+import southcarolina2 from './StatesPics/SouthCarolina2.jpg';
+import southcarolina3 from './StatesPics/SouthCarolina3.jpg';
+import southdakota1 from './StatesPics/SouthDakota1.jpg';
+import southdakota2 from './StatesPics/SouthDakota2.jpg';
+import southdakota3 from './StatesPics/SouthDakota3.jpg';
+import tennessee1 from './StatesPics/Tennessee1.jpg';
+import tennessee2 from './StatesPics/Tennessee2.jpg';
+import tennessee3 from './StatesPics/Tennessee3.jpg';
+import texas1 from './StatesPics/Texas1.jpg';
+import texas2 from './StatesPics/Texas2.jpg';
+import texas3 from './StatesPics/Texas3.jpg';
+import utah1 from './StatesPics/Utah1.jpg';
+import utah2 from './StatesPics/Utah2.jpg';
+import utah3 from './StatesPics/Utah3.jpg';
+import vermont1 from './StatesPics/Vermont1.jpg';
+import vermont2 from './StatesPics/Vermont2.jpg';
+import vermont3 from './StatesPics/Vermont3.jpg';
+import virginia1 from './StatesPics/Virginia1.jpg';
+import virginia2 from './StatesPics/Virginia2.jpg';
+import virginia3 from './StatesPics/Virginia3.jpg';
+import washington1 from './StatesPics/Washington1.jpg';
+import washington2 from './StatesPics/Washington2.jpg';
+import washington3 from './StatesPics/Washington3.jpg';
+import westvirginia1 from './StatesPics/WestVirginia1.jpg';
+import westvirginia2 from './StatesPics/Westvirginia2.jpg';
+import westvirginia3 from './StatesPics/WestVirginia3.jpg';
+import wisconsin1 from './StatesPics/Wisconsin1.jpg';
+import wisconsin2 from './StatesPics/Wisconsin2.jpg';
+import wisconsin3 from './StatesPics/Wisconsin3.jpg';
+import wyoming1 from './StatesPics/Wyoming1.jpg';
+import wyoming2 from './StatesPics/Wyoming2.jpg';
+import wyoming3 from './StatesPics/Wyoming3.jpg';
+
+
+const stateImages = {
+    Alabama: [alabama1, alabama2, alabama3],
+    Alaska: [alaska1, alaska2, alaska3],
+    Arizona: [arizona1, arizona2, arizona3],
+    Arkansas: [arkansas1, arkansas2, arkansas3],
+    California: [california1, california2, california3],
+    Colorado: [colorado1, colorado2, colorado3],
+    Connecticut: [connecticut1, connecticut2, connecticut3],
+    Delaware: [delaware1, delaware2, delaware3],
+    Florida: [florida1, florida2, florida3],
+    Georgia: [georgia1, georgia2, georgia3],
+    Hawaii: [hawaii1, hawaii2, hawaii3],
+    Idaho: [idaho1, idaho2, idaho3],
+    Illinois: [illinois1, illinois2, illinois3],
+    Indiana: [indiana1, indiana2, indiana3],
+    Iowa: [iowa1, iowa2, iowa3],
+    Kansas: [kansas1, kansas2, kansas3],
+    Kentucky: [kentucky1, kentucky2],
+    Louisiana: [louisiana1, louisiana2, louisiana3],
+    Maine: [maine1, maine2, maine3],
+    Maryland: [maryland1, maryland2, maryland3],
+    Massachusetts: [massachusetts1, massachusetts2, massachusetts3],
+    Michigan: [michigan1, michigan2, michigan3],
+    Minnesota: [minnesota1, minnesota2, minnesota3],
+    Mississippi: [mississippi1, mississippi2, mississippi3],
+    Missouri: [missouri1, missouri2, missouri3],
+    Montana: [montana1, montana2, montana3],
+    Nebraska: [nebraska1, nebraska2, nebraska3],
+    Nevada: [nevada1, nevada2, nevada3],
+    "New Hampshire": [newhampshire1, newhampshire2, newhampshire3],
+    "New Jersey": [newjersey1, newjersey2, newjersey3],
+    "New Mexico": [newmexico1, newmexico2, newmexico3],
+    "New York": [newyork1, newyork2, newyork3],
+    "North Carolina": [northcarolina1, northcarolina2, northcarolina3],
+    "North Dakota": [northdakota1, northdakota2, northdakota3],
+    Ohio: [ohio1, ohio2, ohio3],
+    Oklahoma: [oklahoma1, oklahoma2, oklahoma3],
+    Oregon: [oregon1, oregon2, oregon3],
+    Pennsylvania: [pennsylvania1, pennsylvania2, pennsylvania3],
+    "Rhode Island": [rhodeisland1, rhodeisland2, rhodeisland3],
+    "South Carolina": [southcarolina1, southcarolina2, southcarolina3],
+    "South Dakota": [southdakota1, southdakota2, southdakota3],
+    Tennessee: [tennessee1, tennessee2, tennessee3],
+    Texas: [texas1, texas2, texas3],
+    Utah: [utah1, utah2, utah3],
+    Vermont: [vermont1, vermont2, vermont3],
+    Virginia: [virginia1, virginia2, virginia3],
+    Washington: [washington1, washington2, washington3],
+    "West Virginia": [westvirginia1, westvirginia2, westvirginia3],
+    Wisconsin: [wisconsin1, wisconsin2, wisconsin3],
+    Wyoming: [wyoming1, wyoming2, wyoming3],
+
+
+};
+
+export default stateImages;
