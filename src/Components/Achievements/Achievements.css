@@ -312,11 +312,13 @@
     margin-top: 8px;
 }
 
+.disabledButton {
+    cursor: default !important;
+    pointer-events: none !important;
+}
 
 
-
-
-
-
-
-
+html[data-theme='dark'] .achievementsTitle,
+html[data-theme='dark'] .progressText {
+    color: #000000;
+}

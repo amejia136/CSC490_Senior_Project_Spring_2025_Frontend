@@ -260,7 +260,7 @@ const ItineraryPage = () => {
                 <thead>
                 <tr>
                     <th>{t('Trip Name')}</th>
-                    <th>{t('Trip Cost ($)')}</th>
+                    <th>{t('Trip Budget ($)')}</th>
                     <th>{t('Trip Type')}</th>
                     <th>{t('Trip Duration (Days)')}</th>
                     <th>{t('Status')}</th>
@@ -272,12 +272,12 @@ const ItineraryPage = () => {
                     itineraries.map((itinerary) => (
                         <tr
                             key={itinerary.id}
-                            onClick={() => !itinerary.isCompleted && !isLoading && navigate(`/itinerary/${itinerary.id}`)}
+                            onClick={() => !isLoading && navigate(`/itinerary/${itinerary.id}`)}
                             className={`${isLoading ? 'disabled-row' : ''} ${itinerary.isCompleted ? 'completed-row' : ''}`}
                         >
                             <td>{itinerary.TripName}</td>
                             <td>${itinerary.TripCost}</td>
-                            <td>{itinerary.TripType}</td>
+                            <td>{t(itinerary.TripType)}</td>
                             <td>{itinerary.TripDuration}</td>
                             <td>
                                 {itinerary.isCompleted ? (
@@ -311,7 +311,7 @@ const ItineraryPage = () => {
                                     disabled={isLoading || itinerary.isCompleted}
                                     className={`complete-btn ${itinerary.isCompleted ? 'completed' : ''}`}
                                 >
-                                    {itinerary.isCompleted ? '✓ Completed' : 'Mark Complete'}
+                                    {itinerary.isCompleted ? `✓ ${t('Completed')}` : t('Mark Complete')}
                                 </button>
                             </td>
                         </tr>
@@ -328,51 +328,67 @@ const ItineraryPage = () => {
 
             <h2>{editMode ? t('Edit Itinerary') : t('Add New Itinerary')}</h2>
             <form onSubmit={handleSubmit} className="itinerary-form">
-                <input
-                    type="text"
-                    name="tripName"
-                    placeholder={t('Trip Name')}
-                    value={formData.tripName}
-                    onChange={handleInputChange}
-                    required
-                    disabled={isLoading}
-                />
-                <input
-                    type="number"
-                    name="tripCost"
-                    placeholder={t('Trip Budget ($)')}
-                    value={formData.tripCost}
-                    onChange={handleInputChange}
-                    required
-                    disabled={isLoading}
-                    min="0"
-                    step="0.01"
-                />
-                <select
-                    name="tripType"
-                    value={formData.tripType}
-                    onChange={handleInputChange}
-                    required
-                    disabled={isLoading}
-                    className="trip-type-select"
-                >
-                    <option value="">{t('Select Trip Type')}</option>
-                    {tripTypeOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {t(option.label)}
-                        </option>
-                    ))}
-                </select>
-                <input
-                    type="number"
-                    name="tripDuration"
-                    placeholder={t('Trip Duration (Days)')}
-                    value={formData.tripDuration}
-                    onChange={handleInputChange}
-                    required
-                    disabled={isLoading}
-                    min="1"
-                />
+                <div className="input-group">
+                    <label>{t('Trip Name')}</label>
+                    <input
+                        type="text"
+                        name="tripName"
+                        placeholder={t('Trip Name')}
+                        value={formData.tripName}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isLoading}
+                    />
+                </div>
+
+                <div className="input-group">
+                    <label>{t('Trip Budget ($)')}</label>
+                    <input
+                        type="number"
+                        name="tripCost"
+                        placeholder={t('Trip Budget ($)')}
+                        value={formData.tripCost}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isLoading}
+                        min="0"
+                        step="0.01"
+                    />
+                </div>
+
+                <div className="input-group">
+                    <label>{t('Trip Type')}</label>
+                    <select
+                        name="tripType"
+                        value={formData.tripType}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isLoading}
+                        className="trip-type-select"
+                    >
+                        <option value="">{t('Select Trip Type')}</option>
+                        {tripTypeOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {t(option.value)} {/* Ensure translation comes from value (not label) */}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="input-group">
+                    <label>{t('Trip Duration (Days)')}</label>
+                    <input
+                        type="number"
+                        name="tripDuration"
+                        placeholder={t('Trip Duration (Days)')}
+                        value={formData.tripDuration}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isLoading}
+                        min="1"
+                    />
+                </div>
+
                 <div className="form-actions">
                     <button type="submit" disabled={isLoading}>
                         {editMode ? t('Update Itinerary') : t('Add Itinerary')}

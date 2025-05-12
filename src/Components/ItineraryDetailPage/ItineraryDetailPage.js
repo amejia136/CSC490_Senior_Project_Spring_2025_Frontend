@@ -9,9 +9,7 @@ import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
 import Itinerary from "../Itinerary/Itinerary";
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
-import { UserContext } from '../../UserContext';
+
 import {
     collection,
     query,
@@ -21,6 +19,7 @@ import {
     serverTimestamp
 } from 'firebase/firestore';
 import axios from "axios";
+import {t} from "i18next";
 
 
 const ItineraryDetailsPage = () => {
@@ -79,8 +78,6 @@ const ItineraryDetailsPage = () => {
                     console.log("📍 Locations loaded:", mappedLocations);
 
                     setLocations(mappedLocations);
-                    setItinerary({ id: docSnap.id, ...data });
-                    setLocations(data.mapLocations || []);
                 } else {
                     setItinerary(null);
                 }
@@ -93,10 +90,8 @@ const ItineraryDetailsPage = () => {
         };
 
         fetchItinerary();
-    }, [userId, itineraryId, user]);
+    }, [userId, itineraryId, user]); // ✅ this is the correct closing line
 
-
-    }, [userId, itineraryId]);
 
     const handleDragStart = (e, index) => {
         if (itinerary?.isCompleted) return;
@@ -444,34 +439,29 @@ const ItineraryDetailsPage = () => {
 
 
     return (
-        <div
-            className="itinerary-details-container"
-            ref={pdfRef}
-        >
-
+        <div className="itinerary-details-container" ref={pdfRef}>
             <div className={`itinerary-details-container ${itinerary.isCompleted ? 'completed-trip' : ''}`}>
                 <button onClick={() => navigate(-1)} className="back-button">
-                    ← Back to Itineraries
+                    ← {t('Back to Itineraries')}
                 </button>
 
                 <div className="itinerary-header">
                     <h1 className="trip-title">{itinerary.TripName}</h1>
 
                     <div className="trip-meta">
-                        <span><strong>Type:</strong> {itinerary.TripType}</span>
-                        <span><strong>Duration:</strong> {itinerary.TripDuration} days</span>
-                        <span><strong>Budget:</strong> ${itinerary.TripCost}</span>
-                        <span><strong>Current Cost:</strong> ${currentCost}</span>
-                        {itinerary.isCompleted && <span className="completed-badge">✓ Completed</span>}
+                        <span><strong>{t('Type')}:</strong> {t(itinerary.TripType)}</span>
+                        <span><strong>{t('Duration')}:</strong> {itinerary.TripDuration} {t('days')}</span>
+                        <span><strong>{t('Budget')}:</strong> ${itinerary.TripCost}</span>
+                        <span><strong>{t('Current Cost')}:</strong> ${currentCost}</span>
+                        {itinerary.isCompleted && <span className="completed-badge">✓ {t('Completed')}</span>}
                     </div>
 
                     {currentCost > itinerary?.TripCost && (
                         <div className="budget-warning">
-                            ⚠️ Warning: Over budget!
+                            ⚠️ {t('Warning: Over budget!')}
                         </div>
                     )}
                 </div>
-
 
                 <div className="details-content">
                     <div className="locations-section">
@@ -503,37 +493,13 @@ const ItineraryDetailsPage = () => {
                                             disabled={itinerary.isCompleted}
                                             style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
                                         >
-                                            Delete
+                                            {t('Delete')}
                                         </button>
-
                                     )}
                                 </div>
                             ))}
                         </div>
 
-                        <button
-                            className="save-order-button"
-                            onClick={handleSaveOrderToFirestore}
-                            disabled={itinerary.isCompleted}
-                            style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
-                        >
-                            Save Order
-                        </button>
-
-                        {saveSuccess && (
-                            <div className="save-confirmation">
-                                ✓ Changes saved successfully!
-                            </div>
-                        )}
-
-                        <button
-                            className="add-location-button"
-                            onClick={() => navigate('/')}
-                            disabled={itinerary.isCompleted}
-                            style={itinerary.isCompleted ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
-                        >
-                            + Add Location
-                        </button>
                         {!itinerary.isCompleted && (
                             <>
                                 <button
@@ -541,19 +507,19 @@ const ItineraryDetailsPage = () => {
                                     onClick={handleSaveOrderToFirestore}
                                     disabled={isLoading}
                                 >
-                                    {isLoading ? 'Saving...' : 'Save Order'}
+                                    {isLoading ? t('Saving...') : t('Save Order')}
                                 </button>
                                 {saveSuccess && (
                                     <div className="save-confirmation">
-                                        ✓ Changes saved successfully!
+                                        ✓ {t('Changes saved successfully!')}
                                     </div>
                                 )}
                                 <button
                                     className="add-location-button"
-                                    onClick={() => navigate('/map')}
+                                    onClick={() => navigate('/')}
                                     disabled={isLoading}
                                 >
-                                    + Add Location
+                                    + {t('Add Location')}
                                 </button>
                             </>
                         )}
@@ -567,10 +533,11 @@ const ItineraryDetailsPage = () => {
                                 border: 'none',
                                 borderRadius: '5px',
                                 cursor: 'pointer',
-                                marginBottom: '1rem'
+                                marginTop: '0.5rem',
+                                marginBottom: '0.5rem'
                             }}
                         >
-                            Download PDF
+                            {t('Download PDF')}
                         </button>
 
 
@@ -579,19 +546,18 @@ const ItineraryDetailsPage = () => {
                             disabled={itinerary.isCompleted || isLoading}
                             className={`complete-button ${itinerary.isCompleted ? 'permanent-complete' : ''}`}
                         >
-                            {itinerary.isCompleted ? '✓ Permanently Completed' : 'Mark as Complete'}
+                            {itinerary.isCompleted ? `✓ ${t('Permanently Completed')}` : t('Mark as Complete')}
                         </button>
 
                         {itinerary.isCompleted && (
                             <div style={{marginTop: '10px', color: 'green'}}>
-                                This itinerary is completed. Editing is disabled.
+                                {t('This itinerary is completed. Editing is disabled.')}
                             </div>
                         )}
-
                     </div>
 
                     <div className="packing-section">
-                        <h2>Packing List</h2>
+                        <h2>{t('Packing List')}</h2>
                         <div className="packing-items">
                             {getPackingRecommendations().map((item, index) => (
                                 <div key={index} className="packing-item">
@@ -600,7 +566,7 @@ const ItineraryDetailsPage = () => {
                                         id={`item-${index}`}
                                         disabled={itinerary.isCompleted}
                                     />
-                                    <label htmlFor={`item-${index}`}>{item}</label>
+                                    <label htmlFor={`item-${index}`}>{t(item)}</label>
                                 </div>
                             ))}
                         </div>
@@ -611,4 +577,4 @@ const ItineraryDetailsPage = () => {
     );
 };
 
-export default ItineraryDetailsPage;
+    export default ItineraryDetailsPage;

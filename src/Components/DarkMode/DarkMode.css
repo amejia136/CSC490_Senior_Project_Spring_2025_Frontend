@@ -382,3 +382,62 @@ html[data-theme='dark'] .commentsSection {
     margin-top: 1rem;
     color: #E0E0E0;
 }
+
+/* === Achievements Dark Mode Enhancements === */
+
+html[data-theme='dark'] .achievementsTitle,
+html[data-theme='dark'] .progressText {
+    color: var(--whiteColor);
+}
+
+html[data-theme='dark'] .achievementCardRow {
+    background: var(--cardBG);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme='dark'] .progressBar {
+    background: #444;
+}
+
+html[data-theme='dark'] .progressFill {
+    background: linear-gradient(90deg, #64B5F6, #1E88E5);
+}
+
+html[data-theme='dark'] .tabButton {
+    background: #2C2C2C;
+    color: var(--textColor);
+    border: 2px solid #555;
+}
+
+html[data-theme='dark'] .tabButton.active {
+    background: var(--PrimaryColor);
+    color: white;
+}
+
+html[data-theme='dark'] .achievementsCards::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+html[data-theme='dark'] .tabButton:hover {
+    background: #333;
+}
+
+/* Final Adjustments for Achievements Dark Mode */
+
+html[data-theme='dark'] .progressFill {
+    background: #1A237E; /* solid dark blue */
+}
+
+html:not([data-theme='dark']) .achievementsTitle,
+html:not([data-theme='dark']) .progressText {
+    color: #000000; /* Force black in light mode */
+}
+
+html[data-theme='dark'] .tabButton.active {
+    background: #37474F; /* darker slate blue/grey */
+    color: #FFFFFF;
+}
+
+html[data-theme='dark'] .achievements .overlay {
+    background: rgba(0, 0, 0, 0.5); /* darken overlay in dark mode */
+}

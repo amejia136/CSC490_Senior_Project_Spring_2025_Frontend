@@ -363,3 +363,81 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+html[data-theme='dark'] .detailsContent {
+    background-color: #1e1e1e; /* darkest: main content box */
+    color: #f0f0f0;
+}
+
+html[data-theme='dark'] .stateDetails {
+    background-color: #2a2a2a; /* medium dark: lighter than .detailsContent, darker than image area */
+    color: #ffffff;
+}
+
+html[data-theme='dark'] .recommendedTitle {
+    color: #90caf9; /* keep vibrant */
+}
+
+html[data-theme='dark'] .infoDesc,
+html[data-theme='dark'] .infoTitle,
+html[data-theme='dark'] .detailsIntro {
+    color: #dddddd;
+}
+
+html[data-theme='dark'] .recommendedStates {
+    background-color: #262626; /* darker than Hawaii’s #2a2a2a */
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+html[data-theme='dark'] .arrowButton {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+}
+
+html[data-theme='dark'] .arrowButton:hover {
+    background-color: #3a3a3a;
+    color: #ffffff;
+}
+
+html[data-theme='dark'] .commentButton,
+html[data-theme='dark'] .addCommentButton {
+    background: var(--gradientColor);
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+html[data-theme='dark'] .commentButton:hover,
+html[data-theme='dark'] .addCommentButton:hover {
+    filter: brightness(1.1);
+}
+
+html[data-theme='dark'] .commentsSection {
+    background-color: #2d2d2d; /* slightly lighter than page background */
+    color: white;
+    border: 1px solid #444;
+}
+
+html[data-theme='dark'] .comment p,
+html[data-theme='dark'] .comment strong {
+    color: #ffffff;
+}
+
+html[data-theme='dark'] .addCommentForm button[type="submit"] {
+    background: var(--gradientColor);
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    padding: 0.75rem 1.5rem;
+}
+
+html[data-theme='dark'] .addCommentForm button[type="submit"]:hover {
+    filter: brightness(1.1);
+}
+

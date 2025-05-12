@@ -384,7 +384,65 @@
     animation: fadeInOut 3s ease-in-out;
 }
 
+html[data-theme='dark'] .itinerary-details-container {
+    background-color: #1f1f1f; /* dark but lighter than full black */
+    color: #f0f0f0; /* white text */
+}
 
+html[data-theme='dark'] .locations-section,
+html[data-theme='dark'] .packing-section {
+    background-color: #2b2b2b; /* match navbar's soft black */
+    color: #f0f0f0;
+}
+
+html[data-theme='dark'] .location-card {
+    background-color: #303030;
+    color: #ffffff;
+    border: 1px solid #444;
+}
+
+html[data-theme='dark'] .location-info h3,
+html[data-theme='dark'] .location-info p {
+    color: #e0e0e0;
+}
+
+html[data-theme='dark'] .trip-meta {
+    color: #cccccc;
+}
+
+html[data-theme='dark'] .back-button {
+    color: #90caf9;
+}
+
+html[data-theme='dark'] .packing-item label {
+    color: #ffffff;
+}
+
+html[data-theme='dark'] .completed-badge {
+    background-color: #4caf50;
+    color: white;
+}
+
+html[data-theme='dark'] .save-confirmation {
+    background-color: #4caf50;
+    color: white;
+}
+
+html[data-theme='dark'] .location-card {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+html[data-theme='dark'] .itinerary-header h1 {
+    color: #f0f0f0;
+}
+
+html[data-theme='dark'] .packing-section h2 {
+    color: #f0f0f0;
+}
+
+html[data-theme='dark'] .trip-title {
+    color: #f0f0f0;
+}
 
 @keyframes fadeInOut {
     0%, 100% { opacity: 0; }
