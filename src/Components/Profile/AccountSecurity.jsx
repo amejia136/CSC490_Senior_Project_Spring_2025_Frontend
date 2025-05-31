@@ -8,6 +8,7 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { UserContext } from "../../UserContext";
 import i18n from "../../Translations/i18n";
 import {LanguageContext} from "../../LanguageContext";
+import { useTranslation } from 'react-i18next';
 
 const db = getFirestore();
 
@@ -18,6 +19,7 @@ const AccountSecurity = () => {
     const [error, setError] = useState("");
     const [emailVerified, setEmailVerified] = useState(false);
     const { language } = useContext(LanguageContext);
+    const { t } = useTranslation();
 
 
 
@@ -95,15 +97,22 @@ const AccountSecurity = () => {
             </nav>
 
             <div className="profile-content">
-                <h1>Account Security</h1>
+                <h1>{t("Account Security")}</h1>
                 <div className="profile-view">
-                    <p><strong>Two-Factor Authentication:</strong></p>
+                    <p><strong>{t("Two-Factor Authentication")}:</strong></p>
                     <ul style={{ marginLeft: '1rem', listStyle: 'none', padding: 0 }}>
-                        <li>Protect your account with a second layer of security using your email address.</li>
-                        <li>Status: {emailVerified ? "Verified ✅" : emailSent ? "Verification link sent ✅" : "Not verified"}</li>
+                        <li>{t("Protect your account with a second layer of security using your email address.")}</li>
+                        <li>
+                            {t("Status")}:{" "}
+                            {emailVerified
+                                ? t("Verified ✅")
+                                : emailSent
+                                    ? t("Verification link sent ✅")
+                                    : t("Not verified")}
+                        </li>
                     </ul>
                     {!emailVerified && (
-                        <button onClick={handleEnable2FA}>Pair with email...</button>
+                        <button onClick={handleEnable2FA}>{t("Pair with email...")}</button>
                     )}
                     {error && <p style={{ color: "red", marginTop: "0.5rem" }}>{error}</p>}
                 </div>
