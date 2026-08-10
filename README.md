@@ -60,5 +60,5 @@ npm start
 - **Omar** – Frontend Developer – [seguoo](https://github.com/seguoo)
 - **Andrea** – Full Stack – [amejia136](https://github.com/amejia136)
 - **Irvin** – Full Stack – [Irvin02051](https://github.com/Irvin02051)
-- **Aidan** – Project Manager
+- **Aidan** – Project Manager, Database Administrator [alasusa](https://github.com/alasusa)
 - **Luisa** – UI/UX Design – [Luisa-Valencia-C](https://github.com/Luisa-Valencia-C)
