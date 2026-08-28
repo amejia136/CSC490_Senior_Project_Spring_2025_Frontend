@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from "react";
 import './main.css'
-
+import { useNavigate } from 'react-router-dom';
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { LuClipboardCheck } from "react-icons/lu";
 
@@ -25,6 +25,7 @@ import {LanguageContext} from "../../LanguageContext";
 const Main = () => {
     const { t } = useTranslation();
     const { language } = useContext(LanguageContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const savedLanguage = localStorage.getItem('appLanguage') || sessionStorage.getItem('appLanguage');
@@ -108,6 +109,11 @@ const Main = () => {
         },
     ];
 
+    const handleDetailsClick = () => {
+        navigate('/details');
+    };
+
+
     return (
         <section className="main container section">
             <div className="secTitle">
@@ -145,7 +151,7 @@ const Main = () => {
                                     <p>{t(description)}</p>
                                 </div>
 
-                                <button className="btn flex">
+                                <button className="btn flex" onClick={handleDetailsClick}>
                                     {t("DETAILS")} <LuClipboardCheck className="icon"/>
                                 </button>
                             </div>

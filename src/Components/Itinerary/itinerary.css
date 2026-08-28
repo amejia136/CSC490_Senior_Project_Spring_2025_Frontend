@@ -286,3 +286,36 @@ button:not(:disabled):hover {
     padding: 12px 8px;
     vertical-align: middle;
 }
+
+.completed-row {
+    background-color: #f0f0f0;
+    opacity: 0.8;
+}
+
+.completed-row td {
+    color: #666;
+}
+
+.complete-btn.completed {
+    background-color: #38b000;
+    color: white;
+    cursor: default;
+}
+
+.complete-btn:disabled {
+    opacity: 1; /* Keep full opacity for completed state */
+}
+
+.trip-type-select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.trip-type-select:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}

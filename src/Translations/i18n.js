@@ -191,7 +191,16 @@ i18n
 
                     "Want to add this location to your itinerary?": "Want to add this location to your itinerary?",
                     "Yes": "Yes",
-                    "Which itinerary?": "Which itinerary?"
+                    "Which itinerary?": "Which itinerary?",
+
+                    "Your Travel Achievements": "Your Travel Achievements",
+                    "🏆 Completed Achievements": "🏆 Completed Achievements",
+                    "🗺️ All Achievements": "🗺️ All Achievements",
+                    "Progress: {{status}}": "Progress: {{status}}",
+                    "✅ Completed": "✅ Completed",
+                    "❌ Not Completed": "❌ Not Completed",
+                    "🕒 In Progress": "🕒 In Progress",
+                    "✅ Complete": "✅ Complete"
 
 
 
@@ -385,7 +394,16 @@ i18n
 
                     "Want to add this location to your itinerary?": "¿Deseas agregar esta ubicación a tu itinerario?",
                     "Yes": "Sí",
-                    "Which itinerary?": "¿Qué itinerario?"
+                    "Which itinerary?": "¿Qué itinerario?",
+
+                    "Your Travel Achievements": "Tus logros de viaje",
+                    "🏆 Completed Achievements": "🏆 Logros Completados",
+                    "🗺️ All Achievements": "🗺️ Todos los Logros",
+                    "Progress: {{status}}": "Progreso: {{status}}",
+                    "✅ Completed": "✅ Completado",
+                    "❌ Not Completed": "❌ No Completado",
+                    "🕒 In Progress": "🕒 En progreso",
+                    "✅ Complete": "✅ Completar"
 
                 }
             }

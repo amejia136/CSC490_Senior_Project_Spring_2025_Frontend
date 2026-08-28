@@ -21,6 +21,7 @@ import VerifyEmailLink from "./Components/Profile/VerifyEmailLink";
 import About from "./Components/About/About";
 import Contact from "./Components/Contact/Contact";
 import {LanguageProvider} from "./LanguageContext";
+import DetailPage from "./Components/Details/Details";
 
 const App = () => {
     return (
@@ -42,7 +43,13 @@ const App = () => {
                                         <Footer/>
                                     </>
                                 }/>
-
+                                {/* Detail Page */}
+                                <Route path="/details" element={
+                                    <>
+                                        <Navbar/>
+                                        <DetailPage/>
+                                    </>
+                                }/>
                                 {/* Profile Page */}
                                 <Route path="/profile" element={
                                     <>

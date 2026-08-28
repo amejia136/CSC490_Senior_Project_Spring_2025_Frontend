@@ -10,6 +10,8 @@ import {useTranslation} from 'react-i18next';
 import i18n from '../../Translations/i18n';
 import {useDarkMode} from '../DarkMode/DarkMode';
 import {FiSun, FiMoon} from 'react-icons/fi';
+import logo from '../../Assets/logo.png';
+import logoDark from '../../Assets/logo-dark.png';
 
 
 const Navbar = () => {
@@ -24,6 +26,8 @@ const Navbar = () => {
     const {t} = useTranslation();
 
     const [spinning, setSpinning] = useState(false);
+
+
 
     const handleToggleDarkMode = () => {
         setSpinning(true);
@@ -82,6 +86,10 @@ const Navbar = () => {
         navigate('/contact'); // ***** Navigate to login page *****
     };
 
+    const handleDetails = () => {
+        navigate('/details');
+    };
+
     const handleLogout = () => {
 
         setUser(null);
@@ -102,7 +110,12 @@ const Navbar = () => {
 
                 <div className="logoDiv">
                     <a href="#" className="logo flex">
-                        <h1><MdOutlineTravelExplore className="icon"/>Travel.</h1>
+                        <img
+                            src={darkMode ? logoDark : logo}
+                            alt="Travel Logo"
+                            className="customLogo"
+                        />
+
                     </a>
                 </div>
 
@@ -120,9 +133,10 @@ const Navbar = () => {
                             <a href="#" className="navLink">{t('Profile')}</a>
                         </li>
 
-                        <li className="navItem">
-                            <a href="#" className="navLink">{t('Reviews')}</a>
+                        <li className="navItem" onClick={handleDetails}>
+                            <a href="#" className="navLink">{t('Details')}</a>
                         </li>
+
 
                         <li className="navItem" onClick={handleAchievements}>
                             <a href="#" className="navLink">{t('Achievements')}</a>
