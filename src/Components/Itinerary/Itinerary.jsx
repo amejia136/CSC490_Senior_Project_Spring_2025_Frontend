@@ -58,38 +58,41 @@ const ItineraryPage = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [userId]); // Declare all dependencies here
+    }, [userId]);
 
-    // Updated useEffect with proper dependencies
     useEffect(() => {
         fetchItineraries();
     }, [fetchItineraries]);
 
     const toggleCompleteStatus = async (itineraryId, currentStatus) => {
-        if (!userId) return;
+        if (!userId || currentStatus) return;
+
+        if (!window.confirm("Are you sure you want to mark this trip as complete?\n\nThis action cannot be undone.")) {
+            return;
+        }
 
         setIsLoading(true);
         try {
-            const newStatus = !currentStatus;
-            await axios.put(
-                `http://127.0.0.1:5000/itinerary/update/itinerary/${userId}/${itineraryId}`,
-                { isCompleted: newStatus }
+            const response = await axios.post(
+                `http://127.0.0.1:5000/itinerary/complete-itinerary/${userId}/${itineraryId}`
             );
 
-            // Update Firestore
-            await updateDoc(doc(db, "Users", userId, "Itineraries", itineraryId), {
-                isCompleted: newStatus
-            });
+            if (response.data.success) {
+                const updated = itineraries.map(i =>
+                    i.id === itineraryId ? { ...i, isCompleted: true } : i
+                );
+                setItineraries(updated);
+                localStorage.setItem('all-itineraries', JSON.stringify(updated));
 
-            // Update local state
-            const updated = itineraries.map(i =>
-                i.id === itineraryId ? { ...i, isCompleted: newStatus } : i
-            );
-            setItineraries(updated);
-            localStorage.setItem('all-itineraries', JSON.stringify(updated));
-
+                if (response.data.unlocked_achievements?.length > 0) {
+                    alert(`Unlocked achievements:\n${response.data.unlocked_achievements.join("\n")}`);
+                }
+            } else {
+                throw new Error(response.data.error || "Failed to complete itinerary");
+            }
         } catch (error) {
-            setError(error.response?.data?.error || "Failed to update status");
+            setError(error.message || "Failed to complete itinerary.");
+            console.error("Completion failed:", error);
         } finally {
             setIsLoading(false);
         }
@@ -115,7 +118,7 @@ const ItineraryPage = () => {
             TripCost: parseFloat(formData.tripCost),
             TripType: formData.tripType,
             TripDuration: parseInt(formData.tripDuration),
-            isCompleted: false, // Default to not completed
+            isCompleted: false,
             timestamp: Date.now()
         };
 
@@ -172,7 +175,10 @@ const ItineraryPage = () => {
 
     const handleEditClick = (e, itinerary) => {
         e.stopPropagation();
-        if (itinerary.isCompleted) return;
+        if (itinerary.isCompleted) {
+            alert("Completed trips cannot be modified");
+            return;
+        }
 
         setEditMode(true);
         setCurrentItineraryId(itinerary.id);
@@ -290,7 +296,7 @@ const ItineraryPage = () => {
                                         e.stopPropagation();
                                         toggleCompleteStatus(itinerary.id, itinerary.isCompleted);
                                     }}
-                                    disabled={isLoading}
+                                    disabled={isLoading || itinerary.isCompleted}
                                     className={`complete-btn ${itinerary.isCompleted ? 'completed' : ''}`}
                                 >
                                     {itinerary.isCompleted ? t('✓ Completed') : t('Mark Complete')}
