@@ -27,12 +27,6 @@ const ItineraryPage = () => {
     const userId = user?.uid;
 
     useEffect(() => {
-        if (userId) {
-            fetchItineraries();
-        }
-    }, [userId]);
-
-    useEffect(() => {
         if (error) {
             setShowToast(true);
             const timer = setTimeout(() => {
@@ -58,9 +52,9 @@ const ItineraryPage = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [userId]); // Declare all dependencies here
+    }, [userId]);
 
-    // Updated useEffect with proper dependencies
+
     useEffect(() => {
         fetchItineraries();
     }, [fetchItineraries]);
@@ -244,7 +238,7 @@ const ItineraryPage = () => {
                 <thead>
                 <tr>
                     <th>{t('Trip Name')}</th>
-                    <th>{t('Trip Cost ($)')}</th>
+                    <th>{t('Trip Budget ($)')}</th>
                     <th>{t('Trip Type')}</th>
                     <th>{t('Trip Duration (Days)')}</th>
                     <th>{t('Status')}</th>
@@ -322,7 +316,7 @@ const ItineraryPage = () => {
                 <input
                     type="number"
                     name="tripCost"
-                    placeholder={t('Trip Cost ($)')}
+                    placeholder={t('Trip Budget ($)')}
                     value={formData.tripCost}
                     onChange={handleInputChange}
                     required

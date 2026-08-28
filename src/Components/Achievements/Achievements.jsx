@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 import './Achievements.css';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import { getAuth } from 'firebase/auth';
+import {collection, doc, getDoc, getDocs} from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+
 
 import nycCard from '../../Assets/Achievements_Card/nyc_card-300x300.jpg';
 import californiaCard from '../../Assets/Achievements_Card/california_card-300x300.jpg';
@@ -34,6 +38,100 @@ const AchievementsPage = () => {
         { id: 9, name: 'Visited Mount Rushmore', description: 'Visit Mount Rushmore in South Dakota.', image: mountRushmoreCard, status: 'not started' }, // reused Statue of Liberty
         { id: 10, name: 'Visited Great Smoky Mountains', description: 'Visit Great Smoky Mountains National Park.', image: greatSmokyMountainsCard, status: 'not started' }, // reused Grand Canyon
     ]);
+
+    useEffect(() => {
+        const fetchAchievements = async () => {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const userId = user.uid;
+
+            const userAchieveCol = collection(db, "Users", userId, "userAchievements");
+            const itinerariesCol = collection(db, "Users", userId, "Itineraries");
+
+            const fullAchievements = [
+                { id: 1, name: 'Visit New York!', image: nycCard, keyword: "NY" },
+                { id: 2, name: 'Visit California', image: californiaCard, keyword: "CA" },
+                { id: 3, name: 'Visit Florida', image: floridaCard, keyword: "FL" },
+                { id: 5, name: 'Visit the Statue of Liberty', image: statueLibertyCard, keyword: "Statue of Liberty" },
+                { id: 6, name: 'Visit the Golden Gate Bridge', image: goldenGateBridgeCard, keyword: "Golden Gate" },
+                { id: 7, name: 'Visit the Grand Canyon', image: grandCanyonCard, keyword: "Grand Canyon" },
+                { id: 8, name: 'Visit Yellowstone National Park', image: yellowstoneCard, keyword: "Yellowstone" },
+                { id: 9, name: 'Visit Mount Rushmore', image: mountRushmoreCard, keyword: "Rushmore" },
+                { id: 10, name: 'Visit the Great Smoky Mountains!', image: greatSmokyMountainsCard, keyword: "Smoky Mountains" },
+            ];
+
+            try {
+                const [achievementsSnap, itinerariesSnap] = await Promise.all([
+                    getDocs(userAchieveCol),
+                    getDocs(itinerariesCol)
+                ]);
+
+                const completed = [];
+                const inProgress = new Set();
+                const completedIds = new Set();
+
+                // 1. Process completed achievements
+                achievementsSnap.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const clean = (str) => str?.replace(/["']/g, '').trim().toLowerCase();
+
+                    const match = fullAchievements.find(a => clean(a.name) === clean(data.Name));
+                    if (match && data.isComplete) {
+                        completed.push({
+                            id: match.id,
+                            name: match.name,
+                            description: clean(data.Description),
+                            image: match.image,
+                            status: 'completed',
+                        });
+                        completedIds.add(match.id);
+                    }
+                });
+
+                // 2. Check all itinerary locations for "in progress"
+                itinerariesSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const mapLocations = data.mapLocations || [];
+
+                    mapLocations.forEach(loc => {
+                        fullAchievements.forEach(achievement => {
+                            if (
+                                !completedIds.has(achievement.id) &&
+                                loc.address?.includes(achievement.keyword)
+                            ) {
+                                inProgress.add(achievement.id);
+                            }
+                        });
+                    });
+                });
+
+                // 3. Determine remaining achievements (either in progress or not started)
+                const remaining = fullAchievements
+                    .filter(a => !completedIds.has(a.id))
+                    .map(a => ({
+                        ...a,
+                        description: a.name.includes("Empire")
+                            ? 'Visit the Empire State Building on a trip to NYC!'
+                            : a.description || '',
+                        status: inProgress.has(a.id) ? 'in progress' : 'not started',
+                    }));
+
+                setCompletedAchievements(completed);
+                setAllAchievementsData(remaining);
+            } catch (error) {
+                console.error("Error fetching user achievements or itineraries:", error);
+            }
+        };
+
+        fetchAchievements();
+    }, []);
+
+
+
+
+
 
 
 
@@ -121,7 +219,16 @@ const AchievementsPage = () => {
                                         <h3>{achievement.name}</h3>
                                         <p>{achievement.description}</p>
                                         <p className="status">Progress: {achievement.status}</p>
-                                        <button className="completeButton" onClick={() => handleCompleteAchievement(achievement)}>✅ Complete</button>
+                                        <div className={`completeStatusTag ${achievement.status === 'completed' ? 'done' : 'notDone'}`}>
+                                            {achievement.status === 'completed' ? '✅ Completed' : '❌ Not Completed'}
+                                        </div>
+
+                                        {achievement.status === 'in progress' ? (
+                                            <button className="inProgressButton" disabled>🕒 In Progress</button>
+                                        ) : (
+                                            <button className="completeButton" onClick={() => handleCompleteAchievement(achievement)}>✅ Complete</button>
+                                        )}
+
                                     </div>
                                 </div>
                             ))}
@@ -136,4 +243,5 @@ const AchievementsPage = () => {
 };
 
 export default AchievementsPage;
+
 

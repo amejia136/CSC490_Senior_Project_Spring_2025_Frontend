@@ -218,39 +218,39 @@
     background: #0056b3;
 }
 
-/* Grayscale effect for images */
+
 .achievementImage {
     width: 180px;
     height: 180px;
     object-fit: cover;
     border-radius: 16px;
     margin-right: 2rem;
-    filter: grayscale(100%); /* Make image black and white by default */
+    filter: grayscale(100%);
     transition: filter 0.5s ease;
 }
 
-/* On hover - remove grayscale (show full color) */
+
 .achievementCardRow:hover .achievementImage {
     filter: grayscale(0%);
 }
 
-/* Always full color for completed achievements */
+
 .achievementImage.completed {
     filter: none;
 }
 
-/* Entire card grayscale by default */
+
 .grayscaleCard {
     filter: grayscale(100%);
     transition: filter 0.5s ease;
 }
 
-/* When hovering, remove grayscale */
+
 .grayscaleCard:hover {
     filter: grayscale(0%);
 }
 
-/* Button inside card */
+
 .completeButton {
     background: var(--primaryColor);
     color: white;
@@ -264,13 +264,13 @@
     transition: background-color 0.3s ease, filter 0.5s ease;
 }
 
-/* Make sure button doesn't break grayscale */
+
 .grayscaleCard .completeButton {
     background: var(--primaryColor);
     color: white;
 }
 
-/* Keep button colorful on hover over card */
+
 .grayscaleCard:hover .completeButton {
     filter: grayscale(0%);
 }
@@ -278,6 +278,41 @@
 .achievementsTitle {
     text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+.completeStatusTag {
+    margin-top: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    width: fit-content;
+    user-select: none;
+}
+
+.completeStatusTag.done {
+    background-color: #d4edda;
+    color: #2e7d32;
+    cursor: default;
+}
+
+.completeStatusTag.notDone {
+    background-color: #f0f0f0;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.inProgressButton {
+    background-color: orange;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: not-allowed;
+    margin-top: 8px;
+}
+
+
 
 
 
